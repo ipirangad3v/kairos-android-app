@@ -2,27 +2,44 @@ package digital.tonima.kairos.view
 
 import android.Manifest
 import android.app.AlarmManager
+import android.app.NotificationManager
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.provider.CalendarContract
 import android.provider.Settings
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -45,17 +62,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.kizitonwose.calendar.compose.HorizontalCalendar
+import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.DayPosition
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import digital.tonima.kairos.model.Event
+import digital.tonima.kairos.viewmodel.EventScreenUiState
 import digital.tonima.kairos.viewmodel.EventViewModel
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EventScreen(viewModel: EventViewModel) {
-    val events by viewModel.events.collectAsState()
-    val alarmsEnabled by viewModel.alarmsEnabled.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     val standardPermissionsToRequest = remember {
@@ -66,80 +95,80 @@ fun EventScreen(viewModel: EventViewModel) {
         }
     }
     val standardPermissionState = rememberMultiplePermissionsState(permissions = standardPermissionsToRequest)
-
-    // Pede as permissões padrão uma única vez quando a tela é exibida.
     LaunchedEffect(Unit) {
-        if (!standardPermissionState.allPermissionsGranted) {
-            standardPermissionState.launchMultiplePermissionRequest()
-        }
+        if (!standardPermissionState.allPermissionsGranted) standardPermissionState.launchMultiplePermissionRequest()
     }
 
+    // Permissão de Alarme Exato
     val hasExactAlarmPermission = remember { mutableStateOf(true) }
-
     val checkExactAlarmPermission = {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        hasExactAlarmPermission.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            hasExactAlarmPermission.value = alarmManager.canScheduleExactAlarms()
-        } else {
-            hasExactAlarmPermission.value = true
-        }
+            alarmManager.canScheduleExactAlarms()
+        } else true
     }
-    LaunchedEffect(Unit) {
-        checkExactAlarmPermission()
-    }
+    LaunchedEffect(Unit) { checkExactAlarmPermission() }
 
+    // Nova Permissão de Full Screen Intent (Android 14+)
+    val hasFullScreenIntentPermission = remember { mutableStateOf(true) }
+    val checkFullScreenIntentPermission = {
+        hasFullScreenIntentPermission.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.canUseFullScreenIntent()
+        } else true
+    }
+    LaunchedEffect(Unit) { checkFullScreenIntentPermission() }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Alarmes da Agenda") },
+                title = { Text("Kairos") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 )
             )
+        },
+        floatingActionButton = {
+            if (standardPermissionState.allPermissionsGranted && hasExactAlarmPermission.value && hasFullScreenIntentPermission.value) {
+                FloatingActionButton(
+                    onClick = {
+                        val intent = context.packageManager.getLaunchIntentForPackage("com.google.android.calendar")
+                        if (intent != null) context.startActivity(intent)
+                        else Toast.makeText(context, "Google Calendar não encontrado", Toast.LENGTH_SHORT).show()
+                    },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ) {
+                    Icon(Icons.Filled.DateRange, contentDescription = "Abrir Calendário")
+                }
+            }
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp)
-        ) {
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             when {
-                // Caso 1: Permissões padrão e de alarme concedidas. Mostrar a UI principal.
-                standardPermissionState.allPermissionsGranted && hasExactAlarmPermission.value -> {
-                    // O LaunchedEffect aqui agora depende se as permissões foram concedidas,
-                    // garantindo que os eventos carreguem no momento certo.
-                    LaunchedEffect(Unit) {
-                        viewModel.loadEvents()
-                    }
-                    MainContent(
-                        events = events,
-                        alarmsEnabled = alarmsEnabled,
-                        onToggle = { viewModel.onAlarmsToggle(it) },
-                        onEventToggle = { event, isEnabled ->
-                            viewModel.onEventAlarmToggle(event, isEnabled)
-                        }
-                    )
-                }
-                // Caso 2: Permissões padrão concedidas, mas a de alarme NÃO. Mostrar tela para permissão de alarme.
-                standardPermissionState.allPermissionsGranted && !hasExactAlarmPermission.value -> {
-                    ExactAlarmPermissionScreen(
-                        // Passa a função de verificação para o botão "Já autorizei".
-                        onAlreadyAuthorizedClick = checkExactAlarmPermission
-                    )
-                }
-                // Caso 3: Permissões padrão NÃO foram concedidas. Mostrar tela para permissões padrão.
+                !standardPermissionState.allPermissionsGranted -> StandardPermissionsScreen(
+                    onSettingsClick = { context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))) },
+                    onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() }
+                )
+                !hasExactAlarmPermission.value -> ExactAlarmPermissionScreen(onAlreadyAuthorizedClick = checkExactAlarmPermission)
+                !hasFullScreenIntentPermission.value -> FullScreenIntentPermissionScreen(onAlreadyAuthorizedClick = checkFullScreenIntentPermission)
                 else -> {
-                    StandardPermissionsScreen(
-                        onSettingsClick = {
-                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                            val uri = Uri.fromParts("package", context.packageName, null)
-                            intent.data = uri
-                            context.startActivity(intent)
-                        },
-                        onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() }
+                    val onEventClick = { event: Event ->
+                        val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.id)
+                        val intent = Intent(Intent.ACTION_VIEW, uri).apply { putExtra("beginTime", event.startTime) }
+                        try { context.startActivity(intent) }
+                        catch (e: Exception) { Toast.makeText(context, "Não foi possível abrir o evento", Toast.LENGTH_SHORT).show() }
+                    }
+                    LaunchedEffect(Unit) { viewModel.onMonthChanged(YearMonth.now(), true) }
+                    MainContent(
+                        uiState = uiState,
+                        onRefresh = { viewModel.onMonthChanged(uiState.currentMonth, true) },
+                        onToggle = viewModel::onAlarmsToggle,
+                        onEventToggle = viewModel::onEventAlarmToggle,
+                        onMonthChanged = viewModel::onMonthChanged,
+                        onDateSelected = viewModel::onDateSelected,
+                        onEventClick = onEventClick
                     )
                 }
             }
@@ -147,32 +176,103 @@ fun EventScreen(viewModel: EventViewModel) {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainContent(
-    events: List<Event>,
-    alarmsEnabled: Boolean,
+    uiState: EventScreenUiState,
+    onRefresh: () -> Unit,
     onToggle: (Boolean) -> Unit,
-    onEventToggle: (event: Event, isEnabled: Boolean) -> Unit
+    onEventToggle: (event: Event, isEnabled: Boolean) -> Unit,
+    onMonthChanged: (YearMonth) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
+    onEventClick: (Event) -> Unit
 ) {
-    Column {
-        AlarmsToggleRow(
-            alarmsEnabled = alarmsEnabled,
-            onToggle = onToggle
+    val pullRefreshState = rememberPullRefreshState(refreshing = uiState.isRefreshing, onRefresh = onRefresh)
+    val eventsByDate = remember(uiState.events) { uiState.events.groupBy { Instant.ofEpochMilli(it.startTime).atZone(ZoneId.systemDefault()).toLocalDate() } }
+    val eventsInDay = remember(uiState.selectedDate, eventsByDate) { eventsByDate[uiState.selectedDate] ?: emptyList() }
+
+    Column(Modifier.padding(horizontal = 16.dp)) {
+        AlarmsToggleRow(modifier = Modifier.padding(vertical = 16.dp), alarmsEnabled = uiState.isGlobalAlarmEnabled, onToggle = onToggle)
+        CalendarView(
+            currentMonth = uiState.currentMonth,
+            selectedDate = uiState.selectedDate,
+            eventsByDate = eventsByDate,
+            onMonthChanged = onMonthChanged,
+            onDateSelected = onDateSelected
         )
         Spacer(modifier = Modifier.height(16.dp))
-        if (events.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Nenhum evento futuro encontrado ou a agenda está vazia.")
-            }
-        } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(events) { event ->
-                    EventCard(
-                        event = event,
-                        isGloballyEnabled = alarmsEnabled,
-                        onToggle = { isEnabled -> onEventToggle(event, isEnabled) }
-                    )
+        Box(Modifier.pullRefresh(pullRefreshState)) {
+            if (eventsInDay.isEmpty() && !uiState.isRefreshing) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("Nenhum evento para a data selecionada.") }
+            } else {
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(eventsInDay) { event ->
+                        EventCard(event = event, isGloballyEnabled = uiState.isGlobalAlarmEnabled, onToggle = { isEnabled -> onEventToggle(event, isEnabled) }, onEventClick = { onEventClick(event) })
+                    }
                 }
+            }
+            PullRefreshIndicator(refreshing = uiState.isRefreshing, state = pullRefreshState, modifier = Modifier.align(Alignment.TopCenter))
+        }
+    }
+}
+
+@Composable
+fun CalendarView(currentMonth: YearMonth, selectedDate: LocalDate, eventsByDate: Map<LocalDate, List<Event>>, onMonthChanged: (YearMonth) -> Unit, onDateSelected: (LocalDate) -> Unit) {
+    val startMonth = remember { currentMonth.minusMonths(100) }
+    val endMonth = remember { currentMonth.plusMonths(100) }
+    val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
+    val state = rememberCalendarState(startMonth = startMonth, endMonth = endMonth, firstVisibleMonth = currentMonth, firstDayOfWeek = firstDayOfWeek)
+    LaunchedEffect(state.firstVisibleMonth.yearMonth) { onMonthChanged(state.firstVisibleMonth.yearMonth) }
+    Column {
+        MonthHeader(month = state.firstVisibleMonth.yearMonth)
+        HorizontalCalendar(
+            state = state,
+            dayContent = { day -> Day(day = day, isSelected = selectedDate == day.date, hasEvents = eventsByDate.containsKey(day.date)) { onDateSelected(it.date) } },
+            monthHeader = { DaysOfWeekHeader(daysOfWeek = it.weekDays.first().map { it.date.dayOfWeek }) }
+        )
+    }
+}
+
+@Composable
+private fun MonthHeader(month: YearMonth) {
+    val locale = Locale.of("pt", "BR")
+    val formatter = DateTimeFormatter.ofPattern("MMMM 'de' yyyy", locale)
+    Text(
+        text = month.format(formatter).replaceFirstChar { it.titlecase(locale) },
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
+}
+
+@Composable
+private fun DaysOfWeekHeader(daysOfWeek: List<DayOfWeek>) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        val locale = Locale.of("pt", "BR")
+        for (dayOfWeek in daysOfWeek) {
+            Text(modifier = Modifier.weight(1f), textAlign = TextAlign.Center, text = dayOfWeek.getDisplayName(TextStyle.SHORT, locale), style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
+@Composable
+private fun Day(day: CalendarDay, isSelected: Boolean, hasEvents: Boolean, onClick: (CalendarDay) -> Unit) {
+    Box(
+        modifier = Modifier.aspectRatio(1f).padding(2.dp)
+            .background(color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.medium)
+            .clickable(enabled = day.position == DayPosition.MonthDate, onClick = { onClick(day) }),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = day.date.dayOfMonth.toString(),
+                color = when {
+                    isSelected -> MaterialTheme.colorScheme.onPrimary
+                    day.position != DayPosition.MonthDate -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                    else -> MaterialTheme.colorScheme.onSurface
+                }
+            )
+            if (hasEvents) {
+                Box(modifier = Modifier.size(4.dp).background(color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary, shape = CircleShape))
             }
         }
     }
@@ -180,30 +280,14 @@ fun MainContent(
 
 @Composable
 fun StandardPermissionsScreen(onSettingsClick: () -> Unit, onRetryClick: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            "Permissões Iniciais Necessárias",
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
-        )
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Permissões Iniciais Necessárias", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            "Para funcionar, o aplicativo precisa de acesso à sua agenda e permissão para enviar notificações.",
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
-        )
+        Text("Para funcionar, o aplicativo precisa de acesso à sua agenda e permissão para enviar notificações.", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(24.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = onSettingsClick) {
-                Text("Abrir Configurações")
-            }
-            Button(onClick = onRetryClick) {
-                Text("Tentar Novamente")
-            }
+            Button(onClick = onSettingsClick) { Text("Abrir Configurações") }
+            Button(onClick = onRetryClick) { Text("Tentar Novamente") }
         }
     }
 }
@@ -211,80 +295,57 @@ fun StandardPermissionsScreen(onSettingsClick: () -> Unit, onRetryClick: () -> U
 @Composable
 fun ExactAlarmPermissionScreen(onAlreadyAuthorizedClick: () -> Unit) {
     val context = LocalContext.current
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            "Permissão Final Necessária",
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
-        )
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Permissão de Alarme Exato", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            "Para garantir que os alarmes disparem na hora exata, o Android requer uma permissão especial. Por favor, ative-a na próxima tela.",
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
-        )
+        Text("Para garantir que os alarmes disparem na hora certa, o Android requer uma permissão especial. Por favor, ative-a na próxima tela.", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(24.dp))
-        Button(onClick = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                context.startActivity(intent)
-            }
-        }) {
-            Text("Conceder Permissão de Alarme")
-        }
+        Button(onClick = { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) context.startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)) }) { Text("Conceder Permissão") }
         Spacer(modifier = Modifier.height(8.dp))
-        // Botão para o usuário forçar a verificação após conceder a permissão.
-        TextButton(onClick = onAlreadyAuthorizedClick) {
-            Text("Já autorizei, continuar")
-        }
+        TextButton(onClick = onAlreadyAuthorizedClick) { Text("Já autorizei, continuar") }
     }
 }
 
+@Composable
+fun FullScreenIntentPermissionScreen(onAlreadyAuthorizedClick: () -> Unit) {
+    val context = LocalContext.current
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Permissão de Tela Cheia", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("Para mostrar o alarme sobre a tela de bloqueio, como um despertador, o app precisa de uma permissão final. Por favor, ative-a na tela de configurações.", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) context.startActivity(Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${context.packageName}"))) }) { Text("Abrir Configurações") }
+        Spacer(modifier = Modifier.height(8.dp))
+        TextButton(onClick = onAlreadyAuthorizedClick) { Text("Já autorizei, continuar") }
+    }
+}
 
 @Composable
-fun AlarmsToggleRow(alarmsEnabled: Boolean, onToggle: (Boolean) -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+fun AlarmsToggleRow(modifier: Modifier = Modifier, alarmsEnabled: Boolean, onToggle: (Boolean) -> Unit) {
+    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
         Text("Ativar alarmes para eventos", style = MaterialTheme.typography.titleMedium)
         Switch(checked = alarmsEnabled, onCheckedChange = onToggle)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventCard(event: Event, isGloballyEnabled: Boolean, onToggle: (Boolean) -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+fun EventCard(event: Event, isGloballyEnabled: Boolean, onToggle: (Boolean) -> Unit, onEventClick: () -> Unit) {
+    Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), onClick = onEventClick) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = event.title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = formatMillisToDateTime(event.startTime), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(text = formatMillisToTime(event.startTime), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Switch(
-                checked = event.isAlarmEnabled,
-                onCheckedChange = onToggle,
-                enabled = isGloballyEnabled
-            )
+            Switch(checked = event.isAlarmEnabled, onCheckedChange = onToggle, enabled = isGloballyEnabled)
         }
     }
 }
 
-fun formatMillisToDateTime(millis: Long): String {
-    val sdf = SimpleDateFormat("dd/MM/yyyy 'às' HH:mm", Locale.getDefault())
-    return sdf.format(Date(millis))
+fun formatMillisToTime(millis: Long): String {
+    val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return "Às " + sdf.format(Date(millis))
 }
 

@@ -10,52 +10,69 @@ import digital.tonima.kairos.repository.CalendarRepository
 import digital.tonima.kairos.service.EventAlarmScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.YearMonth
+
+data class EventScreenUiState(
+    val events: List<Event> = emptyList(),
+    val isGlobalAlarmEnabled: Boolean = true,
+    val isRefreshing: Boolean = false,
+    val selectedDate: LocalDate = LocalDate.now(),
+    val currentMonth: YearMonth = YearMonth.now()
+)
 
 class EventViewModel(private val application: Application) : AndroidViewModel(application) {
 
     private val repository = CalendarRepository(application)
     private val scheduler = EventAlarmScheduler(application)
 
-    private val _events = MutableStateFlow<List<Event>>(emptyList())
-    val events = _events.asStateFlow()
+    private val _uiState = MutableStateFlow(EventScreenUiState())
+    val uiState = _uiState.asStateFlow()
 
     private val sharedPreferences = application.getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
     private val KEY_GLOBAL_ALARMS_ENABLED = "global_alarms_enabled"
     private val KEY_DISABLED_EVENT_IDS = "disabled_event_ids"
 
-    private val _alarmsEnabled = MutableStateFlow(false)
-    val alarmsEnabled = _alarmsEnabled.asStateFlow()
-
     init {
-        _alarmsEnabled.value = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
+        val initialGlobalState = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
+        _uiState.update { it.copy(isGlobalAlarmEnabled = initialGlobalState) }
     }
 
-    fun loadEvents() {
+    fun onMonthChanged(yearMonth: YearMonth, forceRefresh: Boolean = false) {
+        if (!forceRefresh && yearMonth == _uiState.value.currentMonth) return
+
         viewModelScope.launch {
-            val calendarEvents = repository.getEvents()
+            _uiState.update { it.copy(isRefreshing = true, currentMonth = yearMonth) }
+
+            val calendarEvents = repository.getEventsForMonth(yearMonth)
             val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet()) ?: emptySet()
 
-            _events.value = calendarEvents.map { event ->
-                // Um ID único para cada instância de evento (importante para eventos recorrentes)
+            val updatedEvents = calendarEvents.map { event ->
                 val uniqueId = "${event.id}_${event.startTime}"
-                // O alarme do evento está ativo se seu ID não estiver na lista de desativados.
                 event.copy(isAlarmEnabled = !disabledIds.contains(uniqueId))
             }
 
-            // Se o botão global estiver ativo, agenda os alarmes para todos os eventos marcados como ativos.
-            if (_alarmsEnabled.value) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    events = updatedEvents,
+                    isRefreshing = false
+                )
+            }
+
+            if (_uiState.value.isGlobalAlarmEnabled) {
                 scheduleAllEnabledAlarms()
             }
         }
     }
 
-    /**
-     * Chamado quando o botão global de ativar/desativar alarmes é tocado.
-     */
+    fun onDateSelected(date: LocalDate) {
+        _uiState.update { it.copy(selectedDate = date) }
+    }
+
     fun onAlarmsToggle(isEnabled: Boolean) {
-        _alarmsEnabled.value = isEnabled
-        // Salva o estado do botão global
+        _uiState.update { it.copy(isGlobalAlarmEnabled = isEnabled) }
         sharedPreferences.edit {
             putBoolean(KEY_GLOBAL_ALARMS_ENABLED, isEnabled)
         }
@@ -67,11 +84,7 @@ class EventViewModel(private val application: Application) : AndroidViewModel(ap
         }
     }
 
-    /**
-     * Chamado quando o botão de um evento individual é tocado.
-     */
     fun onEventAlarmToggle(event: Event, isEnabled: Boolean) {
-        // 1. Atualiza o estado salvo para este evento específico.
         val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet())?.toMutableSet() ?: mutableSetOf()
         val uniqueId = "${event.id}_${event.startTime}"
 
@@ -84,17 +97,18 @@ class EventViewModel(private val application: Application) : AndroidViewModel(ap
             putStringSet(KEY_DISABLED_EVENT_IDS, disabledIds)
         }
 
-        // 2. Atualiza a lista na UI para refletir a mudança visualmente.
-        _events.value = _events.value.map {
-            if (it.id == event.id && it.startTime == event.startTime) {
-                it.copy(isAlarmEnabled = isEnabled)
-            } else {
-                it
+        _uiState.update { currentState ->
+            val updatedEvents = currentState.events.map {
+                if (it.id == event.id && it.startTime == event.startTime) {
+                    it.copy(isAlarmEnabled = isEnabled)
+                } else {
+                    it
+                }
             }
+            currentState.copy(events = updatedEvents)
         }
 
-        // 3. Agenda ou cancela o alarme para este evento, mas somente se o botão global estiver ativo.
-        if (_alarmsEnabled.value) {
+        if (_uiState.value.isGlobalAlarmEnabled) {
             if (isEnabled) {
                 scheduler.schedule(event)
             } else {
@@ -106,7 +120,7 @@ class EventViewModel(private val application: Application) : AndroidViewModel(ap
 
     private fun scheduleAllEnabledAlarms() {
         viewModelScope.launch {
-            _events.value.filter { it.isAlarmEnabled }.forEach { event ->
+            _uiState.value.events.filter { it.isAlarmEnabled }.forEach { event ->
                 scheduler.schedule(event)
             }
         }
@@ -114,7 +128,7 @@ class EventViewModel(private val application: Application) : AndroidViewModel(ap
 
     private fun cancelAllAlarms() {
         viewModelScope.launch {
-            _events.value.forEach { event ->
+            _uiState.value.events.forEach { event ->
                 scheduler.cancel(event)
             }
         }

@@ -10,6 +10,8 @@ activityCompose = "1.11.0"
 composeBom = "2025.09.00"
 accompanist="0.37.3"
 spotless = "7.2.1"
+material1="1.9.1"
+compose-calendar = "2.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,8 +27,10 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "material1" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+androidx-compose-calendar = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "compose-calendar" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

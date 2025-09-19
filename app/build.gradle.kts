@@ -11,10 +11,10 @@ android {
 
     defaultConfig {
         applicationId = "digital.tonima.kairos"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,12 +29,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+    kotlin { jvmToolchain(21) }
     buildFeatures {
         compose = true
     }
@@ -49,7 +47,9 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.calendar)
     implementation(libs.accompanist.permissions)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

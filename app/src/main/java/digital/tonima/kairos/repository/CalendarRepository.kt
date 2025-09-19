@@ -1,57 +1,63 @@
 package digital.tonima.kairos.repository
 
-import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.provider.CalendarContract
 import digital.tonima.kairos.model.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.Calendar
+import java.time.YearMonth
+import java.time.ZoneId
 
 class CalendarRepository(private val context: Context) {
 
-    @SuppressLint("MissingPermission")
-    suspend fun getEvents(): List<Event> = withContext(Dispatchers.IO) {
-        val eventList = mutableListOf<Event>()
+    private val eventProjection: Array<String> = arrayOf(
+        CalendarContract.Instances.EVENT_ID,
+        CalendarContract.Instances.TITLE,
+        CalendarContract.Instances.BEGIN
+    )
 
-        val projection = arrayOf(
-            CalendarContract.Instances.EVENT_ID,
-            CalendarContract.Instances.TITLE,
-            CalendarContract.Instances.BEGIN
-        )
+    private val PROJECTION_ID_INDEX = 0
+    private val PROJECTION_TITLE_INDEX = 1
+    private val PROJECTION_BEGIN_INDEX = 2
 
-        val beginTime = Calendar.getInstance()
-        val endTime = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 30) } // Busca eventos dos próximos 30 dias
+    /**
+     * Busca todos os eventos para um mês específico.
+     * Esta função é otimizada para buscar apenas os dados necessários para o mês visível.
+     */
+    suspend fun getEventsForMonth(yearMonth: YearMonth): List<Event> = withContext(Dispatchers.IO) {
+        val events = mutableListOf<Event>()
 
-        val uriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon()
-        ContentUris.appendId(uriBuilder, beginTime.timeInMillis)
-        ContentUris.appendId(uriBuilder, endTime.timeInMillis)
+        // Define o período de tempo para o mês inteiro
+        val startMillis = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endMillis = yearMonth.atEndOfMonth().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
+        // URI para consultar as "instâncias" de eventos, que expande eventos recorrentes.
+        val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+        ContentUris.appendId(builder, startMillis)
+        ContentUris.appendId(builder, endMillis)
+        val uri = builder.build()
+
+        // Executa a consulta em uma thread de background (garantido pelo withContext)
         val cursor = context.contentResolver.query(
-            uriBuilder.build(),
-            projection,
+            uri,
+            eventProjection,
+            null, // A seleção é feita pela URI
             null,
-            null,
-            CalendarContract.Instances.BEGIN + " ASC"
+            "${CalendarContract.Instances.BEGIN} ASC" // Ordena por data de início
         )
 
         cursor?.use {
-            val idColumn = it.getColumnIndexOrThrow(CalendarContract.Instances.EVENT_ID)
-            val titleColumn = it.getColumnIndexOrThrow(CalendarContract.Instances.TITLE)
-            val beginColumn = it.getColumnIndexOrThrow(CalendarContract.Instances.BEGIN)
-
             while (it.moveToNext()) {
-                val id = it.getLong(idColumn)
-                val title = it.getString(titleColumn)
-                val begin = it.getLong(beginColumn)
+                val eventId = it.getLong(PROJECTION_ID_INDEX)
+                val title = it.getString(PROJECTION_TITLE_INDEX)
+                val begin = it.getLong(PROJECTION_BEGIN_INDEX)
 
-                if (!title.isNullOrEmpty()) {
-                    eventList.add(Event(id = id, title = title, startTime = begin))
-                }
+                events.add(Event(id = eventId, title = title, startTime = begin))
             }
         }
-        return@withContext eventList
+
+        return@withContext events
     }
 }
 
