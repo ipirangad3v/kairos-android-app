@@ -23,7 +23,7 @@ class EventAlarmScheduler(private val context: Context) {
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
-                event.startTime.toInt(),
+                event.uniqueIntentId,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
@@ -40,7 +40,7 @@ class EventAlarmScheduler(private val context: Context) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            event.startTime.toInt(),
+            event.uniqueIntentId,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

@@ -28,23 +28,20 @@ class CalendarRepository(private val context: Context) {
     suspend fun getEventsForMonth(yearMonth: YearMonth): List<Event> = withContext(Dispatchers.IO) {
         val events = mutableListOf<Event>()
 
-        // Define o período de tempo para o mês inteiro
         val startMillis = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         val endMillis = yearMonth.atEndOfMonth().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
-        // URI para consultar as "instâncias" de eventos, que expande eventos recorrentes.
         val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
         ContentUris.appendId(builder, startMillis)
         ContentUris.appendId(builder, endMillis)
         val uri = builder.build()
 
-        // Executa a consulta em uma thread de background (garantido pelo withContext)
         val cursor = context.contentResolver.query(
             uri,
             eventProjection,
-            null, // A seleção é feita pela URI
             null,
-            "${CalendarContract.Instances.BEGIN} ASC" // Ordena por data de início
+            null,
+            "${CalendarContract.Instances.BEGIN} ASC"
         )
 
         cursor?.use {

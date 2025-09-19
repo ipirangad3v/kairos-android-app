@@ -23,7 +23,7 @@ data class EventScreenUiState(
     val currentMonth: YearMonth = YearMonth.now()
 )
 
-class EventViewModel(private val application: Application) : AndroidViewModel(application) {
+class EventViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = CalendarRepository(application)
     private val scheduler = EventAlarmScheduler(application)

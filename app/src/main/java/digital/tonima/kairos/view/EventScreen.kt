@@ -99,7 +99,6 @@ fun EventScreen(viewModel: EventViewModel) {
         if (!standardPermissionState.allPermissionsGranted) standardPermissionState.launchMultiplePermissionRequest()
     }
 
-    // Permissão de Alarme Exato
     val hasExactAlarmPermission = remember { mutableStateOf(true) }
     val checkExactAlarmPermission = {
         hasExactAlarmPermission.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -109,7 +108,6 @@ fun EventScreen(viewModel: EventViewModel) {
     }
     LaunchedEffect(Unit) { checkExactAlarmPermission() }
 
-    // Nova Permissão de Full Screen Intent (Android 14+)
     val hasFullScreenIntentPermission = remember { mutableStateOf(true) }
     val checkFullScreenIntentPermission = {
         hasFullScreenIntentPermission.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
