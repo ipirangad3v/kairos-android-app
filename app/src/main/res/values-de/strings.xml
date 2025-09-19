@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kairós</string>
+    <string name="google_calendar_not_found">Google Kalender nicht gefunden</string>
+    <string name="open_calendar">Kalender öffnen</string>
+    <string name="cannot_open_event">Ereignis konnte nicht geöffnet werden</string>
+    <string name="no_events_found_for_this_day">Keine Ereignisse für das ausgewählte Datum.</string>
+    <string name="initial_permissions_required">Anfängliche Berechtigungen erforderlich</string>
+    <string name="permissions_disclaimer">Damit die App funktioniert, benötigt sie Zugriff auf Ihren Kalender und die Berechtigung, Benachrichtigungen zu senden.</string>
+    <string name="open_settings">Einstellungen öffnen</string>
+    <string name="try_again">Erneut versuchen</string>
+    <string name="exact_alarm_permission">Genaue Alarmberechtigung</string>
+    <string name="exact_alarm_permission_disclaimer">Um sicherzustellen, dass Alarme zur richtigen Zeit ausgelöst werden, benötigt Android eine spezielle Berechtigung. Bitte aktivieren Sie sie auf dem nächsten Bildschirm.</string>
+    <string name="provide_permission">Berechtigung erteilen</string>
+    <string name="already_authorized">Bereits autorisiert, weiter</string>
+    <string name="full_screen_permission">Vollbild-Berechtigung</string>
+    <string name="full_screen_permission_disclaimer">Um den Alarm über dem Sperrbildschirm wie einen Wecker anzuzeigen, benötigt die App eine endgültige Berechtigung. Bitte aktivieren Sie sie im Einstellungsbildschirm.</string>
+    <string name="activate_event_alarms">Alarme für Ereignisse aktivieren</string>
+    <string name="at_time">Um %1$s</string>
+    <string name="commitment">Verpflichtung</string>
+    <string name="event_alarm">Ereignisalarm</string>
+    <string name="stop">STOPP</string>
+    <string name="notification_description">Benachrichtigungen für Kalenderereignisse</string>
+    <string name="upcoming_event">Anstehendes Ereignis</string>
 </resources>

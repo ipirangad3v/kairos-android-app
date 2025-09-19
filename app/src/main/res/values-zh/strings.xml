@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kairós</string>
+    <string name="google_calendar_not_found">找不到谷歌日历</string>
+    <string name="open_calendar">打开日历</string>
+    <string name="cannot_open_event">无法打开事件</string>
+    <string name="no_events_found_for_this_day">所选日期没有活动。</string>
+    <string name="initial_permissions_required">需要初始权限</string>
+    <string name="permissions_disclaimer">为使应用正常工作，它需要访问您的日历和发送通知的权限。</string>
+    <string name="open_settings">打开设置</string>
+    <string name="try_again">重试</string>
+    <string name="exact_alarm_permission">精确闹钟权限</string>
+    <string name="exact_alarm_permission_disclaimer">为确保闹钟在正确的时间响起，Android 需要一项特殊权限。请在下一个屏幕上启用它。</string>
+    <string name="provide_permission">授予权限</string>
+    <string name="already_authorized">已授权，继续</string>
+    <string name="full_screen_permission">全屏权限</string>
+    <string name="full_screen_permission_disclaimer">要像闹钟一样在锁定屏幕上显示警报，该应用需要最终权限。请在设置屏幕上启用它。</string>
+    <string name="activate_event_alarms">激活事件闹钟</string>
+    <string name="at_time">在 %1$s</string>
+    <string name="commitment">承诺</string>
+    <string name="event_alarm">事件闹钟</string>
+    <string name="stop">停止</string>
+    <string name="notification_description">日历事件的通知</string>
+    <string name="upcoming_event">即将开始的活动</string>
 </resources>

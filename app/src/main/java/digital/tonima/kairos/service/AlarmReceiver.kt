@@ -20,7 +20,8 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        val eventTitle = intent.getStringExtra(EXTRA_EVENT_TITLE) ?: "Compromisso"
+        val eventTitle =
+            intent.getStringExtra(EXTRA_EVENT_TITLE) ?: context.getString(R.string.commitment)
         val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, 0)
 
         createNotificationChannel(context)
@@ -39,7 +40,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Evento Próximo")
+            .setContentTitle(context.getString(R.string.upcoming_event))
             .setContentText(eventTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -56,8 +57,8 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun createNotificationChannel(context: Context) {
-        val name = "Alarmes de Calendário"
-        val descriptionText = "Notificações para eventos da agenda"
+        val name = context.getString(R.string.event_alarm)
+        val descriptionText = context.getString(R.string.notification_description)
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
             description = descriptionText

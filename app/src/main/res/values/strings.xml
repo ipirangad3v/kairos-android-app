@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name" translatable="false">Kairós</string>
+    <string name="google_calendar_not_found">Google Calendar não encontrado</string>
+    <string name="open_calendar">Abrir Calendário</string>
+    <string name="cannot_open_event">Não foi possível abrir o evento</string>
+    <string name="no_events_found_for_this_day">Nenhum evento para a data selecionada.</string>
+    <string name="initial_permissions_required">Permissões Iniciais Necessárias</string>
+    <string name="permissions_disclaimer">Para funcionar, o aplicativo precisa de acesso à sua agenda e permissão para enviar notificações.</string>
+    <string name="open_settings">Abrir Configurações</string>
+    <string name="try_again">Tentar Novamente</string>
+    <string name="exact_alarm_permission">Permissão de Alarme Exato</string>
+    <string name="exact_alarm_permission_disclaimer">Para garantir que os alarmes disparem na hora certa, o Android requer uma permissão especial. Por favor, ative-a na próxima tela.</string>
+    <string name="provide_permission">Conceder Permissão</string>
+    <string name="already_authorized">Já autorizei, continuar</string>
+    <string name="full_screen_permission">Permissão de Tela Cheia</string>
+    <string name="full_screen_permission_disclaimer">Para mostrar o alarme sobre a tela de bloqueio, como um despertador, o app precisa de uma permissão final. Por favor, ative-a na tela de configurações.</string>
+    <string name="activate_event_alarms">Ativar alarmes para eventos</string>
+    <string name="at_time">Às %1$s</string>
+    <string name="commitment">Compromisso</string>
+    <string name="event_alarm">Alarme de Evento</string>
+    <string name="stop">PARAR</string>
+    <string name="notification_description">Notificações para eventos da agenda</string>
+    <string name="upcoming_event">Evento Próximo</string>
 </resources>

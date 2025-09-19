@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import digital.tonima.kairos.R
 import digital.tonima.kairos.service.AlarmReceiver
 
 class AlarmActivity : ComponentActivity() {
@@ -28,7 +30,7 @@ class AlarmActivity : ComponentActivity() {
         setShowWhenLocked(true)
         setTurnScreenOn(true)
 
-        val eventTitle = intent.getStringExtra(AlarmReceiver.EXTRA_EVENT_TITLE) ?: "Compromisso"
+        val eventTitle = intent.getStringExtra(AlarmReceiver.EXTRA_EVENT_TITLE) ?: getString(R.string.commitment)
 
         try {
             val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
@@ -67,7 +69,7 @@ fun AlarmScreen(eventTitle: String, onDismiss: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Alarme de Evento",
+            text = stringResource(R.string.event_alarm),
             fontSize = 24.sp,
             style = MaterialTheme.typography.headlineMedium
         )
@@ -83,7 +85,7 @@ fun AlarmScreen(eventTitle: String, onDismiss: () -> Unit) {
                 .fillMaxWidth()
                 .height(60.dp)
         ) {
-            Text(text = "PARAR", fontSize = 20.sp)
+            Text(text = stringResource(R.string.stop), fontSize = 20.sp)
         }
     }
 }

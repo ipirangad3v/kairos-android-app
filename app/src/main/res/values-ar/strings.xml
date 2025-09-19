@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kairós</string>
+    <string name="google_calendar_not_found">لم يتم العثور على تقويم جوجل</string>
+    <string name="open_calendar">فتح التقويم</string>
+    <string name="cannot_open_event">لا يمكن فتح الحدث</string>
+    <string name="no_events_found_for_this_day">لا توجد أحداث للتاريخ المحدد.</string>
+    <string name="initial_permissions_required">الأذونات الأولية مطلوبة</string>
+    <string name="permissions_disclaimer">لكي يعمل التطبيق، يحتاج إلى الوصول إلى تقويمك وإذن لإرسال الإشعارات.</string>
+    <string name="open_settings">فتح الإعدادات</string>
+    <string name="try_again">حاول مرة أخرى</string>
+    <string name="exact_alarm_permission">إذن التنبيه الدقيق</string>
+    <string name="exact_alarm_permission_disclaimer">لضمان انطلاق التنبيهات في الوقت المحدد، يتطلب أندرويد إذنًا خاصًا. يرجى تفعيله في الشاشة التالية.</string>
+    <string name="provide_permission">منح الإذن</string>
+    <string name="already_authorized">لقد أذنت بالفعل، متابعة</string>
+    <string name="full_screen_permission">إذن ملء الشاشة</string>
+    <string name="full_screen_permission_disclaimer">لعرض التنبيه فوق شاشة القفل، مثل المنبه، يحتاج التطبيق إلى إذن نهائي. يرجى تفعيله في شاشة الإعدادات.</string>
+    <string name="activate_event_alarms">تفعيل التنبيهات للأحداث</string>
+    <string name="at_time">الساعة %1$s</string>
+    <string name="commitment">التزام</string>
+    <string name="event_alarm">تنبيه الحدث</string>
+    <string name="stop">إيقاف</string>
+    <string name="notification_description">إشعارات لأحداث التقويم</string>
+    <string name="upcoming_event">حدث قادم</string>
 </resources>

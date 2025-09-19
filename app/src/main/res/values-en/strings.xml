@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kairós</string>
+    <string name="google_calendar_not_found">Google Calendar not found</string>
+    <string name="open_calendar">Open Calendar</string>
+    <string name="cannot_open_event">Could not open event</string>
+    <string name="no_events_found_for_this_day">No events for the selected date.</string>
+    <string name="initial_permissions_required">Initial Permissions Required</string>
+    <string name="permissions_disclaimer">For the app to work, it needs access to your calendar and permission to send notifications.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="try_again">Try Again</string>
+    <string name="exact_alarm_permission">Exact Alarm Permission</string>
+    <string name="exact_alarm_permission_disclaimer">To ensure alarms go off at the right time, Android requires a special permission. Please enable it on the next screen.</string>
+    <string name="provide_permission">Grant Permission</string>
+    <string name="already_authorized">Already authorized, continue</string>
+    <string name="full_screen_permission">Full Screen Permission</string>
+    <string name="full_screen_permission_disclaimer">To show the alarm over the lock screen like a wake-up alarm, the app needs a final permission. Please enable it on the settings screen.</string>
+    <string name="activate_event_alarms">Activate alarms for events</string>
+    <string name="at_time">At %1$s</string>
+    <string name="commitment">Commitment</string>
+    <string name="event_alarm">Event Alarm</string>
+    <string name="stop">STOP</string>
+    <string name="notification_description">Notifications for calendar events</string>
+    <string name="upcoming_event">Upcoming Event</string>
 </resources>
