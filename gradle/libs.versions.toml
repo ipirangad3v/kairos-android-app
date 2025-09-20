@@ -16,6 +16,7 @@ workManager="2.10.4"
 google-services = "4.4.3"
 playServicesAdsApi = "24.6.0"
 firebase-bom = "34.3.0"
+crashlytics = "3.0.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,4 +47,5 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 
