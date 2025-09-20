@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.core.net.toUri
 import digital.tonima.kairos.model.Event
 
 class EventAlarmScheduler(private val context: Context) {
@@ -19,7 +20,10 @@ class EventAlarmScheduler(private val context: Context) {
 
         if (canSchedule) {
             val intent = Intent(context, AlarmReceiver::class.java).apply {
+                action = "com.example.calendaralarm.ALARM_TRIGGER.${event.uniqueIntentId}"
+                data = "kairos://alarm/${event.uniqueIntentId}".toUri()
                 putExtra("EXTRA_EVENT_TITLE", event.title)
+                putExtra("EXTRA_UNIQUE_ID", event.uniqueIntentId)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -37,7 +41,10 @@ class EventAlarmScheduler(private val context: Context) {
     }
 
     fun cancel(event: Event) {
-        val intent = Intent(context, AlarmReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            action = "com.example.calendaralarm.ALARM_TRIGGER.${event.uniqueIntentId}"
+            data = "kairos://alarm/${event.uniqueIntentId}".toUri()
+        }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             event.uniqueIntentId,
@@ -47,4 +54,3 @@ class EventAlarmScheduler(private val context: Context) {
         alarmManager.cancel(pendingIntent)
     }
 }
-

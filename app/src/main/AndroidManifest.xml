@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <queries>
         <package android:name="com.google.android.calendar" />
     </queries>
-
 
     <application
         android:name=".KairosApplication"
@@ -21,28 +22,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Kairos"
-        >
+        tools:targetApi="31">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Kairos">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
+            android:theme="@style/Theme.Kairos"
             android:name=".view.AlarmActivity"
             android:exported="false"
-            android:launchMode="singleTask"
-            android:taskAffinity=""
-            android:theme="@style/Theme.Kairos" />
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:launchMode="singleTask" />
+
         <receiver
             android:name=".service.AlarmReceiver"
+            android:exported="false" />
+
+        <service android:name=".service.AlarmSoundService" />
+        <receiver
+            android:name=".service.AlarmActionReceiver"
             android:exported="false" />
     </application>
 
 </manifest>
+
