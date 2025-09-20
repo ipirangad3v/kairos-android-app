@@ -1,10 +1,12 @@
 package digital.tonima.kairos.viewmodel
 
-import android.app.Application
 import android.content.Context
 import androidx.core.content.edit
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import digital.tonima.kairos.delegates.ProUserProvider
 import digital.tonima.kairos.model.Event
 import digital.tonima.kairos.repository.CalendarRepository
 import digital.tonima.kairos.service.EventAlarmScheduler
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 data class EventScreenUiState(
     val events: List<Event> = emptyList(),
@@ -26,11 +29,13 @@ data class EventScreenUiState(
     val showAutostartSuggestion: Boolean = false
 )
 
-class EventViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = CalendarRepository(application)
-    private val scheduler = EventAlarmScheduler(application)
-
+@HiltViewModel
+class EventViewModel @Inject constructor(
+    proUserProvider: ProUserProvider,
+    @ApplicationContext application: Context,
+    private val repository: CalendarRepository,
+    private val scheduler: EventAlarmScheduler,
+) : ViewModel(), ProUserProvider by proUserProvider {
     private val _uiState = MutableStateFlow(EventScreenUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -121,7 +126,8 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onEventAlarmToggle(event: Event, isEnabled: Boolean) {
-        val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet())?.toMutableSet() ?: mutableSetOf()
+        val disabledIds =
+            sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet())?.toMutableSet() ?: mutableSetOf()
         val eventIdStr = event.uniqueIntentId.toString()
 
         if (isEnabled) {

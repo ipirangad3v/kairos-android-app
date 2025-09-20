@@ -5,23 +5,30 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import digital.tonima.kairos.repository.CalendarRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.time.YearMonth
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**
  * Um trabalhador em background que periodicamente verifica os próximos eventos
  * e agenda os alarmes necessários.
  */
-class AlarmSchedulingWorker(
-    appContext: Context,
-    workerParams: WorkerParameters
+@HiltWorker
+class AlarmSchedulingWorker @AssistedInject constructor(
+    @Assisted appContext: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val repository: CalendarRepository,
+    private val scheduler: EventAlarmScheduler
 ) : CoroutineWorker(appContext, workerParams) {
 
     companion object {
@@ -39,9 +46,6 @@ class AlarmSchedulingWorker(
                 Log.w(TAG, "Permissão READ_CALENDAR não concedida. O Worker não pode continuar.")
                 return@withContext Result.success()
             }
-
-            val repository = CalendarRepository(applicationContext)
-            val scheduler = EventAlarmScheduler(applicationContext)
             val sharedPreferences = applicationContext.getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
 
             val isGlobalAlarmEnabled = sharedPreferences.getBoolean("global_alarms_enabled", true)

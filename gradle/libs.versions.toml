@@ -17,6 +17,12 @@ google-services = "4.4.3"
 playServicesAdsApi = "24.6.0"
 firebase-bom = "34.3.0"
 crashlytics = "3.0.6"
+hilt = "2.57.1"
+hilt-worker="1.3.0"
+hilt-binder = "1.1.3"
+hilt-navigations-compose = "1.3.0"
+ksp = "2.2.20-2.0.3"
+billingKtx = "8.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +46,13 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 play-services-ads-api = { group = "com.google.android.gms", name = "play-services-ads-api", version.ref = "playServicesAdsApi" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-binder = { group = "com.paulrybitskyi", name = "hilt-binder", version.ref = "hilt-binder" }
+hilt-binder-compiler = { group = "com.paulrybitskyi", name = "hilt-binder-compiler", version.ref = "hilt-binder" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigations-compose" }
+hilt-worker = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-worker" }
+billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billingKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -48,4 +61,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

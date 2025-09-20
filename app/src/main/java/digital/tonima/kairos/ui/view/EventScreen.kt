@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.CalendarContract
 import android.provider.Settings
-import android.provider.Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.net.toUri
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -48,11 +47,10 @@ import digital.tonima.kairos.ui.components.FullScreenIntentPermissionScreen
 import digital.tonima.kairos.ui.components.MainContent
 import digital.tonima.kairos.ui.components.StandardPermissionsScreen
 import digital.tonima.kairos.viewmodel.EventViewModel
-import java.time.YearMonth
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun EventScreen(viewModel: EventViewModel) {
+fun EventScreen(viewModel: EventViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 

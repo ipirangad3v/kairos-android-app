@@ -8,6 +8,8 @@ plugins {
   alias(libs.plugins.spotless)
   alias(libs.plugins.google.services)
   alias(libs.plugins.crashlytics)
+  alias(libs.plugins.hilt.android)
+  alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -18,8 +20,8 @@ android {
     applicationId = "digital.tonima.kairos"
     minSdk = 28
     targetSdk = 36
-    versionCode = 9
-    versionName = "1.2.6"
+    versionCode = 10
+    versionName = "1.2.7"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -112,6 +114,15 @@ dependencies {
   debugImplementation(libs.androidx.compose.ui.test.manifest)
   implementation(platform(libs.google.firebase.bom))
   implementation(libs.google.firebase.analytics)
+  implementation(libs.billing.ktx)
+
+  // hilt
+  implementation(libs.hilt.android)
+  implementation(libs.hilt.navigation.compose)
+  ksp(libs.hilt.compiler)
+  implementation(libs.hilt.binder)
+  implementation(libs.hilt.worker)
+  ksp(libs.hilt.binder.compiler)
 }
 
 apply(from = "../spotless.gradle")
