@@ -1,0 +1,8 @@
+# spotless/xml.prefs
+# Arquivo de Preferências do Eclipse para Formatação XML
+eclipse.preferences.version=1
+indentationChar=space
+indentationSize=4
+joinLines=false
+lineWidth=120
+splitMultiAttrs=false

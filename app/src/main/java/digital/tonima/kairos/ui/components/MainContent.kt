@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import digital.tonima.kairos.BuildConfig
 import digital.tonima.kairos.R
 import digital.tonima.kairos.model.Event
 import digital.tonima.kairos.util.openAutostartSettings
@@ -60,6 +61,10 @@ fun MainContent(
             modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
             alarmsEnabled = uiState.isGlobalAlarmEnabled,
             onToggle = onToggle
+        )
+        AdBannerView(
+            adId = BuildConfig.ADMOB_BANNER_AD_UNIT_HOME,
+            isProUser = false
         )
 
         if (uiState.showAutostartSuggestion) {

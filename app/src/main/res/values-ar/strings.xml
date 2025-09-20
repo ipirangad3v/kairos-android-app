@@ -9,11 +9,13 @@
     <string name="open_settings">فتح الإعدادات</string>
     <string name="try_again">حاول مرة أخرى</string>
     <string name="exact_alarm_permission">إذن التنبيه الدقيق</string>
-    <string name="exact_alarm_permission_disclaimer">لضمان انطلاق التنبيهات في الوقت المحدد، يتطلب أندرويد إذنًا خاصًا. يرجى تفعيله في الشاشة التالية.</string>
+    <string name="exact_alarm_permission_disclaimer">لضمان انطلاق التنبيهات في الوقت المحدد، يتطلب أندرويد إذنًا خاصًا. يرجى تفعيله في الشاشة
+        التالية.</string>
     <string name="provide_permission">منح الإذن</string>
     <string name="already_authorized">لقد أذنت بالفعل، متابعة</string>
     <string name="full_screen_permission">إذن ملء الشاشة</string>
-    <string name="full_screen_permission_disclaimer">لعرض التنبيه فوق شاشة القفل، مثل المنبه، يحتاج التطبيق إلى إذن نهائي. يرجى تفعيله في شاشة الإعدادات.</string>
+    <string name="full_screen_permission_disclaimer">لعرض التنبيه فوق شاشة القفل، مثل المنبه، يحتاج التطبيق إلى إذن نهائي. يرجى تفعيله في شاشة
+        الإعدادات.</string>
     <string name="activate_event_alarms">تفعيل التنبيهات للأحداث</string>
     <string name="at_time">الساعة %1$s</string>
     <string name="commitment">التزام</string>
@@ -22,7 +24,8 @@
     <string name="notification_description">إشعارات لأحداث التقويم</string>
     <string name="upcoming_event">حدث قادم</string>
     <string name="autostart_suggestion_title">اقتراح التكوين</string>
-    <string name="autostart_suggestion_disclaimer">لضمان عمل الإنذارات بشكل موثوق بعد إعادة تشغيل الهاتف، نوصي بتمكين "البدء التلقائي" لتطبيق Kairos في إعدادات جهازك.</string>
+    <string name="autostart_suggestion_disclaimer">لضمان عمل الإنذارات بشكل موثوق بعد إعادة تشغيل الهاتف، نوصي بتمكين "البدء التلقائي" لتطبيق
+        Kairos في إعدادات جهازك.</string>
     <string name="dismiss">تجاهل</string>
     <string name="autostart_fallback_toast">تعذر فتح الشاشة المحددة. يرجى البحث عن "البدء التلقائي" أو "مدير البطارية" في الإعدادات.</string>
 </resources>

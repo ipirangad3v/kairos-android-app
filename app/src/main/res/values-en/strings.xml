@@ -9,11 +9,13 @@
     <string name="open_settings">Open Settings</string>
     <string name="try_again">Try Again</string>
     <string name="exact_alarm_permission">Exact Alarm Permission</string>
-    <string name="exact_alarm_permission_disclaimer">To ensure alarms go off at the right time, Android requires a special permission. Please enable it on the next screen.</string>
+    <string name="exact_alarm_permission_disclaimer">To ensure alarms go off at the right time, Android requires a special permission. Please enable
+        it on the next screen.</string>
     <string name="provide_permission">Grant Permission</string>
     <string name="already_authorized">Already authorized, continue</string>
     <string name="full_screen_permission">Full Screen Permission</string>
-    <string name="full_screen_permission_disclaimer">To show the alarm over the lock screen like a wake-up alarm, the app needs a final permission. Please enable it on the settings screen.</string>
+    <string name="full_screen_permission_disclaimer">To show the alarm over the lock screen like a wake-up alarm, the app needs a final permission.
+        Please enable it on the settings screen.</string>
     <string name="activate_event_alarms">Activate alarms for events</string>
     <string name="at_time">At %1$s</string>
     <string name="commitment">Commitment</string>
@@ -22,7 +24,9 @@
     <string name="notification_description">Notifications for calendar events</string>
     <string name="upcoming_event">Upcoming Event</string>
     <string name="autostart_suggestion_title">Configuration Suggestion</string>
-    <string name="autostart_suggestion_disclaimer">To ensure alarms work reliably after restarting the phone, we recommend enabling "Autostart" for Kairos in your device\'s settings.</string>
+    <string name="autostart_suggestion_disclaimer">To ensure alarms work reliably after restarting the phone, we recommend enabling "Autostart" for
+        Kairos in your device\'s settings.</string>
     <string name="dismiss">Dismiss</string>
-    <string name="autostart_fallback_toast">Could not open the specific screen. Please search for "Autostart" or "Battery Manager" in the settings.</string>
+    <string name="autostart_fallback_toast">Could not open the specific screen. Please search for "Autostart" or "Battery Manager" in the
+        settings.</string>
 </resources>

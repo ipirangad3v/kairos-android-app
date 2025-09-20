@@ -9,11 +9,13 @@
     <string name="open_settings">सेटिंग्स खोलें</string>
     <string name="try_again">पुनः प्रयास करें</string>
     <string name="exact_alarm_permission">सटीक अलार्म की अनुमति</string>
-    <string name="exact_alarm_permission_disclaimer">यह सुनिश्चित करने के लिए कि अलार्म सही समय पर बजें, एंड्रॉइड को एक विशेष अनुमति की आवश्यकता है। कृपया इसे अगली स्क्रीन पर सक्षम करें।</string>
+    <string name="exact_alarm_permission_disclaimer">यह सुनिश्चित करने के लिए कि अलार्म सही समय पर बजें, एंड्रॉइड को एक विशेष अनुमति की आवश्यकता है।
+        कृपया इसे अगली स्क्रीन पर सक्षम करें।</string>
     <string name="provide_permission">अनुमति दें</string>
     <string name="already_authorized">पहले से अधिकृत, जारी रखें</string>
     <string name="full_screen_permission">पूर्ण स्क्रीन की अनुमति</string>
-    <string name="full_screen_permission_disclaimer">अलार्म को वेक-अप अलार्म की तरह लॉक स्क्रीन पर दिखाने के लिए, ऐप को एक अंतिम अनुमति की आवश्यकता है। कृपया इसे सेटिंग्स स्क्रीन पर सक्षम करें।</string>
+    <string name="full_screen_permission_disclaimer">अलार्म को वेक-अप अलार्म की तरह लॉक स्क्रीन पर दिखाने के लिए, ऐप को एक अंतिम अनुमति की आवश्यकता
+        है। कृपया इसे सेटिंग्स स्क्रीन पर सक्षम करें।</string>
     <string name="activate_event_alarms">ईवेंट के लिए अलार्म सक्रिय करें</string>
     <string name="at_time">%1$s पर</string>
     <string name="commitment">प्रतिबद्धता</string>
@@ -22,7 +24,8 @@
     <string name="notification_description">कैलेंडर ईवेंट के लिए सूचनाएं</string>
     <string name="upcoming_event">आगामी कार्यक्रम</string>
     <string name="autostart_suggestion_title">कॉन्फ़िगरेशन सुझाव</string>
-    <string name="autostart_suggestion_disclaimer">यह सुनिश्चित करने के लिए कि फ़ोन को पुनरारंभ करने के बाद अलार्म विश्वसनीय रूप से काम करें, हम आपके डिवाइस की सेटिंग्स में Kairos के लिए "ऑटोस्टार्ट" सक्षम करने की सलाह देते हैं।</string>
+    <string name="autostart_suggestion_disclaimer">यह सुनिश्चित करने के लिए कि फ़ोन को पुनरारंभ करने के बाद अलार्म विश्वसनीय रूप से काम करें, हम
+        आपके डिवाइस की सेटिंग्स में Kairos के लिए "ऑटोस्टार्ट" सक्षम करने की सलाह देते हैं।</string>
     <string name="dismiss">खारिज करें</string>
     <string name="autostart_fallback_toast">विशिष्ट स्क्रीन नहीं खुल सकी। कृपया सेटिंग्स में "ऑटोस्टार्ट" या "बैटरी मैनेजर" खोजें।</string>
 </resources>

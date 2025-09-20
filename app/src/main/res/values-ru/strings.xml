@@ -9,11 +9,13 @@
     <string name="open_settings">Открыть настройки</string>
     <string name="try_again">Попробовать снова</string>
     <string name="exact_alarm_permission">Разрешение на точные будильники</string>
-    <string name="exact_alarm_permission_disclaimer">Чтобы будильники срабатывали в нужное время, Android требует специальное разрешение. Пожалуйста, включите его на следующем экране.</string>
+    <string name="exact_alarm_permission_disclaimer">Чтобы будильники срабатывали в нужное время, Android требует специальное разрешение. Пожалуйста,
+        включите его на следующем экране.</string>
     <string name="provide_permission">Предоставить разрешение</string>
     <string name="already_authorized">Уже разрешено, продолжить</string>
     <string name="full_screen_permission">Разрешение на полноэкранный режим</string>
-    <string name="full_screen_permission_disclaimer">Чтобы показывать будильник поверх экрана блокировки, как обычный будильник, приложению требуется окончательное разрешение. Пожалуйста, включите его на экране настроек.</string>
+    <string name="full_screen_permission_disclaimer">Чтобы показывать будильник поверх экрана блокировки, как обычный будильник, приложению требуется
+        окончательное разрешение. Пожалуйста, включите его на экране настроек.</string>
     <string name="activate_event_alarms">Активировать будильники для событий</string>
     <string name="at_time">В %1$s</string>
     <string name="commitment">Обязательство</string>
@@ -22,7 +24,9 @@
     <string name="notification_description">Уведомления о событиях календаря</string>
     <string name="upcoming_event">Предстоящее событие</string>
     <string name="autostart_suggestion_title">Предложение по настройке</string>
-    <string name="autostart_suggestion_disclaimer">Чтобы обеспечить надежную работу будильников после перезагрузки телефона, мы рекомендуем включить «Автозапуск» для Kairos в настройках вашего устройства.</string>
+    <string name="autostart_suggestion_disclaimer">Чтобы обеспечить надежную работу будильников после перезагрузки телефона, мы рекомендуем
+        включить «Автозапуск» для Kairos в настройках вашего устройства.</string>
     <string name="dismiss">Отклонить</string>
-    <string name="autostart_fallback_toast">Не удалось открыть указанный экран. Пожалуйста, найдите «Автозапуск» или «Диспетчер батареи» в настройках.</string>
+    <string name="autostart_fallback_toast">Не удалось открыть указанный экран. Пожалуйста, найдите «Автозапуск» или «Диспетчер батареи» в
+        настройках.</string>
 </resources>

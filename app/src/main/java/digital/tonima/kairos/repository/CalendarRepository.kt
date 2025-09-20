@@ -57,4 +57,3 @@ class CalendarRepository(private val context: Context) {
         return@withContext events
     }
 }
-

@@ -84,4 +84,3 @@ class AlarmActivity : ComponentActivity() {
         stopService(Intent(this, AlarmSoundService::class.java))
     }
 }
-

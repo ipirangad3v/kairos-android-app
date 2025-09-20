@@ -1,0 +1,60 @@
+// spotless.gradle
+
+spotless {
+    // Configuração para arquivos Kotlin
+    kotlin {
+        // Inclui todos os arquivos .kt e .kts
+        target '**/*.kt', '**/*.kts'
+
+        // Exclui arquivos no diretório de build
+        targetExclude("$layout.buildDirectory/**/*.kt", "$layout.buildDirectory/**/*.kts")
+
+        // Utiliza o ktlint com a versão mais recente e o estilo do Android
+        ktlint().setEditorConfigPath("$rootDir/.editorconfig")
+
+        // Adiciona um cabeçalho de licença, se desejado
+        // licenseHeaderFile rootProject.file('spotless/copyright.kt')
+
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    // Configuração para arquivos Java
+    java {
+        target '**/*.java'
+        targetExclude("$layout.buildDirectory/**/*.java")
+
+        // Utiliza o formatador do Google para Java
+        googleJavaFormat()
+
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    // Configuração para arquivos XML
+    format 'xml', {
+        target '**/*.xml'
+        targetExclude('**/build/**/*.xml')
+
+        // Utiliza o formatador Eclipse WTP para XML
+        eclipseWtp('xml').configFile(rootProject.file('spotless/xml.prefs'))
+
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts") // Alvo: APENAS arquivos .gradle.kts
+        ktfmt()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    groovyGradle {
+        target("*.gradle")
+        greclipse()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}

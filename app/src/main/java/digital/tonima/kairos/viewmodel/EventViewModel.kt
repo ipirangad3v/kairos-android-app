@@ -161,4 +161,3 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }
-

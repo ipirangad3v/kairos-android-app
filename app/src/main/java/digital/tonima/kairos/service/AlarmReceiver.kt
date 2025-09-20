@@ -65,4 +65,3 @@ class AlarmReceiver : BroadcastReceiver() {
         notificationManager.notify(uniqueId, notification)
     }
 }
-
