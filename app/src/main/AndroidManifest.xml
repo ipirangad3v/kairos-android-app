@@ -34,7 +34,7 @@
         </activity>
         <activity
             android:theme="@style/Theme.Kairos"
-            android:name=".view.AlarmActivity"
+            android:name=".ui.view.AlarmActivity"
             android:exported="false"
             android:showOnLockScreen="true"
             android:turnScreenOn="true"

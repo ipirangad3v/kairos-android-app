@@ -1,0 +1,171 @@
+package digital.tonima.kairos.ui.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.compose.HorizontalCalendar
+import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.DayPosition
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import digital.tonima.kairos.model.Event
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
+
+@Composable
+fun CalendarView(
+    currentMonth: YearMonth,
+    selectedDate: LocalDate,
+    eventsByDate: Map<LocalDate, List<Event>>,
+    onMonthChanged: (YearMonth) -> Unit,
+    onDateSelected: (LocalDate) -> Unit
+) {
+    val startMonth = remember { currentMonth.minusMonths(100) }
+    val endMonth = remember { currentMonth.plusMonths(100) }
+    val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
+    val state = rememberCalendarState(
+        startMonth = startMonth,
+        endMonth = endMonth,
+        firstVisibleMonth = currentMonth,
+        firstDayOfWeek = firstDayOfWeek
+    )
+    LaunchedEffect(state.firstVisibleMonth.yearMonth) { onMonthChanged(state.firstVisibleMonth.yearMonth) }
+    Column {
+        MonthHeader(month = state.firstVisibleMonth.yearMonth)
+        HorizontalCalendar(
+            state = state,
+            dayContent = { day ->
+                Day(
+                    day = day,
+                    isSelected = selectedDate == day.date,
+                    hasEvents = eventsByDate.containsKey(day.date)
+                ) { onDateSelected(it.date) }
+            },
+            monthHeader = {
+                DaysOfWeekHeader(
+                    daysOfWeek = it.weekDays.first().map { it.date.dayOfWeek })
+            }
+        )
+    }
+}
+
+@Composable
+private fun MonthHeader(month: YearMonth) {
+    val locale = Locale.getDefault()
+    val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
+    Text(
+        text = month.format(formatter).replaceFirstChar { it.titlecase(locale) },
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
+}
+
+@Composable
+private fun DaysOfWeekHeader(daysOfWeek: List<DayOfWeek>) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        val locale = Locale.getDefault()
+        for (dayOfWeek in daysOfWeek) {
+            Text(
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, locale),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+}
+
+@Composable
+private fun Day(
+    day: CalendarDay,
+    isSelected: Boolean,
+    hasEvents: Boolean,
+    onClick: (CalendarDay) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .padding(2.dp)
+            .background(
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+                shape = MaterialTheme.shapes.medium
+            )
+            .clickable(enabled = day.position == DayPosition.MonthDate, onClick = { onClick(day) }),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = day.date.dayOfMonth.toString(),
+                color = when {
+                    isSelected -> MaterialTheme.colorScheme.onPrimary
+                    day.position != DayPosition.MonthDate -> MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.3f
+                    )
+
+                    else -> MaterialTheme.colorScheme.onSurface
+                }
+            )
+            if (hasEvents && day.position == DayPosition.MonthDate) {
+                Box(
+                    modifier = Modifier
+                        .size(4.dp)
+                        .background(
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                            shape = CircleShape
+                        )
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CalendarViewPreview() {
+    val sampleEvents = listOf(
+        Event(
+            id = 1L,
+            title = "Meeting with Team",
+            startTime = System.currentTimeMillis() + 3600000
+        ),
+        Event(
+            id = 2L,
+            title = "Doctor Appointment",
+            startTime = System.currentTimeMillis() + 7200000
+        ),
+        Event(
+            id = 3L,
+            title = "Lunch with Sarah",
+            startTime = System.currentTimeMillis() + 10800000
+        )
+    )
+    val eventsByDate = sampleEvents.groupBy { LocalDate.now() } // All events today for preview
+    CalendarView(
+        currentMonth = YearMonth.now(),
+        selectedDate = LocalDate.now(),
+        eventsByDate = eventsByDate,
+        onMonthChanged = {},
+        onDateSelected = {}
+    )
+}

@@ -7,8 +7,6 @@ import android.content.Intent
 
 class AlarmActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        AlarmState.stopAlarm()
-
         val stopSoundIntent = Intent(context, AlarmSoundService::class.java)
         context.stopService(stopSoundIntent)
 

@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import digital.tonima.kairos.ui.theme.KairosTheme
-import digital.tonima.kairos.view.EventScreen
+import digital.tonima.kairos.ui.view.EventScreen
 import digital.tonima.kairos.viewmodel.EventViewModel
 
 class MainActivity : ComponentActivity() {

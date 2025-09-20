@@ -6,16 +6,12 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import digital.tonima.kairos.R
-import digital.tonima.kairos.view.AlarmActivity
+import digital.tonima.kairos.ui.view.AlarmActivity
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (AlarmState.startAlarm()) {
-            return
-        }
 
         val eventTitle = intent.getStringExtra("EXTRA_EVENT_TITLE") ?: context.getString(R.string.upcoming_event)
         val uniqueId = intent.getIntExtra("EXTRA_UNIQUE_ID", System.currentTimeMillis().toInt())

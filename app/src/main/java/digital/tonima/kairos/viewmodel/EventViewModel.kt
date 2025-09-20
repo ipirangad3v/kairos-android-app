@@ -50,8 +50,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet()) ?: emptySet()
 
             val updatedEvents = calendarEvents.map { event ->
-                val uniqueId = "${event.id}_${event.startTime}"
-                event.copy(isAlarmEnabled = !disabledIds.contains(uniqueId))
+                event.copy(isAlarmEnabled = !disabledIds.contains(event.uniqueIntentId.toString()))
             }
 
             _uiState.update { currentState ->
@@ -59,10 +58,6 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                     events = updatedEvents,
                     isRefreshing = false
                 )
-            }
-
-            if (_uiState.value.isGlobalAlarmEnabled) {
-                scheduleAllEnabledAlarms()
             }
         }
     }
@@ -77,21 +72,19 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             putBoolean(KEY_GLOBAL_ALARMS_ENABLED, isEnabled)
         }
 
-        if (isEnabled) {
-            scheduleAllEnabledAlarms()
-        } else {
-            cancelAllAlarms()
+        if (!isEnabled) {
+            cancelAllLoadedAlarms()
         }
     }
 
     fun onEventAlarmToggle(event: Event, isEnabled: Boolean) {
         val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet())?.toMutableSet() ?: mutableSetOf()
-        val uniqueId = "${event.id}_${event.startTime}"
+        val eventIdStr = event.uniqueIntentId.toString()
 
         if (isEnabled) {
-            disabledIds.remove(uniqueId)
+            disabledIds.remove(eventIdStr)
         } else {
-            disabledIds.add(uniqueId)
+            disabledIds.add(eventIdStr)
         }
         sharedPreferences.edit {
             putStringSet(KEY_DISABLED_EVENT_IDS, disabledIds)
@@ -99,7 +92,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
 
         _uiState.update { currentState ->
             val updatedEvents = currentState.events.map {
-                if (it.id == event.id && it.startTime == event.startTime) {
+                if (it.uniqueIntentId == event.uniqueIntentId) {
                     it.copy(isAlarmEnabled = isEnabled)
                 } else {
                     it
@@ -117,16 +110,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
-    private fun scheduleAllEnabledAlarms() {
-        viewModelScope.launch {
-            _uiState.value.events.filter { it.isAlarmEnabled }.forEach { event ->
-                scheduler.schedule(event)
-            }
-        }
-    }
-
-    private fun cancelAllAlarms() {
+    private fun cancelAllLoadedAlarms() {
         viewModelScope.launch {
             _uiState.value.events.forEach { event ->
                 scheduler.cancel(event)
@@ -134,4 +118,3 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }
-

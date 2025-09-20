@@ -1,4 +1,4 @@
-package digital.tonima.kairos.view
+package digital.tonima.kairos.ui.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -22,17 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import digital.tonima.kairos.R
 import digital.tonima.kairos.service.AlarmSoundService
-import digital.tonima.kairos.service.AlarmState
 import digital.tonima.kairos.ui.theme.KairosTheme
 
 class AlarmActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val eventTitle = intent.getStringExtra("EXTRA_EVENT_TITLE") ?: getString(R.string.upcoming_event)
-
-        val soundServiceIntent = Intent(this, AlarmSoundService::class.java)
-        startService(soundServiceIntent)
+        val eventTitle =
+            intent.getStringExtra("EXTRA_EVENT_TITLE") ?: getString(R.string.upcoming_event)
 
         setContent {
             KairosTheme {
@@ -62,10 +59,12 @@ class AlarmActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(48.dp))
                         Button(
                             onClick = {
-                                // Libera a trava do alarme.
-                                AlarmState.stopAlarm()
-                                // Para o serviço de som ao clicar no botão.
-                                stopService(soundServiceIntent)
+                                stopService(
+                                    Intent(
+                                        this@AlarmActivity,
+                                        AlarmSoundService::class.java
+                                    )
+                                )
                                 finish()
                             },
                             modifier = Modifier
@@ -82,7 +81,6 @@ class AlarmActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        AlarmState.stopAlarm()
         stopService(Intent(this, AlarmSoundService::class.java))
     }
 }
