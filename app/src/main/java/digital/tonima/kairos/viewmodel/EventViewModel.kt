@@ -8,19 +8,22 @@ import androidx.lifecycle.viewModelScope
 import digital.tonima.kairos.model.Event
 import digital.tonima.kairos.repository.CalendarRepository
 import digital.tonima.kairos.service.EventAlarmScheduler
+import digital.tonima.kairos.util.needsAutostartPermission
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
+import java.util.concurrent.TimeUnit
 
 data class EventScreenUiState(
     val events: List<Event> = emptyList(),
     val isGlobalAlarmEnabled: Boolean = true,
     val isRefreshing: Boolean = false,
     val selectedDate: LocalDate = LocalDate.now(),
-    val currentMonth: YearMonth = YearMonth.now()
+    val currentMonth: YearMonth = YearMonth.now(),
+    val showAutostartSuggestion: Boolean = false
 )
 
 class EventViewModel(application: Application) : AndroidViewModel(application) {
@@ -34,10 +37,32 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val sharedPreferences = application.getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
     private val KEY_GLOBAL_ALARMS_ENABLED = "global_alarms_enabled"
     private val KEY_DISABLED_EVENT_IDS = "disabled_event_ids"
+    private val KEY_AUTOSTART_SUGGESTION_DISMISSED = "autostart_suggestion_dismissed"
 
     init {
         val initialGlobalState = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
         _uiState.update { it.copy(isGlobalAlarmEnabled = initialGlobalState) }
+        checkIfAutostartSuggestionIsNeeded()
+    }
+
+    /**
+     * Verifica se o aviso de início automático deve ser exibido.
+     */
+    private fun checkIfAutostartSuggestionIsNeeded() {
+        val isDismissed = sharedPreferences.getBoolean(KEY_AUTOSTART_SUGGESTION_DISMISSED, false)
+        if (needsAutostartPermission() && !isDismissed) {
+            _uiState.update { it.copy(showAutostartSuggestion = true) }
+        }
+    }
+
+    /**
+     * Salva a preferência do usuário para não mostrar o aviso novamente.
+     */
+    fun dismissAutostartSuggestion() {
+        sharedPreferences.edit {
+            putBoolean(KEY_AUTOSTART_SUGGESTION_DISMISSED, true)
+        }
+        _uiState.update { it.copy(showAutostartSuggestion = false) }
     }
 
     fun onMonthChanged(yearMonth: YearMonth, forceRefresh: Boolean = false) {
@@ -59,7 +84,25 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                     isRefreshing = false
                 )
             }
+
+            if (_uiState.value.isGlobalAlarmEnabled) {
+                scheduleImmediateEvents(updatedEvents)
+            }
         }
+    }
+
+    private fun scheduleImmediateEvents(events: List<Event>) {
+        val now = System.currentTimeMillis()
+        val scheduleWindowEnd = now + TimeUnit.MINUTES.toMillis(75)
+
+        events
+            .filter { it.isAlarmEnabled }
+            .filter { event ->
+                event.startTime in (now + 1)..scheduleWindowEnd
+            }
+            .forEach { event ->
+                scheduler.schedule(event)
+            }
     }
 
     fun onDateSelected(date: LocalDate) {
@@ -118,3 +161,4 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }
+

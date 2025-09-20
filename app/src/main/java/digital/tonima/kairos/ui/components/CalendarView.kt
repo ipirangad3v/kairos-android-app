@@ -35,6 +35,7 @@ import java.util.Locale
 
 @Composable
 fun CalendarView(
+    modifier: Modifier = Modifier,
     currentMonth: YearMonth,
     selectedDate: LocalDate,
     eventsByDate: Map<LocalDate, List<Event>>,
@@ -51,7 +52,7 @@ fun CalendarView(
         firstDayOfWeek = firstDayOfWeek
     )
     LaunchedEffect(state.firstVisibleMonth.yearMonth) { onMonthChanged(state.firstVisibleMonth.yearMonth) }
-    Column {
+    Column(modifier = modifier) {
         MonthHeader(month = state.firstVisibleMonth.yearMonth)
         HorizontalCalendar(
             state = state,
@@ -139,7 +140,6 @@ private fun Day(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun CalendarViewPreview() {

@@ -18,11 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import digital.tonima.kairos.R
 import digital.tonima.kairos.model.Event
+import digital.tonima.kairos.util.openAutostartSettings
 import digital.tonima.kairos.viewmodel.EventScreenUiState
 import java.time.Instant
 import java.time.LocalDate
@@ -38,7 +40,8 @@ fun MainContent(
     onEventToggle: (event: Event, isEnabled: Boolean) -> Unit,
     onMonthChanged: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
-    onEventClick: (Event) -> Unit
+    onEventClick: (Event) -> Unit,
+    onDismissAutostart: () -> Unit
 ) {
     val pullRefreshState =
         rememberPullRefreshState(refreshing = uiState.isRefreshing, onRefresh = onRefresh)
@@ -50,14 +53,24 @@ fun MainContent(
     val eventsInDay = remember(uiState.selectedDate, eventsByDate) {
         eventsByDate[uiState.selectedDate] ?: emptyList()
     }
+    val context = LocalContext.current
 
     Column(Modifier.padding(horizontal = 16.dp)) {
         AlarmsToggleRow(
-            modifier = Modifier.padding(vertical = 16.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
             alarmsEnabled = uiState.isGlobalAlarmEnabled,
             onToggle = onToggle
         )
+
+        if (uiState.showAutostartSuggestion) {
+            AutostartSuggestionCard(
+                onOpenSettings = { openAutostartSettings(context) },
+                onDismiss = onDismissAutostart
+            )
+        }
+
         CalendarView(
+            modifier = Modifier.padding(top = 8.dp),
             currentMonth = uiState.currentMonth,
             selectedDate = uiState.selectedDate,
             eventsByDate = eventsByDate,
@@ -126,6 +139,7 @@ fun MainContentPreview() {
         onEventToggle = { _, _ -> },
         onMonthChanged = {},
         onDateSelected = {},
-        onEventClick = {}
+        onEventClick = {},
+        onDismissAutostart = {}
     )
 }

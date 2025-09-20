@@ -97,12 +97,10 @@ fun EventScreen(viewModel: EventViewModel) {
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-
 
     Scaffold(
         topBar = {
@@ -157,23 +155,10 @@ fun EventScreen(viewModel: EventViewModel) {
                 )
 
                 !hasExactAlarmPermission.value -> ExactAlarmPermissionScreen(
-                    onProvidePermissionClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) context.startActivity(
-                            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                        )
-                    },
                     onAlreadyAuthorizedClick = checkExactAlarmPermission
                 )
 
                 !hasFullScreenIntentPermission.value -> FullScreenIntentPermissionScreen(
-                    onOpenSettingsClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) context.startActivity(
-                            Intent(
-                                ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
-                                "package:${context.packageName}".toUri()
-                            )
-                        )
-                    },
                     onAlreadyAuthorizedClick = checkFullScreenIntentPermission
                 )
 
@@ -200,7 +185,7 @@ fun EventScreen(viewModel: EventViewModel) {
                             ).show()
                         }
                     }
-                    LaunchedEffect(Unit) { viewModel.onMonthChanged(YearMonth.now(), true) }
+
                     MainContent(
                         uiState = uiState,
                         onRefresh = { viewModel.onMonthChanged(uiState.currentMonth, true) },
@@ -208,7 +193,8 @@ fun EventScreen(viewModel: EventViewModel) {
                         onEventToggle = viewModel::onEventAlarmToggle,
                         onMonthChanged = viewModel::onMonthChanged,
                         onDateSelected = viewModel::onDateSelected,
-                        onEventClick = onEventClick
+                        onEventClick = onEventClick,
+                        onDismissAutostart = viewModel::dismissAutostartSuggestion
                     )
                 }
             }
