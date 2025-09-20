@@ -21,4 +21,8 @@
     <string name="stop">रोकें</string>
     <string name="notification_description">कैलेंडर ईवेंट के लिए सूचनाएं</string>
     <string name="upcoming_event">आगामी कार्यक्रम</string>
+    <string name="autostart_suggestion_title">कॉन्फ़िगरेशन सुझाव</string>
+    <string name="autostart_suggestion_disclaimer">यह सुनिश्चित करने के लिए कि फ़ोन को पुनरारंभ करने के बाद अलार्म विश्वसनीय रूप से काम करें, हम आपके डिवाइस की सेटिंग्स में Kairos के लिए "ऑटोस्टार्ट" सक्षम करने की सलाह देते हैं।</string>
+    <string name="dismiss">खारिज करें</string>
+    <string name="autostart_fallback_toast">विशिष्ट स्क्रीन नहीं खुल सकी। कृपया सेटिंग्स में "ऑटोस्टार्ट" या "बैटरी मैनेजर" खोजें।</string>
 </resources>

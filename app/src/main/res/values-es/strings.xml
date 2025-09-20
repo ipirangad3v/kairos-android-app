@@ -21,4 +21,8 @@
     <string name="stop">PARAR</string>
     <string name="notification_description">Notificaciones para eventos del calendario</string>
     <string name="upcoming_event">Próximo Evento</string>
+    <string name="autostart_suggestion_title">Sugerencia de configuración</string>
+    <string name="autostart_suggestion_disclaimer">Para garantizar que las alarmas funcionen de manera fiable después de reiniciar el teléfono, recomendamos habilitar el "Inicio automático" para Kairos en los ajustes de su dispositivo.</string>
+    <string name="dismiss">Descartar</string>
+    <string name="autostart_fallback_toast">No se pudo abrir la pantalla específica. Busque "Inicio automático" o "Administrador de batería" en los ajustes.</string>
 </resources>

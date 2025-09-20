@@ -21,4 +21,8 @@
     <string name="stop">СТОП</string>
     <string name="notification_description">Уведомления о событиях календаря</string>
     <string name="upcoming_event">Предстоящее событие</string>
+    <string name="autostart_suggestion_title">Предложение по настройке</string>
+    <string name="autostart_suggestion_disclaimer">Чтобы обеспечить надежную работу будильников после перезагрузки телефона, мы рекомендуем включить «Автозапуск» для Kairos в настройках вашего устройства.</string>
+    <string name="dismiss">Отклонить</string>
+    <string name="autostart_fallback_toast">Не удалось открыть указанный экран. Пожалуйста, найдите «Автозапуск» или «Диспетчер батареи» в настройках.</string>
 </resources>

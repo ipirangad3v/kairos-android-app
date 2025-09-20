@@ -21,4 +21,8 @@
     <string name="stop">إيقاف</string>
     <string name="notification_description">إشعارات لأحداث التقويم</string>
     <string name="upcoming_event">حدث قادم</string>
+    <string name="autostart_suggestion_title">اقتراح التكوين</string>
+    <string name="autostart_suggestion_disclaimer">لضمان عمل الإنذارات بشكل موثوق بعد إعادة تشغيل الهاتف، نوصي بتمكين "البدء التلقائي" لتطبيق Kairos في إعدادات جهازك.</string>
+    <string name="dismiss">تجاهل</string>
+    <string name="autostart_fallback_toast">تعذر فتح الشاشة المحددة. يرجى البحث عن "البدء التلقائي" أو "مدير البطارية" في الإعدادات.</string>
 </resources>

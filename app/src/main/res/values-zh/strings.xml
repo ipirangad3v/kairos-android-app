@@ -21,4 +21,8 @@
     <string name="stop">停止</string>
     <string name="notification_description">日历事件的通知</string>
     <string name="upcoming_event">即将开始的活动</string>
+    <string name="autostart_suggestion_title">配置建议</string>
+    <string name="autostart_suggestion_disclaimer">为确保闹钟在重启手机后可靠工作，我们建议您在设备设置中为 Kairos 启用“自动启动”。</string>
+    <string name="dismiss">忽略</string>
+    <string name="autostart_fallback_toast">无法打开特定屏幕。请在设置中搜索“自动启动”或“电池管家”。</string>
 </resources>
