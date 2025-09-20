@@ -41,6 +41,9 @@
             android:value="@string/admob_app_id" />
         <meta-data tools:replace="android:value" android:name="com.google.android.play.billingclient.version"
             android:value="8.0.0" />
+
+        <provider android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup" tools:node="remove" />
     </application>
 
 </manifest>
