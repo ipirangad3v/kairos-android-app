@@ -31,4 +31,6 @@
         settings.</string>
     <string name="remove_ads">Remove Ads</string>
     <string name="menu">Menu</string>
+    <string name="ringer_mode_vibrate_warning">The phone is in vibrate mode. Alarms will not make a sound.</string>
+    <string name="ringer_mode_silent_warning">The phone is in silent mode. Alarms will not make a sound.</string>
 </resources>

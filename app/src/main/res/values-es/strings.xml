@@ -32,4 +32,6 @@
         en los ajustes.</string>
     <string name="remove_ads">Eliminar anuncios</string>
     <string name="menu">Menú</string>
+    <string name="ringer_mode_vibrate_warning">El teléfono está en modo de vibración. Las alarmas no sonarán.</string>
+    <string name="ringer_mode_silent_warning">El teléfono está en modo silencioso. Las alarmas no sonarán.</string>
 </resources>

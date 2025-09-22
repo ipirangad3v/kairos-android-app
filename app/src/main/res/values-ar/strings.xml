@@ -30,4 +30,6 @@
     <string name="autostart_fallback_toast">تعذر فتح الشاشة المحددة. يرجى البحث عن "البدء التلقائي" أو "مدير البطارية" في الإعدادات.</string>
     <string name="remove_ads">إزالة الإعلانات</string>
     <string name="menu">قائمة</string>
+    <string name="ringer_mode_vibrate_warning">الهاتف في وضع الاهتزاز. لن تصدر المنبهات صوتًا.</string>
+    <string name="ringer_mode_silent_warning">الهاتف في الوضع الصامت. لن تصدر المنبهات صوتًا.</string>
 </resources>

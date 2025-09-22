@@ -30,4 +30,6 @@
     <string name="autostart_fallback_toast">विशिष्ट स्क्रीन नहीं खुल सकी। कृपया सेटिंग्स में "ऑटोस्टार्ट" या "बैटरी मैनेजर" खोजें।</string>
     <string name="remove_ads">विज्ञापन हटाएँ</string>
     <string name="menu">मेनू</string>
+    <string name="ringer_mode_vibrate_warning">फ़ोन वाइब्रेट मोड में है। अलार्म आवाज़ नहीं करेंगे।</string>
+    <string name="ringer_mode_silent_warning">फ़ोन साइलेंट मोड में है। अलार्म आवाज़ नहीं करेंगे।</string>
 </resources>

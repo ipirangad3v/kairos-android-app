@@ -32,4 +32,6 @@
         "Gerenciador de Bateria" nas configurações.</string>
     <string name="remove_ads">Remover anúncios</string>
     <string name="menu">Menu</string>
+    <string name="ringer_mode_vibrate_warning">O celular está no modo de vibração. Os alarmes não tocarão som.</string>
+    <string name="ringer_mode_silent_warning">O celular está no modo silencioso. Os alarmes não tocarão som.</string>
 </resources>

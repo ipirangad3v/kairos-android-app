@@ -31,4 +31,6 @@
         настройках.</string>
     <string name="remove_ads">Удалить рекламу</string>
     <string name="menu">Меню</string>
+    <string name="ringer_mode_vibrate_warning">Телефон в режиме вибрации. Будильники не будут издавать звук.</string>
+    <string name="ringer_mode_silent_warning">Телефон в беззвучном режиме. Будильники не будут издавать звук.</string>
 </resources>

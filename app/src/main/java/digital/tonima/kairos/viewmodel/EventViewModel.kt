@@ -8,11 +8,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import digital.tonima.kairos.delegates.ProUserProvider
 import digital.tonima.kairos.model.Event
+import digital.tonima.kairos.repository.AudioWarningState
 import digital.tonima.kairos.repository.CalendarRepository
+import digital.tonima.kairos.repository.RingerModeRepository
 import digital.tonima.kairos.service.EventAlarmScheduler
 import digital.tonima.kairos.util.needsAutostartPermission
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -27,7 +31,8 @@ data class EventScreenUiState(
     val selectedDate: LocalDate = LocalDate.now(),
     val currentMonth: YearMonth = YearMonth.now(),
     val showAutostartSuggestion: Boolean = false,
-    val showUpgradeConfirmation: Boolean = false
+    val showUpgradeConfirmation: Boolean = false,
+    val ringerMode: AudioWarningState = AudioWarningState.NORMAL
 )
 
 @HiltViewModel
@@ -35,6 +40,7 @@ class EventViewModel @Inject constructor(
     proUserProvider: ProUserProvider,
     @ApplicationContext application: Context,
     private val repository: CalendarRepository,
+    private val ringerModeRepository: RingerModeRepository,
     private val scheduler: EventAlarmScheduler,
 ) : ViewModel(), ProUserProvider by proUserProvider {
     private val _uiState = MutableStateFlow(EventScreenUiState())
@@ -49,6 +55,16 @@ class EventViewModel @Inject constructor(
         val initialGlobalState = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
         _uiState.update { it.copy(isGlobalAlarmEnabled = initialGlobalState) }
         checkIfAutostartSuggestionIsNeeded()
+
+        ringerModeRepository.startObserving()
+        ringerModeRepository.ringerMode
+            .onEach { mode -> _uiState.update { it.copy(ringerMode = mode) } }
+            .launchIn(viewModelScope)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ringerModeRepository.stopObserving()
     }
 
     /**

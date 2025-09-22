@@ -32,4 +32,6 @@
         nach „Autostart“ oder „Akkumanager“.</string>
     <string name="remove_ads">Werbung entfernen</string>
     <string name="menu">Menü</string>
+    <string name="ringer_mode_vibrate_warning">Das Telefon ist im Vibrationsmodus. Alarme geben keinen Ton aus.</string>
+    <string name="ringer_mode_silent_warning">Das Telefon ist im Stumm-Modus. Alarme geben keinen Ton aus.</string>
 </resources>
