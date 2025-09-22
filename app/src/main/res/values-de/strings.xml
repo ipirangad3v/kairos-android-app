@@ -30,4 +30,6 @@
     <string name="dismiss">Verwerfen</string>
     <string name="autostart_fallback_toast">Der spezifische Bildschirm konnte nicht geöffnet werden. Bitte suchen Sie in den Einstellungen
         nach „Autostart“ oder „Akkumanager“.</string>
+    <string name="remove_ads">Werbung entfernen</string>
+    <string name="menu">Menü</string>
 </resources>

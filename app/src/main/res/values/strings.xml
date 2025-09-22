@@ -30,4 +30,6 @@
     <string name="dismiss">Dispensar</string>
     <string name="autostart_fallback_toast">Não foi possível abrir a tela específica. Por favor, procure por "Início Automático" ou
         "Gerenciador de Bateria" nas configurações.</string>
+    <string name="remove_ads">Remover anúncios</string>
+    <string name="menu">Menu</string>
 </resources>

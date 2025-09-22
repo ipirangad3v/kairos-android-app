@@ -29,4 +29,6 @@
     <string name="dismiss">Отклонить</string>
     <string name="autostart_fallback_toast">Не удалось открыть указанный экран. Пожалуйста, найдите «Автозапуск» или «Диспетчер батареи» в
         настройках.</string>
+    <string name="remove_ads">Удалить рекламу</string>
+    <string name="menu">Меню</string>
 </resources>

@@ -26,7 +26,8 @@ data class EventScreenUiState(
     val isRefreshing: Boolean = false,
     val selectedDate: LocalDate = LocalDate.now(),
     val currentMonth: YearMonth = YearMonth.now(),
-    val showAutostartSuggestion: Boolean = false
+    val showAutostartSuggestion: Boolean = false,
+    val showUpgradeConfirmation: Boolean = false
 )
 
 @HiltViewModel
@@ -165,5 +166,9 @@ class EventViewModel @Inject constructor(
                 scheduler.cancel(event)
             }
         }
+    }
+
+    fun onUpgradeToProRequest() {
+        _uiState.update { it.copy(showUpgradeConfirmation = true) }
     }
 }

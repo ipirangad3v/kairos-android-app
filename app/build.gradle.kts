@@ -20,8 +20,8 @@ android {
     applicationId = "digital.tonima.kairos"
     minSdk = 28
     targetSdk = 36
-    versionCode = 12
-    versionName = "1.2.9"
+    versionCode = 13
+    versionName = "1.2.10"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -47,8 +47,6 @@ android {
 
       val admobAppId: String
       val admobBannerAdUnitIdHome: String
-      val admobBannerAdUnitIdLockedDiary: String
-      val admobBannerAdUnitIdVaultScreen: String
 
       if (isRunningReleaseTask) {
         // Se for uma tarefa de release, carrega os segredos reais
@@ -71,8 +69,6 @@ android {
         // Para qualquer outra tarefa (como spotlessCheck), usa os IDs de teste
         admobAppId = admobAppIdTest
         admobBannerAdUnitIdHome = admobBannerAdUnitIdTest
-        admobBannerAdUnitIdLockedDiary = admobBannerAdUnitIdTest
-        admobBannerAdUnitIdVaultScreen = admobBannerAdUnitIdTest
       }
 
       resValue("string", "admob_app_id", admobAppId)

@@ -25,4 +25,6 @@
     <string name="autostart_suggestion_disclaimer">为确保闹钟在重启手机后可靠工作，我们建议您在设备设置中为 Kairos 启用“自动启动”。</string>
     <string name="dismiss">忽略</string>
     <string name="autostart_fallback_toast">无法打开特定屏幕。请在设置中搜索“自动启动”或“电池管家”。</string>
+    <string name="remove_ads">移除广告</string>
+    <string name="menu">菜单</string>
 </resources>

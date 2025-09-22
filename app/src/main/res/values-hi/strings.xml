@@ -28,4 +28,6 @@
         आपके डिवाइस की सेटिंग्स में Kairos के लिए "ऑटोस्टार्ट" सक्षम करने की सलाह देते हैं।</string>
     <string name="dismiss">खारिज करें</string>
     <string name="autostart_fallback_toast">विशिष्ट स्क्रीन नहीं खुल सकी। कृपया सेटिंग्स में "ऑटोस्टार्ट" या "बैटरी मैनेजर" खोजें।</string>
+    <string name="remove_ads">विज्ञापन हटाएँ</string>
+    <string name="menu">मेनू</string>
 </resources>

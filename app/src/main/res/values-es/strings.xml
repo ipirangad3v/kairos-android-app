@@ -30,4 +30,6 @@
     <string name="dismiss">Descartar</string>
     <string name="autostart_fallback_toast">No se pudo abrir la pantalla específica. Busque "Inicio automático" o "Administrador de batería"
         en los ajustes.</string>
+    <string name="remove_ads">Eliminar anuncios</string>
+    <string name="menu">Menú</string>
 </resources>

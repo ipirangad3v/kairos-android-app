@@ -31,4 +31,6 @@
     <string name="dismiss">Ignorer</string>
     <string name="autostart_fallback_toast">Impossible d\'ouvrir l\'écran spécifique. Veuillez rechercher « Démarrage automatique » ou «
         Gestionnaire de batterie » dans les paramètres.</string>
+    <string name="remove_ads">Supprimer les publicités</string>
+    <string name="menu">Menu</string>
 </resources>

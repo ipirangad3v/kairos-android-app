@@ -28,4 +28,6 @@
         Kairos في إعدادات جهازك.</string>
     <string name="dismiss">تجاهل</string>
     <string name="autostart_fallback_toast">تعذر فتح الشاشة المحددة. يرجى البحث عن "البدء التلقائي" أو "مدير البطارية" في الإعدادات.</string>
+    <string name="remove_ads">إزالة الإعلانات</string>
+    <string name="menu">قائمة</string>
 </resources>

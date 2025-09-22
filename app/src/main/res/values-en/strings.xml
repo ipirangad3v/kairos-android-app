@@ -29,4 +29,6 @@
     <string name="dismiss">Dismiss</string>
     <string name="autostart_fallback_toast">Could not open the specific screen. Please search for "Autostart" or "Battery Manager" in the
         settings.</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="menu">Menu</string>
 </resources>
