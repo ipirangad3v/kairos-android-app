@@ -237,6 +237,9 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
         }
     }
     if (uiState.showUpgradeConfirmation) {
-        onPurchaseRequest()
+        LaunchedEffect(uiState.showUpgradeConfirmation) {
+            onPurchaseRequest()
+            viewModel.onPurchaseFlowHandled()
+        }
     }
 }
