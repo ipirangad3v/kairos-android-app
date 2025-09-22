@@ -32,4 +32,6 @@
     <string name="menu">قائمة</string>
     <string name="ringer_mode_vibrate_warning">الهاتف في وضع الاهتزاز. لن تصدر المنبهات صوتًا.</string>
     <string name="ringer_mode_silent_warning">الهاتف في الوضع الصامت. لن تصدر المنبهات صوتًا.</string>
+    <string name="thank_you_for_support">أنت تستخدم النسخة الاحترافية. شكراً لدعم مشروعنا!</string>
+    <string name="our_other_apps">تعرف على تطبيقاتنا الأخرى</string>
 </resources>

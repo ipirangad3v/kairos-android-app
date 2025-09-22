@@ -34,4 +34,6 @@
     <string name="menu">Menú</string>
     <string name="ringer_mode_vibrate_warning">El teléfono está en modo de vibración. Las alarmas no sonarán.</string>
     <string name="ringer_mode_silent_warning">El teléfono está en modo silencioso. Las alarmas no sonarán.</string>
+    <string name="thank_you_for_support">Usando la versión PRO. ¡Gracias por apoyar nuestro proyecto!</string>
+    <string name="our_other_apps">Conoce nuestras otras apps</string>
 </resources>

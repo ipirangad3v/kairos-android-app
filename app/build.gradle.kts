@@ -20,8 +20,8 @@ android {
     applicationId = "digital.tonima.kairos"
     minSdk = 28
     targetSdk = 36
-    versionCode = 16
-    versionName = "1.2.13"
+    versionCode = 17
+    versionName = "1.2.14"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
