@@ -65,13 +65,18 @@ fun DrawerContent(
                         }
                     )
                 }
+                HorizontalDivider()
+                Spacer(Modifier.height(12.dp))
 
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Default.Favorite, contentDescription = null) },
                     label = { Text(stringResource(R.string.our_other_apps)) },
                     selected = false,
                     onClick = {
-                        val browserIntent = Intent(Intent.ACTION_VIEW, "https://play.google.com/store/apps/dev?id=6594602823307179845".toUri())
+                        val browserIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            "https://play.google.com/store/apps/dev?id=6594602823307179845".toUri()
+                        )
                         context.startActivity(browserIntent)
                         onCloseDrawer()
                     }

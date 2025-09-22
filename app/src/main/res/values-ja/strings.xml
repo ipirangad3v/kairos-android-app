@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_calendar_not_found">Googleカレンダーが見つかりません</string>
+    <string name="open_calendar">カレンダーを開く</string>
+    <string name="cannot_open_event">イベントを開けませんでした</string>
+    <string name="no_events_found_for_this_day">選択した日付にイベントはありません。</string>
+    <string name="initial_permissions_required">初期権限が必要です</string>
+    <string name="permissions_disclaimer">アプリが機能するには、カレンダーへのアクセスと通知を送信する権限が必要です。</string>
+    <string name="open_settings">設定を開く</string>
+    <string name="try_again">再試行</string>
+    <string name="exact_alarm_permission">正確なアラームの権限</string>
+    <string name="exact_alarm_permission_disclaimer">アラームが正しい時刻に鳴るように、Androidでは特別な権限が必要です。次の画面で有効にしてください。</string>
+    <string name="provide_permission">権限を付与</string>
+    <string name="already_authorized">承認済み、続行</string>
+    <string name="full_screen_permission">全画面表示の権限</string>
+    <string name="full_screen_permission_disclaimer">目覚まし時計のようにロック画面上にアラームを表示するには、アプリに最終的な権限が必要です。設定画面で有効にしてください。</string>
+    <string name="activate_event_alarms">イベントのアラームを有効にする</string>
+    <string name="at_time">%1$s に</string>
+    <string name="commitment">予定</string>
+    <string name="event_alarm">イベントアラーム</string>
+    <string name="stop">停止</string>
+    <string name="notification_description">カレンダーイベントの通知</string>
+    <string name="upcoming_event">近日中のイベント</string>
+    <string name="autostart_suggestion_title">設定の提案</string>
+    <string name="autostart_suggestion_disclaimer">スマートフォンを再起動した後もアラームが確実に機能するように、デバイスの設定でKairosの「自動起動」を有効にすることをお勧めします。</string>
+    <string name="dismiss">閉じる</string>
+    <string name="autostart_fallback_toast">特定の画面を開けませんでした。設定で「自動起動」または「バッテリーマネージャー」を検索してください。</string>
+    <string name="remove_ads">広告を削除</string>
+    <string name="menu">メニュー</string>
+    <string name="ringer_mode_vibrate_warning">スマートフォンはバイブレーションモードです。アラームは鳴りません。</string>
+    <string name="ringer_mode_silent_warning">スマートフォンはサイレントモードです。アラームは鳴りません。</string>
+    <string name="thank_you_for_support">PRO版をご利用いただきありがとうございます。プロジェクトをサポートしていただき、ありがとうございます！</string>
+    <string name="our_other_apps">他のアプリも見る</string>
+    <string name="app_name">Kairós</string>
+</resources>
