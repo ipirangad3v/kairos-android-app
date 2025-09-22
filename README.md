@@ -1,3 +1,5 @@
+<img src="/images/kairos-banner.png" width="1024" height="500">
+
 ## Kairós - Calendar Alarms for Android
 Kairós is a modern Android application designed to ensure you never miss a calendar event again. It intelligently syncs with your device's calendar and turns your appointments into unmissable, full-screen alarms, similar to a native alarm clock.
 
