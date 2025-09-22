@@ -1,8 +1,12 @@
 package digital.tonima.kairos.repository
 
+import android.Manifest
 import android.content.ContentUris
 import android.content.Context
+import android.content.pm.PackageManager
 import android.provider.CalendarContract
+import android.util.Log
+import androidx.core.content.ContextCompat
 import com.paulrybitskyi.hiltbinder.BindType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import digital.tonima.kairos.model.Event
@@ -15,6 +19,10 @@ import javax.inject.Inject
 @BindType(installIn = BindType.Component.SINGLETON, to = CalendarRepository::class)
 class CalendarRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context) :
     CalendarRepository {
+
+    companion object {
+        private const val TAG = "CalendarRepository"
+    }
 
     private val eventProjection: Array<String> = arrayOf(
         CalendarContract.Instances.EVENT_ID,
@@ -31,6 +39,14 @@ class CalendarRepositoryImpl @Inject constructor(@ApplicationContext private val
      * Esta função é otimizada para buscar apenas os dados necessários para o mês visível.
      */
     override suspend fun getEventsForMonth(yearMonth: YearMonth): List<Event> = withContext(Dispatchers.IO) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CALENDAR
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w(TAG, "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR.")
+            return@withContext emptyList()
+        }
         val events = mutableListOf<Event>()
 
         val startMillis = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
