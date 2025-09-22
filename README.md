@@ -3,6 +3,9 @@ Kairós is a modern Android application designed to ensure you never miss a cale
 
 This project showcases a modern Android architecture, focusing on performance, battery efficiency, and a clean user experience.
 
+## Download
+<a href='https://play.google.com/store/apps/details?id=digital.tonima.kairos' target="_blank" rel="noopener noreferrer"><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200'/></a>
+
 ## Key Features
 - <b>Full-Screen Alarms</b>: Triggers a full-screen, audible alarm for calendar events, waking the device even when locked.
 
