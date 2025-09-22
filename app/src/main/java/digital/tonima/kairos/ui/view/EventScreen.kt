@@ -47,12 +47,14 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import digital.tonima.kairos.BuildConfig.ADMOB_BANNER_AD_UNIT_HOME
 import digital.tonima.kairos.R.string.app_name
-import digital.tonima.kairos.R.string.open_calendar
-import digital.tonima.kairos.R.string.menu
 import digital.tonima.kairos.R.string.cannot_open_event
 import digital.tonima.kairos.R.string.google_calendar_not_found
+import digital.tonima.kairos.R.string.menu
+import digital.tonima.kairos.R.string.open_calendar
 import digital.tonima.kairos.model.Event
+import digital.tonima.kairos.ui.components.AdBannerView
 import digital.tonima.kairos.ui.components.DrawerContent
 import digital.tonima.kairos.ui.components.ExactAlarmPermissionScreen
 import digital.tonima.kairos.ui.components.FullScreenIntentPermissionScreen
@@ -227,6 +229,10 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                         )
                     }
                 }
+                AdBannerView(
+                    adId = ADMOB_BANNER_AD_UNIT_HOME,
+                    isProUser = isProUser
+                )
             }
         }
     }
