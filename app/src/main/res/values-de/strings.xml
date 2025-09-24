@@ -36,4 +36,5 @@
     <string name="ringer_mode_silent_warning">Das Telefon ist im Stumm-Modus. Alarme geben keinen Ton aus.</string>
     <string name="thank_you_for_support">Sie verwenden die PRO-Version. Vielen Dank für die Unterstützung unseres Projekts!</string>
     <string name="our_other_apps">Entdecken Sie unsere anderen Apps</string>
+    <string name="back_to_today">Geh zurück zu heute</string>
 </resources>

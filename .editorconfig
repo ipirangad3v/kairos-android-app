@@ -1,6 +1,6 @@
-# .editorconfig
 root = true
 
+# Aplica a todos os ficheiros
 [*]
 indent_style = space
 indent_size = 4
@@ -9,9 +9,7 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+# Regras específicas para ficheiros Kotlin
 [*.{kt,kts}]
-indent_size = 4
-# Continua as regras do ktlint/Android
-ktlint_standard = disabled
-ktlint_official = enabled
 max_line_length = 120
+ij_kotlin_imports_layout = *

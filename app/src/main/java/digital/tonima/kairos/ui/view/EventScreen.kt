@@ -225,7 +225,8 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                             onMonthChanged = viewModel::onMonthChanged,
                             onDateSelected = viewModel::onDateSelected,
                             onEventClick = onEventClick,
-                            onDismissAutostart = viewModel::dismissAutostartSuggestion
+                            onDismissAutostart = viewModel::dismissAutostartSuggestion,
+                            onReturnToToday = viewModel::returnToToday
                         )
                     }
                 }

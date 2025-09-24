@@ -34,4 +34,5 @@
     <string name="ringer_mode_silent_warning">फ़ोन साइलेंट मोड में है। अलार्म आवाज़ नहीं करेंगे।</string>
     <string name="thank_you_for_support">प्रो संस्करण का उपयोग कर रहे हैं। हमारी परियोजना का समर्थन करने के लिए धन्यवाद!</string>
     <string name="our_other_apps">हमारे अन्य ऐप्स खोजें</string>
+    <string name="back_to_today">आज वापस जाओ</string>
 </resources>

@@ -28,7 +28,8 @@ fun MainContent(
     onMonthChanged: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onEventClick: (Event) -> Unit,
-    onDismissAutostart: () -> Unit
+    onDismissAutostart: () -> Unit,
+    onReturnToToday: () -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -61,7 +62,8 @@ fun MainContent(
                     selectedDate = uiState.selectedDate,
                     eventsByDate = eventsByDate,
                     onMonthChanged = onMonthChanged,
-                    onDateSelected = onDateSelected
+                    onDateSelected = onDateSelected,
+                    onReturnToToday = onReturnToToday
                 )
             }
             EventList(
@@ -88,7 +90,8 @@ fun MainContent(
                 selectedDate = uiState.selectedDate,
                 eventsByDate = eventsByDate,
                 onMonthChanged = onMonthChanged,
-                onDateSelected = onDateSelected
+                onDateSelected = onDateSelected,
+                onReturnToToday = onReturnToToday
             )
             Spacer(modifier = Modifier.height(16.dp))
             EventList(

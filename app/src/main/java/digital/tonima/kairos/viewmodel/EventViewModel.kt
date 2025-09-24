@@ -32,7 +32,7 @@ data class EventScreenUiState(
     val currentMonth: YearMonth = YearMonth.now(),
     val showAutostartSuggestion: Boolean = false,
     val showUpgradeConfirmation: Boolean = false,
-    val ringerMode: AudioWarningState = AudioWarningState.NORMAL
+    val audioWarning: AudioWarningState = AudioWarningState.NORMAL
 )
 
 @HiltViewModel
@@ -58,7 +58,7 @@ class EventViewModel @Inject constructor(
 
         ringerModeRepository.startObserving()
         ringerModeRepository.ringerMode
-            .onEach { mode -> _uiState.update { it.copy(ringerMode = mode) } }
+            .onEach { warning -> _uiState.update { it.copy(audioWarning = warning) } }
             .launchIn(viewModelScope)
     }
 
@@ -67,9 +67,6 @@ class EventViewModel @Inject constructor(
         ringerModeRepository.stopObserving()
     }
 
-    /**
-     * Verifica se o aviso de início automático deve ser exibido.
-     */
     private fun checkIfAutostartSuggestionIsNeeded() {
         val isDismissed = sharedPreferences.getBoolean(KEY_AUTOSTART_SUGGESTION_DISMISSED, false)
         if (needsAutostartPermission() && !isDismissed) {
@@ -77,9 +74,6 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Salva a preferência do usuário para não mostrar o aviso novamente.
-     */
     fun dismissAutostartSuggestion() {
         sharedPreferences.edit {
             putBoolean(KEY_AUTOSTART_SUGGESTION_DISMISSED, true)
@@ -129,6 +123,15 @@ class EventViewModel @Inject constructor(
 
     fun onDateSelected(date: LocalDate) {
         _uiState.update { it.copy(selectedDate = date) }
+    }
+
+    fun returnToToday() {
+        _uiState.update {
+            it.copy(
+                selectedDate = LocalDate.now(),
+                currentMonth = YearMonth.now()
+            )
+        }
     }
 
     fun onAlarmsToggle(isEnabled: Boolean) {

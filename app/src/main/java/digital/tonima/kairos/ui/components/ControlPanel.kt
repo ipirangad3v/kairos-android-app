@@ -22,8 +22,8 @@ fun ControlPanel(
         onToggle = onToggle
     )
 
-    if (uiState.ringerMode != AudioWarningState.NORMAL) {
-        RingerModeWarningCard(ringerMode = uiState.ringerMode)
+    if (uiState.audioWarning != AudioWarningState.NORMAL) {
+        RingerModeWarningCard(ringerMode = uiState.audioWarning)
     }
 
     if (uiState.showAutostartSuggestion) {
