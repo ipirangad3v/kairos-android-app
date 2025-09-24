@@ -16,15 +16,18 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltAndroidApp
-class KairosApplication : Application(), Configuration.Provider {
+class KairosApplication :
+    Application(),
+    Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
     override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-
+        get() =
+            Configuration
+                .Builder()
+                .setWorkerFactory(workerFactory)
+                .build()
 
     override fun onCreate() {
         super.onCreate()
@@ -32,15 +35,18 @@ class KairosApplication : Application(), Configuration.Provider {
     }
 
     private fun setupRecurringWork() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-            .build()
+        val constraints =
+            Constraints
+                .Builder()
+                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                .build()
 
         val workManager = WorkManager.getInstance(applicationContext)
 
-        val initialRequest = OneTimeWorkRequestBuilder<AlarmSchedulingWorker>()
-            .setConstraints(constraints)
-            .build()
+        val initialRequest =
+            OneTimeWorkRequestBuilder<AlarmSchedulingWorker>()
+                .setConstraints(constraints)
+                .build()
 
         workManager.enqueueUniqueWork(
             "initial-event-scheduler",

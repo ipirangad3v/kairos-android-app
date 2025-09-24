@@ -90,7 +90,9 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
         hasExactAlarmPermission.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.canScheduleExactAlarms()
-        } else true
+        } else {
+            true
+        }
     }
     LaunchedEffect(Unit) { checkExactAlarmPermission() }
 
@@ -101,7 +103,9 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                 val notificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.canUseFullScreenIntent()
-            } else true
+            } else {
+                true
+            }
     }
     LaunchedEffect(Unit) { checkFullScreenIntentPermission() }
 
@@ -134,7 +138,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                     title = { Text(stringResource(app_name)) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.primary
                     ),
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
@@ -144,17 +148,23 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                 )
             },
             floatingActionButton = {
-                if (standardPermissionState.allPermissionsGranted && hasExactAlarmPermission.value && hasFullScreenIntentPermission.value) {
+                if (
+                    standardPermissionState.allPermissionsGranted &&
+                    hasExactAlarmPermission.value && hasFullScreenIntentPermission.value
+                ) {
                     FloatingActionButton(
                         onClick = {
                             val intent =
                                 context.packageManager.getLaunchIntentForPackage("com.google.android.calendar")
-                            if (intent != null) context.startActivity(intent)
-                            else Toast.makeText(
-                                context,
-                                context.getString(google_calendar_not_found),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (intent != null) {
+                                context.startActivity(intent)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(google_calendar_not_found),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer

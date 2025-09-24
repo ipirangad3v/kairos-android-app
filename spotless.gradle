@@ -10,7 +10,7 @@ spotless {
         targetExclude("$layout.buildDirectory/**/*.kt", "$layout.buildDirectory/**/*.kts")
 
         // Utiliza o ktlint com a versão mais recente e o estilo do Android
-        ktlint().setEditorConfigPath("$rootDir/.editorconfig")
+        ktlint("0.50.0").setEditorConfigPath("$rootDir/.editorconfig")
 
         // Adiciona um cabeçalho de licença, se desejado
         // licenseHeaderFile rootProject.file('spotless/copyright.kt')

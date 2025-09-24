@@ -17,17 +17,62 @@ import digital.tonima.kairos.R
  */
 fun openAutostartSettings(context: Context) {
     val intents = listOf(
-        Intent().setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
-        Intent().setComponent(ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
-        Intent().setComponent(ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
-        Intent().setComponent(ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
-        Intent().setComponent(ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")),
-        Intent().setComponent(ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")),
+        Intent().setComponent(
+            ComponentName(
+                "com.miui.securitycenter",
+                "com.miui.permcenter.autostart.AutoStartManagementActivity"
+            )
+        ),
+        Intent().setComponent(
+            ComponentName(
+                "com.letv.android.letvsafe",
+                "com.letv.android.letvsafe.AutobootManageActivity"
+            )
+        ),
+        Intent().setComponent(
+            ComponentName(
+                "com.huawei.systemmanager",
+                "com.huawei.systemmanager.optimize.process.ProtectActivity"
+            )
+        ),
+        Intent().setComponent(
+            ComponentName(
+                "com.coloros.safecenter",
+                "com.coloros.safecenter.permission.startup.StartupAppListActivity"
+            )
+        ),
+        Intent().setComponent(
+            ComponentName(
+                "com.oppo.safe",
+                "com.oppo.safe.permission.startup.StartupAppListActivity"
+            )
+        ),
+        Intent().setComponent(
+            ComponentName(
+                "com.iqoo.secure",
+                "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity"
+            )
+        ),
         Intent().setComponent(ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")),
-        Intent().setComponent(ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")),
-        Intent().setComponent(ComponentName("com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity")),
+        Intent().setComponent(
+            ComponentName(
+                "com.vivo.permissionmanager",
+                "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
+            )
+        ),
+        Intent().setComponent(
+            ComponentName(
+                "com.samsung.android.lool",
+                "com.samsung.android.sm.ui.battery.BatteryActivity"
+            )
+        ),
         Intent().setComponent(ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.LandingPageActivity")),
-        Intent().setComponent(ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.autostart.AutoStartActivity"))
+        Intent().setComponent(
+            ComponentName(
+                "com.asus.mobilemanager",
+                "com.asus.mobilemanager.autostart.AutoStartActivity"
+            )
+        )
     )
 
     var didStartActivity = false
@@ -56,6 +101,7 @@ fun openAutostartSettings(context: Context) {
  */
 fun needsAutostartPermission(): Boolean {
     val manufacturer = Build.MANUFACTURER.lowercase()
-    val knownManufacturers = listOf("xiaomi", "oppo", "vivo", "oneplus", "huawei", "samsung", "asus", "letv", "iqoo", "htc")
+    val knownManufacturers =
+        listOf("xiaomi", "oppo", "vivo", "oneplus", "huawei", "samsung", "asus", "letv", "iqoo", "htc")
     return knownManufacturers.any { manufacturer.contains(it) }
 }

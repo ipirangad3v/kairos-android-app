@@ -76,9 +76,11 @@ fun ExactAlarmPermissionScreen(onAlreadyAuthorizedClick: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) context.startActivity(
-                Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                context.startActivity(
+                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                )
+            }
         }) { Text(stringResource(R.string.provide_permission)) }
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(onClick = onAlreadyAuthorizedClick) { Text(stringResource(R.string.already_authorized)) }
@@ -108,12 +110,14 @@ fun FullScreenIntentPermissionScreen(onAlreadyAuthorizedClick: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) context.startActivity(
-                Intent(
-                    ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
-                    "package:${context.packageName}".toUri()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                context.startActivity(
+                    Intent(
+                        ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                        "package:${context.packageName}".toUri()
+                    )
                 )
-            )
+            }
         }) { Text(stringResource(R.string.open_settings)) }
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(onClick = onAlreadyAuthorizedClick) { Text(stringResource(R.string.already_authorized)) }

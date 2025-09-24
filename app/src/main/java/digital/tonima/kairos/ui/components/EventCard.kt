@@ -73,7 +73,6 @@ fun formatMillisToTime(millis: Long): String {
     return stringResource(R.string.at_time, formattedTime)
 }
 
-
 @Preview
 @Composable
 fun EventCardPreview() {

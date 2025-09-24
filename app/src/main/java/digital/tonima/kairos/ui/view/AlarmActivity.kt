@@ -25,7 +25,6 @@ import digital.tonima.kairos.service.AlarmSoundService
 import digital.tonima.kairos.ui.theme.KairosTheme
 
 class AlarmActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val eventTitle =
@@ -38,9 +37,10 @@ class AlarmActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(32.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(32.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -67,9 +67,10 @@ class AlarmActivity : ComponentActivity() {
                                 )
                                 finish()
                             },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(60.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp)
                         ) {
                             Text(text = getString(R.string.stop), fontSize = 20.sp)
                         }

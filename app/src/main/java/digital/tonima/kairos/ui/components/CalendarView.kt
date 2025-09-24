@@ -89,7 +89,8 @@ fun CalendarView(
             },
             monthHeader = {
                 DaysOfWeekHeader(
-                    daysOfWeek = it.weekDays.first().map { it.date.dayOfWeek })
+                    daysOfWeek = it.weekDays.first().map { it.date.dayOfWeek }
+                )
             }
         )
     }
@@ -175,7 +176,11 @@ private fun Day(
                         .padding(top = 2.dp)
                         .size(4.dp)
                         .background(
-                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                            color = if (isSelected) {
+                                MaterialTheme.colorScheme.onPrimary
+                            } else {
+                                MaterialTheme.colorScheme.primary
+                            },
                             shape = CircleShape
                         )
                 )

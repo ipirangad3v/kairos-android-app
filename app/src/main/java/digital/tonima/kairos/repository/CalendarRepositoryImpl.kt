@@ -17,65 +17,69 @@ import java.time.ZoneId
 import javax.inject.Inject
 
 @BindType(installIn = BindType.Component.SINGLETON, to = CalendarRepository::class)
-class CalendarRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context) :
+class CalendarRepositoryImpl
+    @Inject
+    constructor(
+        @ApplicationContext private val context: Context
+    ) :
     CalendarRepository {
 
-    companion object {
-        private const val TAG = "CalendarRepository"
-    }
-
-    private val eventProjection: Array<String> = arrayOf(
-        CalendarContract.Instances.EVENT_ID,
-        CalendarContract.Instances.TITLE,
-        CalendarContract.Instances.BEGIN
-    )
-
-    private val PROJECTION_ID_INDEX = 0
-    private val PROJECTION_TITLE_INDEX = 1
-    private val PROJECTION_BEGIN_INDEX = 2
-
-    /**
-     * Busca todos os eventos para um mês específico.
-     * Esta função é otimizada para buscar apenas os dados necessários para o mês visível.
-     */
-    override suspend fun getEventsForMonth(yearMonth: YearMonth): List<Event> = withContext(Dispatchers.IO) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_CALENDAR
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.w(TAG, "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR.")
-            return@withContext emptyList()
+        companion object {
+            private const val TAG = "CalendarRepository"
         }
-        val events = mutableListOf<Event>()
 
-        val startMillis = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        val endMillis =
-            yearMonth.atEndOfMonth().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-
-        val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
-        ContentUris.appendId(builder, startMillis)
-        ContentUris.appendId(builder, endMillis)
-        val uri = builder.build()
-
-        val cursor = context.contentResolver.query(
-            uri,
-            eventProjection,
-            null,
-            null,
-            "${CalendarContract.Instances.BEGIN} ASC"
+        private val eventProjection: Array<String> = arrayOf(
+            CalendarContract.Instances.EVENT_ID,
+            CalendarContract.Instances.TITLE,
+            CalendarContract.Instances.BEGIN
         )
 
-        cursor?.use {
-            while (it.moveToNext()) {
-                val eventId = it.getLong(PROJECTION_ID_INDEX)
-                val title = it.getString(PROJECTION_TITLE_INDEX)
-                val begin = it.getLong(PROJECTION_BEGIN_INDEX)
+        private val PROJECTION_ID_INDEX = 0
+        private val PROJECTION_TITLE_INDEX = 1
+        private val PROJECTION_BEGIN_INDEX = 2
 
-                events.add(Event(id = eventId, title = title, startTime = begin))
+        /**
+         * Busca todos os eventos para um mês específico.
+         * Esta função é otimizada para buscar apenas os dados necessários para o mês visível.
+         */
+        override suspend fun getEventsForMonth(yearMonth: YearMonth): List<Event> = withContext(Dispatchers.IO) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.READ_CALENDAR
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.w(TAG, "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR.")
+                return@withContext emptyList()
             }
-        }
+            val events = mutableListOf<Event>()
 
-        return@withContext events
+            val startMillis = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            val endMillis =
+                yearMonth.atEndOfMonth().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+            val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+            ContentUris.appendId(builder, startMillis)
+            ContentUris.appendId(builder, endMillis)
+            val uri = builder.build()
+
+            val cursor = context.contentResolver.query(
+                uri,
+                eventProjection,
+                null,
+                null,
+                "${CalendarContract.Instances.BEGIN} ASC"
+            )
+
+            cursor?.use {
+                while (it.moveToNext()) {
+                    val eventId = it.getLong(PROJECTION_ID_INDEX)
+                    val title = it.getString(PROJECTION_TITLE_INDEX)
+                    val begin = it.getLong(PROJECTION_BEGIN_INDEX)
+
+                    events.add(Event(id = eventId, title = title, startTime = begin))
+                }
+            }
+
+            return@withContext events
+        }
     }
-}
