@@ -11,7 +11,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
-import digital.tonima.kairos.service.AlarmSchedulingWorker
+import digital.tonima.core.service.AlarmSchedulingWorker
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

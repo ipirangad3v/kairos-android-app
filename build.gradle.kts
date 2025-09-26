@@ -8,4 +8,5 @@ plugins {
     alias (libs.plugins.crashlytics) apply false
     alias (libs.plugins.hilt.android) apply false
     alias (libs.plugins.kotlin.ksp) apply false
+    alias(libs.plugins.android.library) apply false
 }
