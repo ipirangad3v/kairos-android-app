@@ -376,13 +376,6 @@ ij_xml_space_inside_empty_tag = true
 ij_xml_text_wrap = normal
 ij_xml_use_custom_settings = true
 
-[*.{bash,sh,zsh}]
-ij_shell_binary_ops_start_line = false
-ij_shell_keep_column_alignment_padding = false
-ij_shell_minify_program = false
-ij_shell_redirect_followed_by_space = false
-ij_shell_switch_cases_indented = false
-
 [*.{gant,gradle,groovy,gy}]
 indent_size = 4
 tab_width = 4
@@ -605,11 +598,3 @@ ij_html_space_around_equality_in_attribute = false
 ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
 
-[*.{yaml,yml}]
-ij_yaml_keep_indents_on_empty_lines = false
-ij_yaml_keep_line_breaks = true
-
-[**/test/**.kt]
-# setting this to `off` seems to make the IDE behave like there's a hard limit when auto-formatting
-# which will wrap some assignments and methods calls, setting this up to a high value do the trick
-max_line_length=off
