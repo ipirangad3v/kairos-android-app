@@ -23,7 +23,7 @@
     <string name="event_alarm">Alarma de Evento</string>
     <string name="stop">PARAR</string>
     <string name="notification_description">Notificaciones para eventos del calendario</string>
-    <string name="upcoming_event">Próximo Evento</string>
+    <string name="upcoming_event">Próximos Eventos</string>
     <string name="autostart_suggestion_title">Sugerencia de configuración</string>
     <string name="autostart_suggestion_disclaimer">Para garantizar que las alarmas funcionen de manera fiable después de reiniciar el teléfono,
         recomendamos habilitar el "Inicio automático" para Kairos en los ajustes de su dispositivo.</string>

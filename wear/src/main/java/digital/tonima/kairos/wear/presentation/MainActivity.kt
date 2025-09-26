@@ -24,7 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.material.Card
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Switch
@@ -32,6 +31,7 @@ import androidx.wear.compose.material.ToggleChip
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
 import androidx.wear.compose.material.scrollAway
+import androidx.wear.compose.material3.Card
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TimeText
@@ -85,7 +85,7 @@ fun WearApp(
                 Spacer(Modifier.height(16.dp))
                 Text(
                     text = stringResource(coreR.string.app_name),
-                    style = MaterialTheme.typography.displayMedium
+                    style = MaterialTheme.typography.labelSmall,
                 )
             }
             item {
@@ -103,7 +103,7 @@ fun WearApp(
             item {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = stringResource(coreR.string.activate_event_alarms),
+                    text = stringResource(coreR.string.upcoming_event),
                     style = MaterialTheme.typography.labelMedium
                 )
                 Spacer(Modifier.height(8.dp))
@@ -112,8 +112,6 @@ fun WearApp(
                 item {
                     Text(
                         text = stringResource(coreR.string.no_events_found_for_this_day),
-                        color =
-                            MaterialTheme.colorScheme.onSurface,
                     )
                 }
             } else {
@@ -144,12 +142,11 @@ fun EventListItem(event: Event) {
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            Text(text = event.title, style = MaterialTheme.typography.labelLarge)
+            Text(text = event.title)
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = formattedTime,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }

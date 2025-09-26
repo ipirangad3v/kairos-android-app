@@ -22,7 +22,7 @@
     <string name="event_alarm">Event Alarm</string>
     <string name="stop">STOP</string>
     <string name="notification_description">Notifications for calendar events</string>
-    <string name="upcoming_event">Upcoming Event</string>
+    <string name="upcoming_event">Upcoming Events</string>
     <string name="autostart_suggestion_title">Configuration Suggestion</string>
     <string name="autostart_suggestion_disclaimer">To ensure alarms work reliably after restarting the phone, we recommend enabling "Autostart" for
         Kairos in your device\'s settings.</string>
