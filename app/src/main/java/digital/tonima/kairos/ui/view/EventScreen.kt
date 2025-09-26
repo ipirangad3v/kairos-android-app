@@ -14,9 +14,6 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -39,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -47,13 +45,15 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import digital.tonima.core.R.string.app_name
+import digital.tonima.core.R.string.cannot_open_event
+import digital.tonima.core.R.string.google_calendar_not_found
+import digital.tonima.core.R.string.menu
+import digital.tonima.core.R.string.open_calendar
+import digital.tonima.core.model.Event
 import digital.tonima.kairos.BuildConfig.ADMOB_BANNER_AD_UNIT_HOME
-import digital.tonima.kairos.R.string.app_name
-import digital.tonima.kairos.R.string.cannot_open_event
-import digital.tonima.kairos.R.string.google_calendar_not_found
-import digital.tonima.kairos.R.string.menu
-import digital.tonima.kairos.R.string.open_calendar
-import digital.tonima.kairos.model.Event
+import digital.tonima.kairos.R.drawable
+import digital.tonima.kairos.R.drawable.date_range
 import digital.tonima.kairos.ui.components.AdBannerView
 import digital.tonima.kairos.ui.components.DrawerContent
 import digital.tonima.kairos.ui.components.ExactAlarmPermissionScreen
@@ -142,7 +142,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                     ),
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(Icons.Default.Menu, contentDescription = stringResource(menu))
+                            Icon(painterResource(drawable.menu), contentDescription = stringResource(menu))
                         }
                     }
                 )
@@ -170,7 +170,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ) {
                         Icon(
-                            Icons.Filled.DateRange,
+                            painterResource(date_range),
                             contentDescription = stringResource(open_calendar)
                         )
                     }

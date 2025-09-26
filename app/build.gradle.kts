@@ -88,6 +88,8 @@ android {
 }
 
 dependencies {
+  implementation(project(":core"))
+
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.activity.compose)
@@ -103,7 +105,6 @@ dependencies {
   implementation(libs.play.services.ads.api)
   implementation(libs.accompanist.permissions)
   implementation(libs.google.firebase.analytics)
-  implementation(libs.billing.ktx)
 
   // hilt
   implementation(libs.hilt.android)

@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import digital.tonima.kairos.repository.AudioWarningState
-import digital.tonima.kairos.util.openAutostartSettings
+import digital.tonima.core.repository.AudioWarningState
+import digital.tonima.core.util.openAutostartSettings
 import digital.tonima.kairos.viewmodel.EventScreenUiState
 
 @Composable
