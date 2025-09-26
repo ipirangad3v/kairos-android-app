@@ -11,16 +11,17 @@ android {
     compileSdk = rootProject.extra["COMPILE_SDK_VERSION"].toString().toInt()
 
     defaultConfig {
-        applicationId = "digital.tonima.kairos.wear"
+        applicationId = "digital.tonima.kairos"
         minSdk = rootProject.extra["MIN_SDK_VERSION"].toString().toInt()
         targetSdk = rootProject.extra["TARGET_SDK_VERSION"].toString().toInt()
         versionCode = rootProject.extra["APP_VERSION_CODE"].toString().toInt()
-        versionName = rootProject.extra["APP_VERSION_NAME"].toString()
+        versionName = (rootProject.extra["APP_VERSION_NAME"]).toString() + "-wear"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
