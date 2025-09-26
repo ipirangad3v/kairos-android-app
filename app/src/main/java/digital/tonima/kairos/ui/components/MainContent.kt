@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import digital.tonima.core.model.Event
-import digital.tonima.kairos.viewmodel.EventScreenUiState
+import digital.tonima.core.viewmodel.EventScreenUiState
 import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth

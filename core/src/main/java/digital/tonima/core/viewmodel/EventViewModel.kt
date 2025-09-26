@@ -1,4 +1,4 @@
-package digital.tonima.kairos.viewmodel
+package digital.tonima.core.viewmodel
 
 import android.content.Context
 import androidx.core.content.edit

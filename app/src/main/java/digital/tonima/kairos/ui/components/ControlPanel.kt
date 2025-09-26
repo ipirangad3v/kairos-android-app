@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import digital.tonima.core.repository.AudioWarningState
 import digital.tonima.core.util.openAutostartSettings
-import digital.tonima.kairos.viewmodel.EventScreenUiState
+import digital.tonima.core.viewmodel.EventScreenUiState
 
 @Composable
 fun ControlPanel(

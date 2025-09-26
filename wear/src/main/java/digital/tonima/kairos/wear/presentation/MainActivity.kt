@@ -37,15 +37,15 @@ import androidx.wear.compose.material3.Text
 import androidx.wear.compose.material3.TimeText
 import androidx.wear.tooling.preview.devices.WearDevices
 import dagger.hilt.android.AndroidEntryPoint
-import digital.tonima.core.R
 import digital.tonima.core.model.Event
-import digital.tonima.kairos.wear.presentation.theme.KairosTheme
-import digital.tonima.kairos.wear.viewmodel.EventViewModel
+import digital.tonima.core.viewmodel.EventViewModel
+import digital.tonima.kairos.wear.ui.theme.KairosTheme
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import digital.tonima.core.R as coreR
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -83,14 +83,17 @@ fun WearApp(
         ) {
             item {
                 Spacer(Modifier.height(16.dp))
-                Text(text = stringResource(R.string.app_name), style = MaterialTheme.typography.displayMedium)
+                Text(
+                    text = stringResource(coreR.string.app_name),
+                    style = MaterialTheme.typography.displayMedium
+                )
             }
             item {
                 Spacer(Modifier.height(8.dp))
                 ToggleChip(
                     checked = uiState.isGlobalAlarmEnabled,
                     onCheckedChange = { isChecked -> viewModel.onAlarmsToggle(isChecked) },
-                    label = { Text(stringResource(R.string.activate_event_alarms)) },
+                    label = { Text(stringResource(coreR.string.activate_event_alarms)) },
                     toggleControl = { Switch(checked = uiState.isGlobalAlarmEnabled) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,12 +102,19 @@ fun WearApp(
             }
             item {
                 Spacer(Modifier.height(16.dp))
-                Text(text = stringResource(R.string.activate_event_alarms), style = MaterialTheme.typography.labelMedium)
+                Text(
+                    text = stringResource(coreR.string.activate_event_alarms),
+                    style = MaterialTheme.typography.labelMedium
+                )
                 Spacer(Modifier.height(8.dp))
             }
             if (uiState.events.isEmpty() && !uiState.isRefreshing) {
                 item {
-                    Text(text = stringResource(R.string.no_events_found_for_this_day))
+                    Text(
+                        text = stringResource(coreR.string.no_events_found_for_this_day),
+                        color =
+                            MaterialTheme.colorScheme.onSurface,
+                    )
                 }
             } else {
                 items(uiState.events.sortedBy { it.startTime }) { event ->
@@ -139,7 +149,7 @@ fun EventListItem(event: Event) {
             Text(
                 text = formattedTime,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }

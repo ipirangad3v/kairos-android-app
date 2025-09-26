@@ -51,6 +51,7 @@ import digital.tonima.core.R.string.google_calendar_not_found
 import digital.tonima.core.R.string.menu
 import digital.tonima.core.R.string.open_calendar
 import digital.tonima.core.model.Event
+import digital.tonima.core.viewmodel.EventViewModel
 import digital.tonima.kairos.BuildConfig.ADMOB_BANNER_AD_UNIT_HOME
 import digital.tonima.kairos.R.drawable
 import digital.tonima.kairos.R.drawable.date_range
@@ -60,7 +61,6 @@ import digital.tonima.kairos.ui.components.ExactAlarmPermissionScreen
 import digital.tonima.kairos.ui.components.FullScreenIntentPermissionScreen
 import digital.tonima.kairos.ui.components.MainContent
 import digital.tonima.kairos.ui.components.StandardPermissionsScreen
-import digital.tonima.kairos.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
