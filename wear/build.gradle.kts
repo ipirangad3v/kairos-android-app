@@ -8,15 +8,14 @@ plugins {
 
 android {
     namespace = "digital.tonima.kairos.wear"
-    compileSdk = 36
+    compileSdk = rootProject.extra["COMPILE_SDK_VERSION"].toString().toInt()
 
     defaultConfig {
         applicationId = "digital.tonima.kairos.wear"
-        minSdk = 30
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
+        minSdk = rootProject.extra["MIN_SDK_VERSION"].toString().toInt()
+        targetSdk = rootProject.extra["TARGET_SDK_VERSION"].toString().toInt()
+        versionCode = rootProject.extra["APP_VERSION_CODE"].toString().toInt()
+        versionName = rootProject.extra["APP_VERSION_NAME"].toString()
     }
 
     buildTypes {

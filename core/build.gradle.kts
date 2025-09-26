@@ -9,10 +9,10 @@ plugins {
 
 android {
     namespace = "digital.tonima.core"
-    compileSdk = 36
+    compileSdk = rootProject.extra["COMPILE_SDK_VERSION"].toString().toInt()
 
     defaultConfig {
-        minSdk = 28
+        minSdk = rootProject.extra["MIN_SDK_VERSION"].toString().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
