@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import digital.tonima.core.R.string.ringer_mode_silent_warning
-import digital.tonima.core.R.string.ringer_mode_vibrate_warning
 import digital.tonima.core.repository.AudioWarningState
 import digital.tonima.kairos.R.drawable.vibration
 import digital.tonima.kairos.R.drawable.volume_off
+import digital.tonima.kairos.core.R.string.ringer_mode_silent_warning
+import digital.tonima.kairos.core.R.string.ringer_mode_vibrate_warning
 
 @Composable
 fun RingerModeWarningCard(ringerMode: AudioWarningState) {

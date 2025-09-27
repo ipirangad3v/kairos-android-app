@@ -45,16 +45,12 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import digital.tonima.core.R.string.app_name
-import digital.tonima.core.R.string.cannot_open_event
-import digital.tonima.core.R.string.google_calendar_not_found
-import digital.tonima.core.R.string.menu
-import digital.tonima.core.R.string.open_calendar
 import digital.tonima.core.model.Event
 import digital.tonima.core.viewmodel.EventViewModel
 import digital.tonima.kairos.BuildConfig.ADMOB_BANNER_AD_UNIT_HOME
 import digital.tonima.kairos.R.drawable
 import digital.tonima.kairos.R.drawable.date_range
+import digital.tonima.kairos.core.R
 import digital.tonima.kairos.ui.components.AdBannerView
 import digital.tonima.kairos.ui.components.DrawerContent
 import digital.tonima.kairos.ui.components.ExactAlarmPermissionScreen
@@ -135,14 +131,14 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(stringResource(app_name)) },
+                    title = { Text(stringResource(R.string.app_name)) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary
                     ),
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(painterResource(drawable.menu), contentDescription = stringResource(menu))
+                            Icon(painterResource(drawable.menu), contentDescription = stringResource(R.string.menu))
                         }
                     }
                 )
@@ -161,7 +157,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                             } else {
                                 Toast.makeText(
                                     context,
-                                    context.getString(google_calendar_not_found),
+                                    context.getString(R.string.google_calendar_not_found),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -171,7 +167,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                     ) {
                         Icon(
                             painterResource(date_range),
-                            contentDescription = stringResource(open_calendar)
+                            contentDescription = stringResource(R.string.open_calendar)
                         )
                     }
                 }
@@ -221,7 +217,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                                 e.printStackTrace()
                                 Toast.makeText(
                                     context,
-                                    context.getString(cannot_open_event),
+                                    context.getString(R.string.cannot_open_event),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
