@@ -149,13 +149,13 @@ jobs:
           keyStorePassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
           keyPassword: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
 
-      - name: Upload to Google Play
+      - name: Upload Phone App Bundle to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           packageName: digital.tonima.kairos
-          releaseFiles: "${{ steps.sign_phone_app.outputs.signedReleaseFile }},${{ steps.sign_wear_app.outputs.signedReleaseFile }}"
-          track: internal # Ou 'production', 'beta', etc.
+          releaseFiles: ${{ steps.sign_phone_app.outputs.signedReleaseFile }}
+          track: internal
 
       - name: Create GitHub Tag and Release
         uses: softprops/action-gh-release@v1
