@@ -103,7 +103,7 @@ fun WearApp(
             item {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = stringResource(coreR.string.upcoming_event),
+                    text = stringResource(coreR.string.events_for_today),
                     style = MaterialTheme.typography.labelMedium
                 )
                 Spacer(Modifier.height(8.dp))
@@ -152,7 +152,7 @@ fun EventListItem(event: Event) {
     }
 }
 
-@Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
+@Preview(device = WearDevices.LARGE_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
     WearApp(hiltViewModel())
