@@ -10,7 +10,8 @@ This project showcases a modern Android architecture, focusing on performance, b
 <a href='https://play.google.com/store/apps/details?id=digital.tonima.kairos' target="_blank" rel="noopener noreferrer"><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200'/></a>
 
 ## Wear OS:
-<img src="/images/wear.png" width="454" height="454">
+<img src="/images/watch1.png" width="500" height="auto">
+<img src="/images/watch2.png" width="500" height="auto">
 
 ## Key Features
 
