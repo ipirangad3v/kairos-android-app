@@ -1,0 +1,165 @@
+name: Android CI - Kairos Multi-Module
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: Lint and Test
+    if: "!contains(github.event.head_commit.message, 'ci: Bump version')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Create google-services.json for App Module
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
+
+      - name: Create google-services.json for Wear Module
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Spotless Check
+        run: ./gradlew spotlessCheck
+
+      - name: Run unit tests for Core Module
+        run: ./gradlew :core:testDebugUnitTest
+
+      - name: Run unit tests for App Module
+        run: ./gradlew :app:testDebugUnitTest
+
+      - name: Run unit tests for Wear Module
+        run: ./gradlew :wear:testDebugUnitTest
+
+
+  deploy:
+    name: Build, Sign and Deploy
+    if: "!contains(github.event.head_commit.message, 'ci: Bump version')"
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: play-store-release
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Bump version properties
+        id: version_bumper
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          echo "Setting versionCode to $GITHUB_RUN_NUMBER"
+          sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$GITHUB_RUN_NUMBER/" gradle.properties
+          VERSION_NAME=$(grep "APP_VERSION_NAME" gradle.properties | cut -d'=' -f2)
+          IFS='.' read -r -a VERSION_PARTS <<< "$VERSION_NAME"
+          VERSION_PARTS[2]=$((VERSION_PARTS[2] + 1))
+          NEW_VERSION_NAME="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
+          echo "Bumping versionName to $NEW_VERSION_NAME"
+          sed -i "s/APP_VERSION_NAME=.*/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
+          echo "version_name=$NEW_VERSION_NAME" >> $GITHUB_OUTPUT
+          git add gradle.properties
+          if ! git diff --staged --quiet; then
+            git commit -m "ci: Bump version to $NEW_VERSION_NAME ($GITHUB_RUN_NUMBER)"
+            git push
+          else
+            echo "No version changes to commit."
+          fi
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Create google-services.json for App Module
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
+
+      - name: Create google-services.json for Wear Module
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Release App Bundle (Phone)
+        run: ./gradlew :app:bundleRelease
+
+      - name: Build Release App Bundle (Wear OS)
+        run: ./gradlew :wear:bundleRelease
+
+      - name: Sign App Bundle (Phone)
+        id: sign_phone_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/bundle/release/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
+          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          keyPassword: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+
+      - name: Sign App Bundle (Wear OS)
+        id: sign_wear_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: wear/build/outputs/bundle/release/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
+          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          keyPassword: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          packageName: digital.tonima.kairos
+          releaseFiles: |
+            ${{ steps.sign_phone_app.outputs.signedReleaseFile }}
+            ${{ steps.sign_wear_app.outputs.signedReleaseFile }}
+          track: internal # Ou 'production', 'beta', etc.
+
+      - name: Create GitHub Tag and Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version_bumper.outputs.version_name }}
+          name: Release v${{ steps.version_bumper.outputs.version_name }}
+          files: |
+            ${{ steps.sign_phone_app.outputs.signedReleaseFile }}
+            ${{ steps.sign_wear_app.outputs.signedReleaseFile }}
+          body: "Release automático da versão ${{ steps.version_bumper.outputs.version_name }} via GitHub Actions para telefone e Wear OS."
