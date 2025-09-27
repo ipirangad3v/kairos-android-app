@@ -24,9 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import digital.tonima.kairos.core.R
 import digital.tonima.kairos.R.drawable.favorite
 import digital.tonima.kairos.R.drawable.star
+import digital.tonima.kairos.core.R
 
 @Composable
 fun DrawerContent(
