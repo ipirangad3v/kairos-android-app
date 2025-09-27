@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import digital.tonima.core.R
+import digital.tonima.kairos.core.R
 import digital.tonima.core.model.Event
 import digital.tonima.core.viewmodel.EventScreenUiState
 import java.time.LocalDate

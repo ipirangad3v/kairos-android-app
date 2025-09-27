@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import digital.tonima.core.R
+import digital.tonima.kairos.core.R
 
 @Composable
 fun AutostartSuggestionCard(onOpenSettings: () -> Unit, onDismiss: () -> Unit) {

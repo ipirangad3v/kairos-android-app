@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "digital.tonima.core"
+    namespace = "digital.tonima.kairos.core"
     compileSdk = rootProject.extra["COMPILE_SDK_VERSION"].toString().toInt()
 
     defaultConfig {

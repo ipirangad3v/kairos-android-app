@@ -32,7 +32,7 @@ import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
-import digital.tonima.core.R
+import digital.tonima.kairos.core.R
 import digital.tonima.core.model.Event
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
