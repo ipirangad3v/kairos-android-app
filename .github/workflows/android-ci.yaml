@@ -76,8 +76,12 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          echo "Setting versionCode to $GITHUB_RUN_NUMBER"
-          sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$GITHUB_RUN_NUMBER/" gradle.properties
+
+          NEW_VERSION_CODE=$(($GITHUB_RUN_NUMBER * 2))
+
+          echo "Setting versionCode to $NEW_VERSION_CODE"
+          sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$NEW_VERSION_CODE/" gradle.properties
+
           VERSION_NAME=$(grep "APP_VERSION_NAME" gradle.properties | cut -d'=' -f2)
           IFS='.' read -r -a VERSION_PARTS <<< "$VERSION_NAME"
           VERSION_PARTS[2]=$((VERSION_PARTS[2] + 1))
@@ -85,9 +89,10 @@ jobs:
           echo "Bumping versionName to $NEW_VERSION_NAME"
           sed -i "s/APP_VERSION_NAME=.*/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
           echo "version_name=$NEW_VERSION_NAME" >> $GITHUB_OUTPUT
+
           git add gradle.properties
           if ! git diff --staged --quiet; then
-            git commit -m "ci: Bump version to $NEW_VERSION_NAME ($GITHUB_RUN_NUMBER)"
+            git commit -m "ci: Bump version to $NEW_VERSION_NAME ($NEW_VERSION_CODE)"
             git push
           else
             echo "No version changes to commit."
