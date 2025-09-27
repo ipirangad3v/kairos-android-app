@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import digital.tonima.kairos.core.R
 import digital.tonima.core.service.AlarmSoundService
+import digital.tonima.kairos.core.R
 import digital.tonima.kairos.ui.theme.KairosTheme
 
 class AlarmActivity : ComponentActivity() {

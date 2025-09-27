@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import digital.tonima.kairos.core.R
 import digital.tonima.core.model.Event
+import digital.tonima.kairos.core.R
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
