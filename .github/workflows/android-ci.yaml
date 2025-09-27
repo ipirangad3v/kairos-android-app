@@ -149,9 +149,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           packageName: digital.tonima.kairos
-          releaseFiles: |
-            ${{ steps.sign_phone_app.outputs.signedReleaseFile }}
-            ${{ steps.sign_wear_app.outputs.signedReleaseFile }}
+          releaseFiles: "${{ steps.sign_phone_app.outputs.signedReleaseFile }},${{ steps.sign_wear_app.outputs.signedReleaseFile }}"
           track: internal # Ou 'production', 'beta', etc.
 
       - name: Create GitHub Tag and Release
