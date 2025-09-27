@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
-import digital.tonima.core.R
+import digital.tonima.kairos.core.R
 
 /**
  * Tenta abrir a tela de configurações de "Início Automático" (Autostart) específica do fabricante.

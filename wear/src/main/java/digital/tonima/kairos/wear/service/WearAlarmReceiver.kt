@@ -7,7 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import digital.tonima.core.R
+import digital.tonima.kairos.core.R
 import digital.tonima.core.service.AlarmReceiver.Companion.ACTION_ALARM_TRIGGERED
 import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
 import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
@@ -53,7 +53,7 @@ class WearAlarmReceiver : BroadcastReceiver() {
         )
 
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(digital.tonima.kairos.wear.R.drawable.ic_launcher_foreground)
+            .setSmallIcon(digital.tonima.kairos.R.drawable.ic_launcher_foreground)
             .setContentTitle(notificationTitle)
             .setContentText(eventTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

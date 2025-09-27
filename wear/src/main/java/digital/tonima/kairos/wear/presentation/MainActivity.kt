@@ -45,7 +45,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import digital.tonima.core.R as coreR
+import digital.tonima.kairos.core.R as coreR
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

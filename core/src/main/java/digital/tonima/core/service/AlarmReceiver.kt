@@ -8,7 +8,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import digital.tonima.core.R
+import digital.tonima.kairos.core.R
 
 class AlarmReceiver : BroadcastReceiver() {
 
