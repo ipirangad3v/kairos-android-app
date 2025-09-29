@@ -41,10 +41,13 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.billing.ktx)
 
+    implementation(libs.logcat)
+
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.hilt.binder)
     implementation(libs.hilt.worker)
     ksp(libs.hilt.binder.compiler)

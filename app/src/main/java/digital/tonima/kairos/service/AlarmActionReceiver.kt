@@ -14,8 +14,9 @@ class AlarmActionReceiver : BroadcastReceiver() {
         context: Context,
         intent: Intent
     ) {
-        val stopSoundIntent = Intent(context, AlarmSoundService::class.java)
-        context.stopService(stopSoundIntent)
+        Intent(context, AlarmSoundService::class.java).apply {
+            context.stopService(this)
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager

@@ -15,6 +15,7 @@ import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_EVENT_ID
 import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_EVENT_START_TIME
 import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
 import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
+import logcat.logcat
 import javax.inject.Inject
 
 @BindType(installIn = BindType.Component.SINGLETON, to = EventAlarmScheduler::class)
@@ -26,10 +27,9 @@ constructor(
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(event: Event) {
-        Log.d(
-            "EventAlarmScheduler",
+        logcat {
             "Scheduling alarm for event: ${event.title} at ${event.startTime} with ID: ${event.uniqueIntentId}"
-        )
+        }
         val canSchedule =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 alarmManager.canScheduleExactAlarms()
@@ -65,7 +65,9 @@ constructor(
     }
 
     override fun cancel(event: Event) {
-        Log.d("EventAlarmScheduler", "Cancelling alarm for event ID: ${event.uniqueIntentId}")
+        logcat {
+            "Cancelling alarm for event ID: ${event.uniqueIntentId}"
+        }
         val intent =
             Intent(context, AlarmReceiver::class.java).apply {
                 action = ACTION_ALARM_TRIGGERED

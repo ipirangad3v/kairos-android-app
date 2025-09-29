@@ -106,6 +106,8 @@ dependencies {
   implementation(libs.accompanist.permissions)
   implementation(libs.google.firebase.analytics)
 
+  implementation(libs.logcat)
+
   // hilt
   implementation(libs.hilt.android)
   implementation(libs.hilt.navigation.compose)
