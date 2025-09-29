@@ -1,8 +1,9 @@
-package digital.tonima.kairos.service // Este é o pacote do módulo app
+package digital.tonima.kairos.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.getBroadcast
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -51,19 +52,19 @@ class AlarmNotificationReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val stopActionIntent = Intent(context, AlarmActionReceiver::class.java).apply {
+        val soundAlarmIntent = Intent(context, AlarmActionReceiver::class.java).apply {
             putExtra(EXTRA_UNIQUE_ID, uniqueId)
         }
-        val stopActionPendingIntent = PendingIntent.getBroadcast(
+        val stopActionPendingIntent = getBroadcast(
             context,
             uniqueId + 1,
-            stopActionIntent,
+            soundAlarmIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val notificationTitle = context.getString(R.string.commitment)
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(digital.tonima.kairos.R.drawable.ic_launcher_foreground) // R do app
+            .setSmallIcon(digital.tonima.kairos.R.drawable.ic_launcher_foreground)
             .setContentTitle(notificationTitle)
             .setContentText(eventTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

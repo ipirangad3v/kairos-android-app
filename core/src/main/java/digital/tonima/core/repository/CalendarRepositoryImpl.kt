@@ -1,17 +1,18 @@
 package digital.tonima.core.repository
 
+
 import android.Manifest
 import android.content.ContentUris
 import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.CalendarContract
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.paulrybitskyi.hiltbinder.BindType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import digital.tonima.core.model.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import logcat.logcat
 import java.time.YearMonth
 import java.time.ZoneId
 import javax.inject.Inject
@@ -48,7 +49,9 @@ class CalendarRepositoryImpl
                     Manifest.permission.READ_CALENDAR
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                Log.w(TAG, "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR.")
+                logcat{
+                    "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR."
+                }
                 return@withContext emptyList()
             }
             val events = mutableListOf<Event>()

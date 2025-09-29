@@ -12,6 +12,8 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import digital.tonima.core.service.AlarmSchedulingWorker
+import logcat.AndroidLogcatLogger
+import logcat.LogPriority.VERBOSE
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -31,7 +33,12 @@ class KairosApplication :
 
     override fun onCreate() {
         super.onCreate()
+        setupLogger()
         setupRecurringWork()
+    }
+
+    private fun setupLogger() {
+        AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = VERBOSE)
     }
 
     private fun setupRecurringWork() {
