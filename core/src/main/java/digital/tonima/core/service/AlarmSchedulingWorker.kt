@@ -1,14 +1,12 @@
 package digital.tonima.core.service
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.repository.CalendarRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,6 +30,7 @@ constructor(
     private val scheduler: EventAlarmScheduler,
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
+    private val permissionManager: PermissionManager
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result =
@@ -40,11 +39,7 @@ constructor(
                 "Worker iniciado para verificação periódica."
             }
             try {
-                if (ContextCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.READ_CALENDAR
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
+                if (!permissionManager.hasCalendarPermission()) {
                     logcat(LogPriority.WARN) {
                         "Permissão READ_CALENDAR não concedida. O Worker não pode continuar."
                     }

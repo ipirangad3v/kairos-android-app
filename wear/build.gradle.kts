@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.wear.tooling.preview)
     implementation(libs.logcat)
+    implementation(libs.accompanist.permissions)
 
     // hilt
     implementation(libs.hilt.android)

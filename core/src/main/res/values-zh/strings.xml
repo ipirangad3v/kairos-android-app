@@ -33,4 +33,5 @@
     <string name="our_other_apps">了解我们的其他应用</string>
     <string name="back_to_today">回到今天</string>
     <string name="events_for_today">Eventos para hoje</string>
+    <string name="not_applicable_on_this_android_version">Não aplicável a essa versão do sistema</string>
 </resources>

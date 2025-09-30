@@ -46,7 +46,7 @@
         <service android:name="digital.tonima.core.service.AlarmSoundService" />
 
         <activity
-            android:name=".wear.presentation.MainActivity"
+            android:name=".wear.MainActivity"
             android:exported="true"
             android:taskAffinity=""
             android:theme="@style/Theme.Kairos">

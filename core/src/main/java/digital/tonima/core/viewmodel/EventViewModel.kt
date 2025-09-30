@@ -8,17 +8,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import digital.tonima.core.delegates.ProUserProvider
 import digital.tonima.core.model.Event
+import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.repository.AudioWarningState
 import digital.tonima.core.repository.CalendarRepository
 import digital.tonima.core.repository.RingerModeRepository
 import digital.tonima.core.service.EventAlarmScheduler
-import digital.tonima.core.util.needsAutostartPermission
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import logcat.LogPriority
+import logcat.logcat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.concurrent.TimeUnit
@@ -32,82 +34,112 @@ data class EventScreenUiState(
     val currentMonth: YearMonth = YearMonth.now(),
     val showAutostartSuggestion: Boolean = false,
     val showUpgradeConfirmation: Boolean = false,
+    val hasCalendarPermission: Boolean = false,
+    val hasPostNotificationsPermission: Boolean = false,
+    val hasExactAlarmPermission: Boolean = false,
+    val hasFullScreenIntentPermission: Boolean = false,
     val audioWarning: AudioWarningState = AudioWarningState.NORMAL
 )
 
 @HiltViewModel
 class EventViewModel
-    @Inject
-    constructor(
-        proUserProvider: ProUserProvider,
-        @ApplicationContext application: Context,
-        private val repository: CalendarRepository,
-        private val ringerModeRepository: RingerModeRepository,
-        private val scheduler: EventAlarmScheduler
-    ) : ViewModel(), ProUserProvider by proUserProvider {
-        private val _uiState = MutableStateFlow(EventScreenUiState())
-        val uiState = _uiState.asStateFlow()
+@Inject
+constructor(
+    proUserProvider: ProUserProvider,
+    @ApplicationContext application: Context,
+    private val repository: CalendarRepository,
+    private val ringerModeRepository: RingerModeRepository,
+    private val scheduler: EventAlarmScheduler,
+    private val permissionManager: PermissionManager
+) : ViewModel(), ProUserProvider by proUserProvider {
 
-        private val sharedPreferences = application.getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
-        private val KEY_GLOBAL_ALARMS_ENABLED = "global_alarms_enabled"
-        private val KEY_DISABLED_EVENT_IDS = "disabled_event_ids"
-        private val KEY_AUTOSTART_SUGGESTION_DISMISSED = "autostart_suggestion_dismissed"
+    private val _uiState = MutableStateFlow(EventScreenUiState())
+    val uiState = _uiState.asStateFlow()
 
-        init {
-            val initialGlobalState = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
-            _uiState.update { it.copy(isGlobalAlarmEnabled = initialGlobalState) }
-            checkIfAutostartSuggestionIsNeeded()
+    private val sharedPreferences = application.getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
+    private val KEY_GLOBAL_ALARMS_ENABLED = "global_alarms_enabled"
+    private val KEY_DISABLED_EVENT_IDS = "disabled_event_ids"
+    private val KEY_AUTOSTART_SUGGESTION_DISMISSED = "autostart_suggestion_disposed"
 
-            ringerModeRepository.startObserving()
-            ringerModeRepository.ringerMode
-                .onEach { warning -> _uiState.update { it.copy(audioWarning = warning) } }
-                .launchIn(viewModelScope)
+    init {
+        val initialGlobalState = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
+        _uiState.update { it.copy(isGlobalAlarmEnabled = initialGlobalState) }
+
+        checkAllPermissions()
+        checkAndLoadEvents()
+
+        ringerModeRepository.startObserving()
+        ringerModeRepository.ringerMode
+            .onEach { warning -> _uiState.update { it.copy(audioWarning = warning) } }
+            .launchIn(viewModelScope)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ringerModeRepository.stopObserving()
+    }
+
+    fun checkAllPermissions() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                hasCalendarPermission = permissionManager.hasCalendarPermission(),
+                hasPostNotificationsPermission = permissionManager.hasPostNotificationsPermission(),
+                hasExactAlarmPermission = permissionManager.hasExactAlarmPermission(),
+                hasFullScreenIntentPermission = permissionManager.hasFullScreenIntentPermission()
+            )
         }
-
-        override fun onCleared() {
-            super.onCleared()
-            ringerModeRepository.stopObserving()
+        if (_uiState.value.hasCalendarPermission) {
+            onMonthChanged(_uiState.value.currentMonth, forceRefresh = true)
         }
+    }
 
-        private fun checkIfAutostartSuggestionIsNeeded() {
-            val isDismissed = sharedPreferences.getBoolean(KEY_AUTOSTART_SUGGESTION_DISMISSED, false)
-            if (needsAutostartPermission() && !isDismissed) {
-                _uiState.update { it.copy(showAutostartSuggestion = true) }
+    private fun checkAndLoadEvents() {
+        if (!_uiState.value.hasCalendarPermission) {
+            logcat(LogPriority.WARN) { "Permissão de calendário não concedida para o ViewModel. Eventos não serão carregados." }
+            _uiState.value = _uiState.value.copy(events = emptyList())
+            return
+        }
+        onMonthChanged(_uiState.value.currentMonth, forceRefresh = true)
+    }
+
+    fun dismissAutostartSuggestion() {
+        sharedPreferences.edit {
+            putBoolean(KEY_AUTOSTART_SUGGESTION_DISMISSED, true)
+        }
+        _uiState.update { it.copy(showAutostartSuggestion = false) }
+    }
+
+
+    fun onMonthChanged(yearMonth: YearMonth, forceRefresh: Boolean = false) {
+        if (!_uiState.value.hasCalendarPermission) {
+            logcat(LogPriority.WARN) { "Permissão de calendário não concedida. Não é possível mudar o mês ou carregar eventos." }
+            _uiState.update { it.copy(events = emptyList()) }
+            return
+        }
+        if (!forceRefresh && yearMonth == _uiState.value.currentMonth) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true, currentMonth = yearMonth) }
+
+            val calendarEvents = repository.getEventsForMonth(yearMonth)
+            val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet()) ?: emptySet()
+
+            val updatedEvents = calendarEvents.map { event ->
+                event.copy(isAlarmEnabled = !disabledIds.contains(event.uniqueIntentId.toString()))
+            }
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    events = updatedEvents,
+                    isRefreshing = false
+                )
+            }
+
+            if (_uiState.value.isGlobalAlarmEnabled) {
+                scheduleImmediateEvents(updatedEvents)
             }
         }
-
-        fun dismissAutostartSuggestion() {
-            sharedPreferences.edit {
-                putBoolean(KEY_AUTOSTART_SUGGESTION_DISMISSED, true)
-            }
-            _uiState.update { it.copy(showAutostartSuggestion = false) }
-        }
-
-        fun onMonthChanged(yearMonth: YearMonth, forceRefresh: Boolean = false) {
-            if (!forceRefresh && yearMonth == _uiState.value.currentMonth) return
-
-            viewModelScope.launch {
-                _uiState.update { it.copy(isRefreshing = true, currentMonth = yearMonth) }
-
-                val calendarEvents = repository.getEventsForMonth(yearMonth)
-                val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet()) ?: emptySet()
-
-                val updatedEvents = calendarEvents.map { event ->
-                    event.copy(isAlarmEnabled = !disabledIds.contains(event.uniqueIntentId.toString()))
-                }
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        events = updatedEvents,
-                        isRefreshing = false
-                    )
-                }
-
-                if (_uiState.value.isGlobalAlarmEnabled) {
-                    scheduleImmediateEvents(updatedEvents)
-                }
-            }
-        }
+    }
 
         private fun scheduleImmediateEvents(events: List<Event>) {
             val now = System.currentTimeMillis()
