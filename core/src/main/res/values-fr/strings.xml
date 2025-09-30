@@ -39,4 +39,5 @@
     <string name="our_other_apps">Découvrez nos autres applications</string>
     <string name="back_to_today">Revenez à aujourd\'hui</string>
     <string name="events_for_today">Eventos para hoje</string>
+    <string name="not_applicable_on_this_android_version">Não aplicável a essa versão do sistema</string>
 </resources>

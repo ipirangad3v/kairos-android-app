@@ -1,10 +1,7 @@
 package digital.tonima.kairos.ui.view
 
 import android.Manifest
-import android.app.AlarmManager
-import android.app.NotificationManager
 import android.content.ContentUris
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -29,9 +26,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -62,7 +57,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: () -> Unit) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isProUser by viewModel.isProUser.collectAsStateWithLifecycle()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
@@ -77,38 +72,47 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
     }
     val standardPermissionState =
         rememberMultiplePermissionsState(permissions = standardPermissionsToRequest)
-    LaunchedEffect(Unit) {
-        if (!standardPermissionState.allPermissionsGranted) standardPermissionState.launchMultiplePermissionRequest()
+
+    val openAppSettings = {
+        context.startActivity(
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", context.packageName, null)
+            )
+        )
     }
 
-    val hasExactAlarmPermission = remember { mutableStateOf(true) }
-    val checkExactAlarmPermission = {
-        hasExactAlarmPermission.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.canScheduleExactAlarms()
+    val openExactAlarmSettings = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            context.startActivity(Intent("android.settings.REQUEST_SCHEDULE_EXACT_ALARM"))
         } else {
-            true
+            Toast.makeText(context, R.string.not_applicable_on_this_android_version, Toast.LENGTH_SHORT).show()
         }
     }
-    LaunchedEffect(Unit) { checkExactAlarmPermission() }
-
-    val hasFullScreenIntentPermission = remember { mutableStateOf(true) }
-    val checkFullScreenIntentPermission = {
-        hasFullScreenIntentPermission.value =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                val notificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.canUseFullScreenIntent()
-            } else {
-                true
-            }
+    val openFullScreenIntentSettings = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            context.startActivity(
+                Intent("android.settings.MANAGE_APP_ALL_ALARMS").apply {
+                    data = Uri.fromParts("package", context.packageName, null)
+                }
+            )
+        } else {
+            Toast.makeText(context, R.string.not_applicable_on_this_android_version, Toast.LENGTH_SHORT).show()
+        }
     }
-    LaunchedEffect(Unit) { checkFullScreenIntentPermission() }
+
+    LaunchedEffect(standardPermissionState.allPermissionsGranted) {
+        if (!standardPermissionState.allPermissionsGranted) {
+            standardPermissionState.launchMultiplePermissionRequest()
+        }
+        viewModel.checkAllPermissions()
+    }
 
     val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner, uiState.currentMonth) {
+    DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.checkAllPermissions()
                 viewModel.onMonthChanged(uiState.currentMonth, forceRefresh = true)
             }
         }
@@ -145,8 +149,9 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
             },
             floatingActionButton = {
                 if (
-                    standardPermissionState.allPermissionsGranted &&
-                    hasExactAlarmPermission.value && hasFullScreenIntentPermission.value
+                    uiState.hasCalendarPermission &&
+                    uiState.hasExactAlarmPermission &&
+                    uiState.hasFullScreenIntentPermission
                 ) {
                     FloatingActionButton(
                         onClick = {
@@ -179,24 +184,18 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                     .padding(paddingValues)
             ) {
                 when {
-                    !standardPermissionState.allPermissionsGranted -> StandardPermissionsScreen(
-                        onSettingsClick = {
-                            context.startActivity(
-                                Intent(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.fromParts("package", context.packageName, null)
-                                )
-                            )
-                        },
+                    !uiState.hasCalendarPermission ||
+                        !uiState.hasPostNotificationsPermission -> StandardPermissionsScreen(
+                        onSettingsClick = openAppSettings,
                         onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() }
                     )
 
-                    !hasExactAlarmPermission.value -> ExactAlarmPermissionScreen(
-                        onAlreadyAuthorizedClick = checkExactAlarmPermission
+                    !uiState.hasExactAlarmPermission -> ExactAlarmPermissionScreen(
+                        onAlreadyAuthorizedClick = openExactAlarmSettings
                     )
 
-                    !hasFullScreenIntentPermission.value -> FullScreenIntentPermissionScreen(
-                        onAlreadyAuthorizedClick = checkFullScreenIntentPermission
+                    !uiState.hasFullScreenIntentPermission -> FullScreenIntentPermissionScreen(
+                        onAlreadyAuthorizedClick = openFullScreenIntentSettings
                     )
 
                     else -> {

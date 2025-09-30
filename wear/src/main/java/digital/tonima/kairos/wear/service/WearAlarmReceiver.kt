@@ -11,7 +11,7 @@ import digital.tonima.kairos.core.R
 import digital.tonima.core.service.AlarmReceiver.Companion.ACTION_ALARM_TRIGGERED
 import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
 import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
-import digital.tonima.kairos.wear.presentation.MainActivity
+import digital.tonima.kairos.wear.MainActivity
 
 class WearAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
