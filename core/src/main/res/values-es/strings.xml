@@ -37,6 +37,6 @@
     <string name="thank_you_for_support">Usando la versión PRO. ¡Gracias por apoyar nuestro proyecto!</string>
     <string name="our_other_apps">Conoce nuestras otras apps</string>
     <string name="back_to_today">Vuelve a hoy</string>
-    <string name="events_for_today">Eventos para hoje</string>
-    <string name="not_applicable_on_this_android_version">Não aplicável a essa versão do sistema</string>
+    <string name="events_for_today">Eventos para hoy</string>
+    <string name="not_applicable_on_this_android_version">No aplicable en esta versión de Android</string>
 </resources>

@@ -35,6 +35,6 @@
     <string name="thank_you_for_support">أنت تستخدم النسخة الاحترافية. شكراً لدعم مشروعنا!</string>
     <string name="our_other_apps">تعرف على تطبيقاتنا الأخرى</string>
     <string name="back_to_today">ارجع إلى اليوم</string>
-    <string name="events_for_today">Eventos para hoje</string>
-    <string name="not_applicable_on_this_android_version">Não aplicável a essa versão do sistema</string>
+    <string name="events_for_today">أحداث اليوم</string>
+    <string name="not_applicable_on_this_android_version">غير قابل للتطبيق في هذا الإصدار من أندرويد</string>
 </resources>
