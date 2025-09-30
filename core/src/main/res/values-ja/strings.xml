@@ -32,6 +32,6 @@
     <string name="thank_you_for_support">PRO版をご利用いただきありがとうございます。プロジェクトをサポートしていただき、ありがとうございます！</string>
     <string name="our_other_apps">他のアプリも見る</string>
     <string name="back_to_today">今日に戻りましょう</string>
-    <string name="events_for_today">Eventos para hoje</string>
-    <string name="not_applicable_on_this_android_version">Não aplicável a essa versão do sistema</string>
+    <string name="events_for_today">今日のイベント</string>
+    <string name="not_applicable_on_this_android_version">このAndroidバージョンには適用されません</string>
 </resources>

@@ -41,9 +41,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.viewmodel.EventViewModel
-import digital.tonima.kairos.core.R as coreR
-import digital.tonima.kairos.wear.EventListItem
 import java.time.LocalDate
+import digital.tonima.kairos.core.R as coreR
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

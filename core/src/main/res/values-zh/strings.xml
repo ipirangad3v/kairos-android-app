@@ -32,6 +32,6 @@
     <string name="thank_you_for_support">正在使用专业版。感谢您支持我们的项目！</string>
     <string name="our_other_apps">了解我们的其他应用</string>
     <string name="back_to_today">回到今天</string>
-    <string name="events_for_today">Eventos para hoje</string>
-    <string name="not_applicable_on_this_android_version">Não aplicável a essa versão do sistema</string>
+    <string name="events_for_today">今日活动</string>
+    <string name="not_applicable_on_this_android_version">不适用于此安卓版本</string>
 </resources>
