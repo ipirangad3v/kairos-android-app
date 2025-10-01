@@ -37,4 +37,16 @@
     <string name="back_to_today">आज वापस जाओ</string>
     <string name="events_for_today">आज के कार्यक्रम</string>
     <string name="not_applicable_on_this_android_version">इस Android संस्करण पर लागू नहीं</string>
+    <string name="complication_label">आगामी कार्यक्रम</string>
+    <string name="no_events">कोई कार्यक्रम नहीं</string>
+    <string name="no_upcoming_events">कोई आगामी कार्यक्रम नहीं</string>
+    <string name="next_event">अगला कार्यक्रम</string>
+    <string name="global_alarms">वैश्विक अलार्म</string>
+    <string name="next_event_title_placeholder">अगला</string>
+    <string name="no_events_title_placeholder">कोई कार्यक्रम नहीं</string>
+    <string name="no_upcoming_events_short">कोई नहीं</string>
+    <string name="no_upcoming_events_title">कोई कार्यक्रम नहीं</string>
+    <string name="no_upcoming_events_ranged_description">कोई भविष्य का कार्यक्रम निर्धारित नहीं है।</string>
+    <string name="complication_long_text_description_event">अगले निर्धारित कार्यक्रम का विवरण</string>
+    <string name="complication_long_text_description_no_event">कोई भविष्य का कार्यक्रम नहीं मिला</string>
 </resources>

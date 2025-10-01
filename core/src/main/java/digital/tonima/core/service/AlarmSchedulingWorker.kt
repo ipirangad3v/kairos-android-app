@@ -26,10 +26,10 @@ import java.util.concurrent.TimeUnit
 class AlarmSchedulingWorker
 @AssistedInject
 constructor(
-    private val repository: CalendarRepository,
-    private val scheduler: EventAlarmScheduler,
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
+    private val repository: CalendarRepository,
+    private val scheduler: EventAlarmScheduler,
     private val permissionManager: PermissionManager
 ) : CoroutineWorker(appContext, workerParams) {
 

@@ -44,8 +44,8 @@ import digital.tonima.core.model.Event
 import digital.tonima.core.viewmodel.EventViewModel
 import digital.tonima.kairos.BuildConfig.ADMOB_BANNER_AD_UNIT_HOME
 import digital.tonima.kairos.R.drawable
-import digital.tonima.kairos.R.drawable.date_range
 import digital.tonima.kairos.core.R
+import digital.tonima.kairos.core.R.drawable.date_range
 import digital.tonima.kairos.ui.components.AdBannerView
 import digital.tonima.kairos.ui.components.DrawerContent
 import digital.tonima.kairos.ui.components.ExactAlarmPermissionScreen
