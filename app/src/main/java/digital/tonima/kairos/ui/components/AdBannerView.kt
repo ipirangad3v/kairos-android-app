@@ -24,6 +24,6 @@ fun AdBannerView(modifier: Modifier = Modifier, adId: String, isProUser: Boolean
         },
         update = { adView ->
             adView.loadAd(AdRequest.Builder().build())
-        }
+        },
     )
 }

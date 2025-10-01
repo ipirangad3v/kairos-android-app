@@ -29,7 +29,7 @@ fun EventList(
     eventsByDate: Map<LocalDate, List<Event>>,
     onRefresh: () -> Unit,
     onEventToggle: (event: Event, isEnabled: Boolean) -> Unit,
-    onEventClick: (Event) -> Unit
+    onEventClick: (Event) -> Unit,
 ) {
     val pullRefreshState = rememberPullRefreshState(refreshing = uiState.isRefreshing, onRefresh = onRefresh)
     val eventsInDay = remember(uiState.selectedDate, eventsByDate) {
@@ -40,7 +40,7 @@ fun EventList(
         if (eventsInDay.isEmpty() && !uiState.isRefreshing) {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) { Text(stringResource(R.string.no_events_found_for_this_day)) }
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -49,7 +49,7 @@ fun EventList(
                         event = event,
                         isGloballyEnabled = uiState.isGlobalAlarmEnabled,
                         onToggle = { isEnabled -> onEventToggle(event, isEnabled) },
-                        onEventClick = { onEventClick(event) }
+                        onEventClick = { onEventClick(event) },
                     )
                 }
             }
@@ -57,7 +57,7 @@ fun EventList(
         PullRefreshIndicator(
             refreshing = uiState.isRefreshing,
             state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter)
+            modifier = Modifier.align(Alignment.TopCenter),
         )
     }
 }

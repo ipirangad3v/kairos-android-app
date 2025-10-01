@@ -32,7 +32,7 @@ import digital.tonima.kairos.core.R
 fun DrawerContent(
     isProUser: Boolean,
     onUpgradeToPro: () -> Unit,
-    onCloseDrawer: () -> Unit
+    onCloseDrawer: () -> Unit,
 ) {
     val context = LocalContext.current
     val versionName = remember {
@@ -62,7 +62,7 @@ fun DrawerContent(
                         onClick = {
                             onUpgradeToPro()
                             onCloseDrawer()
-                        }
+                        },
                     )
                 }
                 HorizontalDivider()
@@ -75,11 +75,11 @@ fun DrawerContent(
                     onClick = {
                         val browserIntent = Intent(
                             Intent.ACTION_VIEW,
-                            "https://play.google.com/store/apps/dev?id=6594602823307179845".toUri()
+                            "https://play.google.com/store/apps/dev?id=6594602823307179845".toUri(),
                         )
                         context.startActivity(browserIntent)
                         onCloseDrawer()
-                    }
+                    },
                 )
             }
 
@@ -89,7 +89,7 @@ fun DrawerContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(16.dp)
+                    .padding(16.dp),
             )
         }
     }

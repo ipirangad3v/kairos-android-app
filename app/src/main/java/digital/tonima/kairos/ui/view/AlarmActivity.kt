@@ -34,7 +34,7 @@ class AlarmActivity : ComponentActivity() {
             KairosTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     Column(
                         modifier =
@@ -42,19 +42,19 @@ class AlarmActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(32.dp),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
                             text = getString(R.string.event_alarm),
                             fontSize = 24.sp,
-                            style = MaterialTheme.typography.headlineSmall
+                            style = MaterialTheme.typography.headlineSmall,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = eventTitle,
                             fontSize = 32.sp,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineLarge
+                            style = MaterialTheme.typography.headlineLarge,
                         )
                         Spacer(modifier = Modifier.height(48.dp))
                         Button(
@@ -62,15 +62,15 @@ class AlarmActivity : ComponentActivity() {
                                 stopService(
                                     Intent(
                                         this@AlarmActivity,
-                                        AlarmSoundService::class.java
-                                    )
+                                        AlarmSoundService::class.java,
+                                    ),
                                 )
                                 finish()
                             },
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .height(60.dp)
+                                    .height(60.dp),
                         ) {
                             Text(text = getString(R.string.stop), fontSize = 20.sp)
                         }

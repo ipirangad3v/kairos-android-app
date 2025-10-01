@@ -17,12 +17,12 @@ import digital.tonima.kairos.core.R
 fun AlarmsToggleRow(
     modifier: Modifier = Modifier,
     alarmsEnabled: Boolean,
-    onToggle: (Boolean) -> Unit
+    onToggle: (Boolean) -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(stringResource(R.string.activate_event_alarms), style = MaterialTheme.typography.titleMedium)
         Switch(checked = alarmsEnabled, onCheckedChange = onToggle)
@@ -34,6 +34,6 @@ fun AlarmsToggleRow(
 fun AlarmsToggleRowPreview() {
     AlarmsToggleRow(
         alarmsEnabled = true,
-        onToggle = {}
+        onToggle = {},
     )
 }

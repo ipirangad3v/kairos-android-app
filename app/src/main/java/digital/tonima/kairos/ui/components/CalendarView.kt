@@ -50,7 +50,7 @@ fun CalendarView(
     eventsByDate: Map<LocalDate, List<Event>>,
     onMonthChanged: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
-    onReturnToToday: () -> Unit
+    onReturnToToday: () -> Unit,
 ) {
     val startMonth = remember { YearMonth.now().minusMonths(100) }
     val endMonth = remember { YearMonth.now().plusMonths(100) }
@@ -59,7 +59,7 @@ fun CalendarView(
         startMonth = startMonth,
         endMonth = endMonth,
         firstVisibleMonth = currentMonth,
-        firstDayOfWeek = firstDayOfWeek
+        firstDayOfWeek = firstDayOfWeek,
     )
     val scope = rememberCoroutineScope()
 
@@ -76,7 +76,7 @@ fun CalendarView(
     Column(modifier = modifier) {
         MonthHeader(
             month = state.firstVisibleMonth.yearMonth,
-            onReturnToTodayClicked = onReturnToToday // Passa a ação para o cabeçalho
+            onReturnToTodayClicked = onReturnToToday, // Passa a ação para o cabeçalho
         )
         HorizontalCalendar(
             state = state,
@@ -84,14 +84,14 @@ fun CalendarView(
                 Day(
                     day = day,
                     isSelected = selectedDate == day.date,
-                    hasEvents = eventsByDate.containsKey(day.date)
+                    hasEvents = eventsByDate.containsKey(day.date),
                 ) { onDateSelected(it.date) }
             },
             monthHeader = {
                 DaysOfWeekHeader(
-                    daysOfWeek = it.weekDays.first().map { it.date.dayOfWeek }
+                    daysOfWeek = it.weekDays.first().map { it.date.dayOfWeek },
                 )
-            }
+            },
         )
     }
 }
@@ -102,14 +102,14 @@ private fun MonthHeader(month: YearMonth, onReturnToTodayClicked: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         val locale = Locale.getDefault()
         val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
         Text(
             text = month.format(formatter).replaceFirstChar { it.titlecase(locale) },
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(vertical = 8.dp),
         )
         if (month != currentMonth) {
             TextButton(onClick = onReturnToTodayClicked) {
@@ -128,7 +128,7 @@ private fun DaysOfWeekHeader(daysOfWeek: List<DayOfWeek>) {
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 text = dayOfWeek.getDisplayName(TextStyle.SHORT, locale),
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }
@@ -139,7 +139,7 @@ private fun Day(
     day: CalendarDay,
     isSelected: Boolean,
     hasEvents: Boolean,
-    onClick: (CalendarDay) -> Unit
+    onClick: (CalendarDay) -> Unit,
 ) {
     val isToday = day.date == LocalDate.now()
 
@@ -149,15 +149,15 @@ private fun Day(
             .padding(2.dp)
             .background(
                 color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium,
             )
             .border(
                 width = if (isToday && !isSelected) 1.5.dp else 0.dp,
                 color = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium,
             )
             .clickable(enabled = day.position == DayPosition.MonthDate) { onClick(day) },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
@@ -168,7 +168,7 @@ private fun Day(
                     day.position != DayPosition.MonthDate -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                     else -> MaterialTheme.colorScheme.onSurface
                 },
-                fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal
+                fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal,
             )
             if (hasEvents && day.position == DayPosition.MonthDate) {
                 Box(
@@ -181,8 +181,8 @@ private fun Day(
                             } else {
                                 MaterialTheme.colorScheme.primary
                             },
-                            shape = CircleShape
-                        )
+                            shape = CircleShape,
+                        ),
                 )
             }
         }
@@ -196,18 +196,18 @@ fun CalendarViewPreview() {
         Event(
             id = 1L,
             title = "Meeting with Team",
-            startTime = System.currentTimeMillis() + 3600000
+            startTime = System.currentTimeMillis() + 3600000,
         ),
         Event(
             id = 2L,
             title = "Doctor Appointment",
-            startTime = System.currentTimeMillis() + 7200000
+            startTime = System.currentTimeMillis() + 7200000,
         ),
         Event(
             id = 3L,
             title = "Lunch with Sarah",
-            startTime = System.currentTimeMillis() + 10800000
-        )
+            startTime = System.currentTimeMillis() + 10800000,
+        ),
     )
     val eventsByDate = sampleEvents.groupBy { LocalDate.now() }
     CalendarView(
@@ -216,6 +216,6 @@ fun CalendarViewPreview() {
         eventsByDate = eventsByDate,
         onMonthChanged = {},
         onDateSelected = {},
-        onReturnToToday = {}
+        onReturnToToday = {},
     )
 }
