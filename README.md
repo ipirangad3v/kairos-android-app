@@ -10,14 +10,29 @@ This project showcases a modern Android architecture, focusing on performance, b
 <a href='https://play.google.com/store/apps/details?id=digital.tonima.kairos' target="_blank" rel="noopener noreferrer"><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='200'/></a>
 
 ## Wear OS:
-<img src="/images/watch1.png" width="500" height="auto">
-<img src="/images/watch2.png" width="500" height="auto">
+Experience seamless calendar integration and proactive event management directly on your smartwatch.
+
+<table>
+  <tr>
+    <td style="text-align: center;">
+      <img src="/images/watch1.png" width="400" height="auto"> </td>
+    <td style="text-align: center;">
+      <img src="/images/watch2.png" width="400" height="auto"> </td>
+  </tr>
+</table>
+
+### Complications in Action:
+Visualize your upcoming events at a glance with Kairós complications.
+
+<img src="/images/complications.gif" alt="Kairós Complications in Action" width="600" height="auto" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
 
 ## Key Features
 
 - **Full-Screen Alarms**: Triggers a full-screen, audible alarm for calendar events, waking the device even when locked. **On Wear OS, alerts are displayed prominently on the watch face.**
 
-- **Smart Scheduling**: Utilizes WorkManager to efficiently schedule alarms in the background, checking for upcoming events periodically without draining the battery.
+- **Complication Support (Wear OS)**: Get a quick glance at your upcoming events directly on your watch face with customizable complication widgets. Supports `SHORT_TEXT`, `LONG_TEXT`, and `RANGED_VALUE` types to display event times, titles, and time until the next event.
+
+- **Smart Scheduling**: Utilizes [WorkManager](https://developer.android.com/guide/background/persistent/getting-started) to efficiently schedule alarms in the background, checking for upcoming events periodically without draining the battery.
 
 - **Proactive Scheduling**: A "safety net" feature in the ViewModel ensures that newly created, imminent events are scheduled immediately when the app is opened.
 
@@ -34,6 +49,7 @@ This project showcases a modern Android architecture, focusing on performance, b
 - **Wear OS**:
   - **Optimized for Wearable Devices**: A dedicated interface to view upcoming events directly on your smartwatch.
   - **Quick Glance**: Get event notifications and details at a glance, right on your wrist.
+  - **Watch Face Complications**: Add Kairós complications to your favorite watch face for immediate access to upcoming event information.
   - **Global Alarm Toggle**: Enable or disable event alarms directly from your watch.
 
 - **Robust Permission Handling**: Guides the user through granting all necessary permissions, including special ones like `SCHEDULE_EXACT_ALARM` and `USE_FULL_SCREEN_INTENT`.
@@ -47,9 +63,11 @@ This application is built following modern Android development principles and a 
 
 ## UI Layer:
 
-- **Jetpack Compose**: The entire UI is built with Jetpack Compose for a declarative, modern, and reactive user interface, providing a native experience on both phone and watch.
+- **[Jetpack Compose](https://developer.android.com/jetpack/compose)**: The entire UI is built with Jetpack Compose for a declarative, modern, and reactive user interface, providing a native experience on both phone and watch.
 
 - **ViewModel**: Manages UI state and business logic, exposing a single `UiState` object to the screen.
+
+- **ComplicationDataSourceService**: Handles the logic for providing real-time calendar event data to watch face complications.
 
 ## Data Layer:
 
@@ -57,9 +75,9 @@ This application is built following modern Android development principles and a 
 
 ## Domain/Service Layer:
 
-- **WorkManager**: Handles reliable, battery-efficient background tasks for periodic alarm scheduling.
+- **[WorkManager](https://developer.android.com/guide/background/persistent/getting-started)**: Handles reliable, battery-efficient background tasks for periodic alarm scheduling.
 
-- **AlarmManager**: Used to set the precise, full-screen alarms.
+- **[AlarmManager](https://developer.android.com/reference/android/app/AlarmManager)**: Used to set the precise, full-screen alarms.
 
 - **BroadcastReceivers & Services**: Manages alarm triggers, sound playback, and notification actions.
 
@@ -67,9 +85,9 @@ This application is built following modern Android development principles and a 
 
 ## Dependency:
 
-- **Accompanist**: For streamlined permission handling in Compose.
+- **[Accompanist](https://google.github.io/accompanist/)**: For streamlined permission handling in Compose.
 
-- **Kizitonwose Calendar**: For the highly customizable calendar view (primarily for phone UI).
+- **[Kizitonwose Calendar](https://github.com/kizitonwose/Calendar)**: For the highly customizable calendar view (primarily for phone UI).
 
 ## Flow:
 <img src="/images/flow.png" width="3840" height="3405">
