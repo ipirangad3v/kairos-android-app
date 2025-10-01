@@ -77,8 +77,8 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
         context.startActivity(
             Intent(
                 Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.fromParts("package", context.packageName, null)
-            )
+                Uri.fromParts("package", context.packageName, null),
+            ),
         )
     }
 
@@ -94,7 +94,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
             context.startActivity(
                 Intent("android.settings.MANAGE_APP_ALL_ALARMS").apply {
                     data = Uri.fromParts("package", context.packageName, null)
-                }
+                },
             )
         } else {
             Toast.makeText(context, R.string.not_applicable_on_this_android_version, Toast.LENGTH_SHORT).show()
@@ -128,9 +128,9 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
             DrawerContent(
                 isProUser = isProUser,
                 onUpgradeToPro = viewModel::onUpgradeToProRequest,
-                onCloseDrawer = { scope.launch { drawerState.close() } }
+                onCloseDrawer = { scope.launch { drawerState.close() } },
             )
-        }
+        },
     ) {
         Scaffold(
             topBar = {
@@ -138,13 +138,13 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                     title = { Text(stringResource(R.string.app_name)) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary
+                        titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(painterResource(drawable.menu), contentDescription = stringResource(R.string.menu))
                         }
-                    }
+                    },
                 )
             },
             floatingActionButton = {
@@ -163,51 +163,51 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                                 Toast.makeText(
                                     context,
                                     context.getString(R.string.google_calendar_not_found),
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         },
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     ) {
                         Icon(
                             painterResource(date_range),
-                            contentDescription = stringResource(R.string.open_calendar)
+                            contentDescription = stringResource(R.string.open_calendar),
                         )
                     }
                 }
-            }
+            },
         ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(paddingValues),
             ) {
                 when {
                     !uiState.hasCalendarPermission ||
                         !uiState.hasPostNotificationsPermission -> StandardPermissionsScreen(
                         onSettingsClick = openAppSettings,
-                        onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() }
+                        onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() },
                     )
 
                     !uiState.hasExactAlarmPermission -> ExactAlarmPermissionScreen(
-                        onAlreadyAuthorizedClick = openExactAlarmSettings
+                        onAlreadyAuthorizedClick = openExactAlarmSettings,
                     )
 
                     !uiState.hasFullScreenIntentPermission -> FullScreenIntentPermissionScreen(
-                        onAlreadyAuthorizedClick = openFullScreenIntentSettings
+                        onAlreadyAuthorizedClick = openFullScreenIntentSettings,
                     )
 
                     else -> {
                         val onEventClick = { event: Event ->
                             val uri = ContentUris.withAppendedId(
                                 CalendarContract.Events.CONTENT_URI,
-                                event.id
+                                event.id,
                             )
                             val intent = Intent(Intent.ACTION_VIEW, uri).apply {
                                 putExtra(
                                     "beginTime",
-                                    event.startTime
+                                    event.startTime,
                                 )
                             }
                             try {
@@ -217,7 +217,7 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                                 Toast.makeText(
                                     context,
                                     context.getString(R.string.cannot_open_event),
-                                    Toast.LENGTH_SHORT
+                                    Toast.LENGTH_SHORT,
                                 ).show()
                             }
                         }
@@ -231,13 +231,13 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel(), onPurchaseRequest: 
                             onDateSelected = viewModel::onDateSelected,
                             onEventClick = onEventClick,
                             onDismissAutostart = viewModel::dismissAutostartSuggestion,
-                            onReturnToToday = viewModel::returnToToday
+                            onReturnToToday = viewModel::returnToToday,
                         )
                     }
                 }
                 AdBannerView(
                     adId = ADMOB_BANNER_AD_UNIT_HOME,
-                    isProUser = isProUser
+                    isProUser = isProUser,
                 )
             }
         }

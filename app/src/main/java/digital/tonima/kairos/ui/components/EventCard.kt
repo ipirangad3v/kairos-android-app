@@ -34,17 +34,17 @@ fun EventCard(
     event: Event,
     isGloballyEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
-    onEventClick: () -> Unit
+    onEventClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        onClick = onEventClick
+        onClick = onEventClick,
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = event.title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
@@ -52,14 +52,14 @@ fun EventCard(
                 Text(
                     text = formatMillisToTime(event.startTime),
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
             Switch(
                 checked = event.isAlarmEnabled,
                 onCheckedChange = onToggle,
-                enabled = isGloballyEnabled
+                enabled = isGloballyEnabled,
             )
         }
     }
@@ -80,12 +80,12 @@ fun EventCardPreview() {
         id = 1L,
         title = "Team Meeting",
         startTime = System.currentTimeMillis() + 3600000, // 1 hour from now
-        isAlarmEnabled = true
+        isAlarmEnabled = true,
     )
     EventCard(
         event = sampleEvent,
         isGloballyEnabled = true,
         onToggle = {},
-        onEventClick = {}
+        onEventClick = {},
     )
 }

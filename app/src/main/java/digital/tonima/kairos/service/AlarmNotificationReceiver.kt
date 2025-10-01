@@ -33,7 +33,7 @@ class AlarmNotificationReceiver : BroadcastReceiver() {
         val channel = NotificationChannel(
             channelId,
             context.getString(R.string.event_alarm),
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
             description = context.getString(R.string.notification_description)
         }
@@ -49,7 +49,7 @@ class AlarmNotificationReceiver : BroadcastReceiver() {
             context,
             uniqueId,
             fullScreenIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
         val soundAlarmIntent = Intent(context, AlarmActionReceiver::class.java).apply {
@@ -59,7 +59,7 @@ class AlarmNotificationReceiver : BroadcastReceiver() {
             context,
             uniqueId + 1,
             soundAlarmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
         val notificationTitle = context.getString(R.string.commitment)

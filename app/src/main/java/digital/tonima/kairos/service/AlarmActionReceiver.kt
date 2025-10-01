@@ -12,7 +12,7 @@ import digital.tonima.core.service.AlarmSoundService
 class AlarmActionReceiver : BroadcastReceiver() {
     override fun onReceive(
         context: Context,
-        intent: Intent
+        intent: Intent,
     ) {
         Intent(context, AlarmSoundService::class.java).apply {
             context.stopService(this)

@@ -29,7 +29,7 @@ fun MainContent(
     onDateSelected: (LocalDate) -> Unit,
     onEventClick: (Event) -> Unit,
     onDismissAutostart: () -> Unit,
-    onReturnToToday: () -> Unit
+    onReturnToToday: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -44,17 +44,17 @@ fun MainContent(
         Row(
             Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp),
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp),
             ) {
                 ControlPanel(
                     uiState = uiState,
                     onToggle = onToggle,
-                    onDismissAutostart = onDismissAutostart
+                    onDismissAutostart = onDismissAutostart,
                 )
                 CalendarView(
                     modifier = Modifier.padding(top = 8.dp),
@@ -63,7 +63,7 @@ fun MainContent(
                     eventsByDate = eventsByDate,
                     onMonthChanged = onMonthChanged,
                     onDateSelected = onDateSelected,
-                    onReturnToToday = onReturnToToday
+                    onReturnToToday = onReturnToToday,
                 )
             }
             EventList(
@@ -74,7 +74,7 @@ fun MainContent(
                 eventsByDate = eventsByDate,
                 onRefresh = onRefresh,
                 onEventToggle = onEventToggle,
-                onEventClick = onEventClick
+                onEventClick = onEventClick,
             )
         }
     } else {
@@ -82,7 +82,7 @@ fun MainContent(
             ControlPanel(
                 uiState = uiState,
                 onToggle = onToggle,
-                onDismissAutostart = onDismissAutostart
+                onDismissAutostart = onDismissAutostart,
             )
             CalendarView(
                 modifier = Modifier.padding(top = 8.dp),
@@ -91,7 +91,7 @@ fun MainContent(
                 eventsByDate = eventsByDate,
                 onMonthChanged = onMonthChanged,
                 onDateSelected = onDateSelected,
-                onReturnToToday = onReturnToToday
+                onReturnToToday = onReturnToToday,
             )
             Spacer(modifier = Modifier.height(16.dp))
             EventList(
@@ -100,7 +100,7 @@ fun MainContent(
                 eventsByDate = eventsByDate,
                 onRefresh = onRefresh,
                 onEventToggle = onEventToggle,
-                onEventClick = onEventClick
+                onEventClick = onEventClick,
             )
         }
     }

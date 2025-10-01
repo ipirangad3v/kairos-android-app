@@ -13,13 +13,13 @@ import digital.tonima.core.viewmodel.EventScreenUiState
 fun ControlPanel(
     uiState: EventScreenUiState,
     onToggle: (Boolean) -> Unit,
-    onDismissAutostart: () -> Unit
+    onDismissAutostart: () -> Unit,
 ) {
     val context = LocalContext.current
     AlarmsToggleRow(
         modifier = Modifier.padding(vertical = 16.dp),
         alarmsEnabled = uiState.isGlobalAlarmEnabled,
-        onToggle = onToggle
+        onToggle = onToggle,
     )
 
     if (uiState.audioWarning != AudioWarningState.NORMAL) {
@@ -29,7 +29,7 @@ fun ControlPanel(
     if (uiState.showAutostartSuggestion) {
         AutostartSuggestionCard(
             onOpenSettings = { openAutostartSettings(context) },
-            onDismiss = onDismissAutostart
+            onDismiss = onDismissAutostart,
         )
     }
 }

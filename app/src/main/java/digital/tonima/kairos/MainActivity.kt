@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             KairosTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     EventScreen {
                         billingManager.launchPurchaseFlow(this)

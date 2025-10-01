@@ -32,18 +32,18 @@ fun StandardPermissionsScreen(onSettingsClick: () -> Unit, onRetryClick: () -> U
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             stringResource(R.string.initial_permissions_required),
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             stringResource(R.string.permissions_disclaimer),
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(24.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -61,24 +61,24 @@ fun ExactAlarmPermissionScreen(onAlreadyAuthorizedClick: () -> Unit) {
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             stringResource(R.string.exact_alarm_permission),
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             stringResource(R.string.exact_alarm_permission_disclaimer),
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 context.startActivity(
-                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM),
                 )
             }
         }) { Text(stringResource(R.string.provide_permission)) }
@@ -95,18 +95,18 @@ fun FullScreenIntentPermissionScreen(onAlreadyAuthorizedClick: () -> Unit) {
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             stringResource(R.string.full_screen_permission),
             style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             stringResource(R.string.full_screen_permission_disclaimer),
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = {
@@ -114,8 +114,8 @@ fun FullScreenIntentPermissionScreen(onAlreadyAuthorizedClick: () -> Unit) {
                 context.startActivity(
                     Intent(
                         ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
-                        "package:${context.packageName}".toUri()
-                    )
+                        "package:${context.packageName}".toUri(),
+                    ),
                 )
             }
         }) { Text(stringResource(R.string.open_settings)) }
