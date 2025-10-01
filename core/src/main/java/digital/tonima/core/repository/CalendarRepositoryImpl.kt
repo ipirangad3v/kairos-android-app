@@ -13,8 +13,10 @@ import digital.tonima.core.model.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import logcat.logcat
+import java.time.Instant
 import java.time.YearMonth
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @BindType(installIn = BindType.Component.SINGLETON, to = CalendarRepository::class)
@@ -24,11 +26,6 @@ class CalendarRepositoryImpl
         @ApplicationContext private val context: Context
     ) :
     CalendarRepository {
-
-        companion object {
-            private const val TAG = "CalendarRepository"
-        }
-
         private val eventProjection: Array<String> = arrayOf(
             CalendarContract.Instances.EVENT_ID,
             CalendarContract.Instances.TITLE,
@@ -85,4 +82,49 @@ class CalendarRepositoryImpl
 
             return@withContext events
         }
+    /**
+     * Busca o próximo evento futuro mais próximo.
+     * Para complicações, precisamos de dados rápidos e focados.
+     */
+    override suspend fun getNextUpcomingEvent(): Event? = withContext(Dispatchers.IO) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CALENDAR
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            logcat { "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR." }
+            return@withContext null
+        }
+
+        val now = Instant.now()
+        val startMillis = now.toEpochMilli()
+        val endMillis = now.plus(30, ChronoUnit.DAYS).toEpochMilli()
+
+        val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+        ContentUris.appendId(builder, startMillis)
+        ContentUris.appendId(builder, endMillis)
+        val uri = builder.build()
+
+        val selection = "${CalendarContract.Instances.END} > ?"
+        val selectionArgs = arrayOf(now.toEpochMilli().toString())
+
+        val cursor = context.contentResolver.query(
+            uri,
+            eventProjection,
+            selection,
+            selectionArgs,
+            "${CalendarContract.Instances.BEGIN} ASC"
+        )
+
+        var nextEvent: Event? = null
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val eventId = it.getLong(PROJECTION_ID_INDEX)
+                val title = it.getString(PROJECTION_TITLE_INDEX)
+                val begin = it.getLong(PROJECTION_BEGIN_INDEX)
+                nextEvent = Event(id = eventId, title = title, startTime = begin)
+            }
+        }
+        return@withContext nextEvent
+    }
     }

@@ -39,4 +39,16 @@
     <string name="back_to_today">Vuelve a hoy</string>
     <string name="events_for_today">Eventos para hoy</string>
     <string name="not_applicable_on_this_android_version">No aplicable en esta versión de Android</string>
+    <string name="complication_label">Próximos eventos</string>
+    <string name="no_events">Sin eventos</string>
+    <string name="no_upcoming_events">Sin próximos eventos</string>
+    <string name="next_event">Próximo evento</string>
+    <string name="global_alarms">Alarmas globales</string>
+    <string name="next_event_title_placeholder">Siguiente</string>
+    <string name="no_events_title_placeholder">Sin Eventos</string>
+    <string name="no_upcoming_events_short">Ninguno</string>
+    <string name="no_upcoming_events_title">Sin Eventos</string>
+    <string name="no_upcoming_events_ranged_description">No hay eventos futuros programados.</string>
+    <string name="complication_long_text_description_event">Detalles del próximo evento programado</string>
+    <string name="complication_long_text_description_no_event">No se encontraron eventos futuros</string>
 </resources>

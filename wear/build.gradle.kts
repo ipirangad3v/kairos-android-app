@@ -54,6 +54,10 @@ dependencies {
     implementation(libs.wear.tooling.preview)
     implementation(libs.logcat)
     implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.watchface)
+    implementation(libs.androidx.watchface.complications.data.source)
+    implementation(libs.androidx.watchface.complications.data.source.ktx)
+    implementation(libs.androidx.watchface.complications.rendering)
 
     // hilt
     implementation(libs.hilt.android)

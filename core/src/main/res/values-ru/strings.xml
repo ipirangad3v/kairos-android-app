@@ -38,4 +38,16 @@
     <string name="back_to_today">Вернуться к сегодняшнему</string>
     <string name="events_for_today">События на сегодня</string>
     <string name="not_applicable_on_this_android_version">Не применимо к этой версии Android</string>
+    <string name="complication_label">Предстоящие события</string>
+    <string name="no_events">Нет событий</string>
+    <string name="no_upcoming_events">Нет предстоящих событий</string>
+    <string name="next_event">Следующее событие</string>
+    <string name="global_alarms">Глобальные будильники</string>
+    <string name="next_event_title_placeholder">Далее</string>
+    <string name="no_events_title_placeholder">Нет событий</string>
+    <string name="no_upcoming_events_short">Нет</string>
+    <string name="no_upcoming_events_title">Нет событий</string>
+    <string name="no_upcoming_events_ranged_description">Будущие события не запланированы.</string>
+    <string name="complication_long_text_description_event">Подробности следующего запланированного события</string>
+    <string name="complication_long_text_description_no_event">Будущие события не найдены</string>
 </resources>

@@ -9,7 +9,7 @@ lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.09.01"
 accompanist="0.37.3"
-spotless = "7.2.1"
+spotless = "8.0.0"
 material1="1.9.2"
 compose-calendar = "2.9.0"
 workManager="2.10.5"
@@ -28,6 +28,9 @@ wear-compose = "1.5.2"
 wearToolingPreview = "1.0.0"
 logcat = "0.4"
 androidx-hilt-compiler = "1.3.0"
+watchface-complications = "1.2.1"
+datastoreCore = "1.1.7"
+datastoreCoreVersion = "1.1.7"
 
 
 [libraries]
@@ -62,6 +65,8 @@ hilt-worker = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt
 billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billingKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 logcat = { group = "com.squareup.logcat", name = "logcat", version.ref = "logcat" }
+datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastoreCore" }
+
 
 # -- bibliotecas para Wear OS --
 androidx-wear-material-compose = { group = "androidx.wear.compose", name = "compose-material", version.ref = "wear-compose" }
@@ -69,6 +74,11 @@ androidx-wear-material-compose3 = { group = "androidx.wear.compose", name = "com
 androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wear-compose" }
 androidx-wear-tooling-preview = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "wear-compose" }
 wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
+androidx-watchface = { group = "androidx.wear.watchface", name = "watchface", version.ref = "watchface-complications" }
+androidx-watchface-complications-data-source = { group = "androidx.wear.watchface", name = "watchface-complications-data-source", version.ref = "watchface-complications" }
+androidx-watchface-complications-data-source-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version.ref = "watchface-complications" }
+androidx-watchface-complications-rendering = { group = "androidx.wear.watchface", name = "watchface-complications-rendering", version.ref = "watchface-complications" }
+androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCoreVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -38,4 +38,16 @@
     <string name="back_to_today">Back to today</string>
     <string name="events_for_today">Events for today</string>
     <string name="not_applicable_on_this_android_version">Not applicable on this Android version</string>
+    <string name="complication_label">Upcoming events</string>
+    <string name="no_events">No events</string>
+    <string name="no_upcoming_events">No upcoming events</string>
+    <string name="next_event">Next event</string>
+    <string name="global_alarms">Global alarms</string>
+    <string name="next_event_title_placeholder">Next</string>
+    <string name="no_events_title_placeholder">No Events</string>
+    <string name="no_upcoming_events_short">None</string>
+    <string name="no_upcoming_events_title">No Events</string>
+    <string name="no_upcoming_events_ranged_description">No future events scheduled.</string>
+    <string name="complication_long_text_description_event">Details of the next scheduled event</string>
+    <string name="complication_long_text_description_no_event">No future events found</string>
 </resources>

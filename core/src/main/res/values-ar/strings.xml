@@ -37,4 +37,16 @@
     <string name="back_to_today">ارجع إلى اليوم</string>
     <string name="events_for_today">أحداث اليوم</string>
     <string name="not_applicable_on_this_android_version">غير قابل للتطبيق في هذا الإصدار من أندرويد</string>
+    <string name="complication_label">الأحداث القادمة</string>
+    <string name="no_events">لا توجد أحداث</string>
+    <string name="no_upcoming_events">لا توجد أحداث قادمة</string>
+    <string name="next_event">الحدث التالي</string>
+    <string name="global_alarms">المنبهات الشاملة</string>
+    <string name="next_event_title_placeholder">التالي</string>
+    <string name="no_events_title_placeholder">لا توجد أحداث</string>
+    <string name="no_upcoming_events_short">لا شيء</string>
+    <string name="no_upcoming_events_title">لا توجد أحداث</string>
+    <string name="no_upcoming_events_ranged_description">لا توجد أحداث مستقبلية مجدولة.</string>
+    <string name="complication_long_text_description_event">تفاصيل الحدث القادم المجدول</string>
+    <string name="complication_long_text_description_no_event">لم يتم العثور على أحداث مستقبلية</string>
 </resources>

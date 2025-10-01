@@ -34,4 +34,16 @@
     <string name="back_to_today">回到今天</string>
     <string name="events_for_today">今日活动</string>
     <string name="not_applicable_on_this_android_version">不适用于此安卓版本</string>
+    <string name="complication_label">即将发生的事件</string>
+    <string name="no_events">无事件</string>
+    <string name="no_upcoming_events">无即将发生的事件</string>
+    <string name="next_event">下一个事件</string>
+    <string name="global_alarms">全局闹钟</string>
+    <string name="next_event_title_placeholder">下一个</string>
+    <string name="no_events_title_placeholder">无事件</string>
+    <string name="no_upcoming_events_short">无</string>
+    <string name="no_upcoming_events_title">无事件</string>
+    <string name="no_upcoming_events_ranged_description">未安排未来的事件。</string>
+    <string name="complication_long_text_description_event">下一次预定事件的详细信息</string>
+    <string name="complication_long_text_description_no_event">未找到未来的事件</string>
 </resources>

@@ -34,4 +34,16 @@
     <string name="back_to_today">今日に戻りましょう</string>
     <string name="events_for_today">今日のイベント</string>
     <string name="not_applicable_on_this_android_version">このAndroidバージョンには適用されません</string>
+    <string name="complication_label">今後のイベント</string>
+    <string name="no_events">イベントなし</string>
+    <string name="no_upcoming_events">今後のイベントなし</string>
+    <string name="next_event">次のイベント</string>
+    <string name="global_alarms">グローバルアラーム</string>
+    <string name="next_event_title_placeholder">次</string>
+    <string name="no_events_title_placeholder">イベントなし</string>
+    <string name="no_upcoming_events_short">なし</string>
+    <string name="no_upcoming_events_title">イベントなし</string>
+    <string name="no_upcoming_events_ranged_description">今後のイベントは予定されていません。</string>
+    <string name="complication_long_text_description_event">次の予定イベントの詳細</string>
+    <string name="complication_long_text_description_no_event">今後のイベントは見つかりませんでした</string>
 </resources>
