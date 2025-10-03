@@ -33,7 +33,7 @@
             android:launchMode="singleTask" android:showOnLockScreen="true" android:theme="@style/Theme.Kairos"
             android:turnScreenOn="true" />
 
-        <receiver android:name="digital.tonima.core.service.AlarmReceiver" android:exported="false" />
+        <receiver android:name="digital.tonima.core.receiver.AlarmReceiver" android:exported="false" />
 
         <receiver android:name=".service.AlarmNotificationReceiver" android:exported="false">
             <intent-filter>
@@ -43,7 +43,7 @@
 
         <receiver android:name=".service.AlarmActionReceiver" android:exported="false" />
 
-        <service android:name="digital.tonima.core.service.AlarmSoundService" />
+        <service android:name="digital.tonima.core.service.AlarmSoundAndVibrateService" />
 
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id" />

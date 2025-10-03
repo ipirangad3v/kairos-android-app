@@ -18,6 +18,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+includeBuild("build-logic")
 
 rootProject.name = "Kairos"
 include(":app")
