@@ -83,7 +83,7 @@ constructor(
             .launchIn(viewModelScope)
     }
 
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
         ringerModeRepository.stopObserving()
     }

@@ -8,9 +8,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import digital.tonima.kairos.core.R
-import digital.tonima.core.service.AlarmReceiver.Companion.ACTION_ALARM_TRIGGERED
-import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
-import digital.tonima.core.service.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
+import digital.tonima.core.receiver.AlarmReceiver.Companion.ACTION_ALARM_TRIGGERED
+import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
+import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
 import digital.tonima.kairos.wear.MainActivity
 
 class WearAlarmReceiver : BroadcastReceiver() {

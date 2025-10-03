@@ -1,13 +1,10 @@
-package digital.tonima.core.service
+package digital.tonima.core.receiver
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
+import digital.tonima.core.service.AlarmSoundAndVibrateService
 import digital.tonima.kairos.core.R
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -18,9 +15,6 @@ class AlarmReceiver : BroadcastReceiver() {
         const val EXTRA_UNIQUE_ID = "EXTRA_UNIQUE_ID"
         const val EXTRA_EVENT_ID = "EXTRA_EVENT_ID"
         const val EXTRA_EVENT_START_TIME = "EXTRA_EVENT_START_TIME"
-
-        val VIBRATION_PATTERN = longArrayOf(0, 500, 500)
-        const val VIBRATION_REPEAT_INDEX = 0
     }
 
     @SuppressLint("MissingPermission")
@@ -31,19 +25,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val eventId = intent.getLongExtra(EXTRA_EVENT_ID, -1L)
         val startTime = intent.getLongExtra(EXTRA_EVENT_START_TIME, -1L)
 
-        val soundServiceIntent = Intent(context, AlarmSoundService::class.java)
-        context.startService(soundServiceIntent)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }.apply {
-            vibrate(VibrationEffect.createWaveform(VIBRATION_PATTERN, VIBRATION_REPEAT_INDEX))
-        }
-
+        AlarmSoundAndVibrateService.Companion.startAlarm(context)
 
         val uiIntent = Intent(ACTION_ALARM_TRIGGERED).apply {
             putExtra(EXTRA_EVENT_TITLE, eventTitle)

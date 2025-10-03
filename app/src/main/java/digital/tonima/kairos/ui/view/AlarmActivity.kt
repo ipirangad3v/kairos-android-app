@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import digital.tonima.core.service.AlarmSoundService
+import digital.tonima.core.service.AlarmSoundAndVibrateService
 import digital.tonima.kairos.core.R
 import digital.tonima.kairos.ui.theme.KairosTheme
 
@@ -62,7 +62,7 @@ class AlarmActivity : ComponentActivity() {
                                 stopService(
                                     Intent(
                                         this@AlarmActivity,
-                                        AlarmSoundService::class.java,
+                                        AlarmSoundAndVibrateService::class.java,
                                     ),
                                 )
                                 finish()
@@ -82,6 +82,6 @@ class AlarmActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopService(Intent(this, AlarmSoundService::class.java))
+        stopService(Intent(this, AlarmSoundAndVibrateService::class.java))
     }
 }
