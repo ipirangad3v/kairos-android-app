@@ -56,4 +56,6 @@
     <string name="restart_app">REDÉMARRER</string>
     <string name="checking_updates">Vérification des mises à jour !</string>
     <string name="update_fail_or_canceled">La mise à jour de l\'application a échoué ou a été annulée.</string>
+    <string name="open_event_button">Voir l\'événement</string>
+    <string name="tile_preview_description">Aperçu de la tuile Événement suivant</string>
 </resources>

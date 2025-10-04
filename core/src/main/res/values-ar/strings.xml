@@ -53,4 +53,6 @@
     <string name="restart_app">إعادة التشغيل</string>
     <string name="checking_updates">جارٍ التحقق من وجود تحديثات!</string>
     <string name="update_fail_or_canceled">فشل تحديث التطبيق أو تم إلغاؤه.</string>
+    <string name="open_event_button">عرض الحدث</string>
+    <string name="tile_preview_description">معاينة مربع الحدث التالي</string>
 </resources>

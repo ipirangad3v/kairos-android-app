@@ -15,8 +15,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceSe
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.model.Event
-import digital.tonima.core.repository.CalendarRepository
-import digital.tonima.kairos.core.R as coreR
+import digital.tonima.core.usecases.GetNextEventUseCase
 import digital.tonima.kairos.wear.MainActivity
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
@@ -27,13 +26,14 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import javax.inject.Inject
+import digital.tonima.kairos.core.R as coreR
 
 
 @AndroidEntryPoint
 class KairosComplicationService : ComplicationDataSourceService() {
 
     @Inject
-    lateinit var calendarRepository: CalendarRepository
+    lateinit var getNextEventUseCase: GetNextEventUseCase
     private fun getTapAction(context: Context): PendingIntent {
         val intent = Intent(context, MainActivity::class.java)
         return PendingIntent.getActivity(
@@ -53,7 +53,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
         val context = this
         val tapAction = getTapAction(context)
 
-        val nextEvent: Event? = runBlocking { calendarRepository.getNextUpcomingEvent() }
+        val nextEvent: Event? = runBlocking { getNextEventUseCase.invoke() }
 
         val complicationData = when (request.complicationType) {
             ComplicationType.SHORT_TEXT -> createShortTextComplicationData(nextEvent, tapAction)

@@ -55,4 +55,6 @@
     <string name="restart_app">NEUSTARTEN</string>
     <string name="checking_updates">Suche nach Updates!</string>
     <string name="update_fail_or_canceled">App-Update fehlgeschlagen oder abgebrochen.</string>
+    <string name="open_event_button">Ereignis ansehen</string>
+    <string name="tile_preview_description">Vorschau der Kachel für das nächste Ereignis</string>
 </resources>

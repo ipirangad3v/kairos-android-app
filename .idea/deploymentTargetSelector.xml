@@ -28,7 +28,18 @@
       </SelectionState>
       <SelectionState runConfigName="wear">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-10-01T01:14:13.054195Z">
+        <DropdownSelection timestamp="2025-10-04T16:27:41.621128Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/anthoni/.android/avd/Wear_OS_Small_Round.avd" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="wear.NextEventTileService">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-10-04T16:35:18.843372Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/Users/anthoni/.android/avd/Wear_OS_Large_Round.avd" />

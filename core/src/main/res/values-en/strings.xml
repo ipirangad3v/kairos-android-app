@@ -54,4 +54,6 @@
     <string name="restart_app">RESTART</string>
     <string name="checking_updates">Checking for updates!</string>
     <string name="update_fail_or_canceled">App update failed or was canceled.</string>
+    <string name="open_event_button">View Event</string>
+    <string name="tile_preview_description">Next Event Tile Preview</string>
 </resources>

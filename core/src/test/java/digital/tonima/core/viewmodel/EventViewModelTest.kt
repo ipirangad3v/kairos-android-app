@@ -9,6 +9,7 @@ import digital.tonima.core.repository.AudioWarningState
 import digital.tonima.core.repository.CalendarRepository
 import digital.tonima.core.repository.RingerModeRepository
 import digital.tonima.core.service.EventAlarmScheduler
+import digital.tonima.core.usecases.GetEventsForMonthUseCase
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -42,7 +43,7 @@ class EventViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
 
     private val mockProUserProvider: ProUserProvider = mockk(relaxed = true)
-    private val mockCalendarRepository: CalendarRepository = mockk(relaxed = true)
+    private val getEventsForMonthUseCase: GetEventsForMonthUseCase = mockk(relaxed = true)
     private val mockAppPreferencesRepository: AppPreferencesRepository = mockk(relaxed = true)
     private val mockRingerModeRepository: RingerModeRepository = mockk(relaxed = true)
     private val mockScheduler: EventAlarmScheduler = mockk(relaxed = true)
@@ -72,7 +73,7 @@ class EventViewModelTest {
 
         viewModel = EventViewModel(
             mockProUserProvider,
-            mockCalendarRepository,
+            getEventsForMonthUseCase,
             mockAppPreferencesRepository,
             mockRingerModeRepository,
             mockScheduler,

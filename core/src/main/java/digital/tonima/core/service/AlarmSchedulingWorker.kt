@@ -7,7 +7,7 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import digital.tonima.core.permissions.PermissionManager
-import digital.tonima.core.repository.CalendarRepository
+import digital.tonima.core.usecases.GetEventsForMonthUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import logcat.LogPriority
@@ -28,7 +28,7 @@ class AlarmSchedulingWorker
 constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repository: CalendarRepository,
+    private val getEventsForMonthUseCase: GetEventsForMonthUseCase,
     private val scheduler: EventAlarmScheduler,
     private val permissionManager: PermissionManager
 ) : CoroutineWorker(appContext, workerParams) {
@@ -55,8 +55,8 @@ constructor(
                     return@withContext Result.success()
                 }
 
-                val currentMonthEvents = repository.getEventsForMonth(YearMonth.now())
-                val nextMonthEvents = repository.getEventsForMonth(YearMonth.now().plusMonths(1))
+                val currentMonthEvents = getEventsForMonthUseCase.invoke(YearMonth.now())
+                val nextMonthEvents = getEventsForMonthUseCase.invoke(YearMonth.now().plusMonths(1))
                 val allUpcomingEvents = currentMonthEvents + nextMonthEvents
 
                 logcat {

@@ -50,4 +50,6 @@
     <string name="restart_app">重新启动</string>
     <string name="checking_updates">正在检查更新！</string>
     <string name="update_fail_or_canceled">应用更新失败或已取消。</string>
+    <string name="open_event_button">查看事件</string>
+    <string name="tile_preview_description">下一个事件磁贴预览</string>
 </resources>

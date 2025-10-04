@@ -50,4 +50,6 @@
     <string name="restart_app">再起動</string>
     <string name="checking_updates">アップデートを確認しています！</string>
     <string name="update_fail_or_canceled">アプリのアップデートに失敗したか、キャンセルされました。</string>
+    <string name="open_event_button">イベントを表示</string>
+    <string name="tile_preview_description">次のイベントタイルのプレビュー</string>
 </resources>
