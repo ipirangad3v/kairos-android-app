@@ -8,9 +8,9 @@ import digital.tonima.core.model.Event
 import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.core.repository.AudioWarningState
-import digital.tonima.core.repository.CalendarRepository
 import digital.tonima.core.repository.RingerModeRepository
 import digital.tonima.core.service.EventAlarmScheduler
+import digital.tonima.core.usecases.GetEventsForMonthUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -45,7 +45,7 @@ class EventViewModel
 @Inject
 constructor(
     proUserProvider: ProUserProvider,
-    private val calendarRepository: CalendarRepository,
+    private val getEventsForMonthUseCase: GetEventsForMonthUseCase,
     private val appPreferencesRepository: AppPreferencesRepository,
     private val ringerModeRepository: RingerModeRepository,
     private val scheduler: EventAlarmScheduler,
@@ -120,7 +120,7 @@ constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true, currentMonth = yearMonth) }
 
-            val calendarEvents = calendarRepository.getEventsForMonth(yearMonth)
+            val calendarEvents = getEventsForMonthUseCase.invoke(yearMonth)
             val disabledIds = appPreferencesRepository.getDisabledEventIds().firstOrNull() ?: emptySet()
 
             val updatedEvents = calendarEvents.map { event ->

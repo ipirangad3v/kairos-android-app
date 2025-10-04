@@ -86,6 +86,21 @@
                 android:name="android.support.wearable.complications.PROVIDER_ICON"
                 android:resource="@drawable/date_range" />
         </service>
+
+        <service
+            android:name=".wear.service.NextEventTileService"
+            android:label="@string/next_event"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/tile_preview_next_event" />
+        </service>
+
     </application>
 
 </manifest>

@@ -56,4 +56,6 @@
     <string name="restart_app">REINICIAR</string>
     <string name="checking_updates">Verificando atualizações!</string>
     <string name="update_fail_or_canceled">Atualização do app falhou ou foi cancelada.</string>
+    <string name="open_event_button">Ver Evento</string>
+    <string name="tile_preview_description">Prévia do Tile de Próximo Evento</string>
 </resources>

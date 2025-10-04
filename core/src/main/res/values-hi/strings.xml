@@ -53,4 +53,6 @@
     <string name="restart_app">पुनरारंभ करें</string>
     <string name="checking_updates">अपडेट की जांच हो रही है!</string>
     <string name="update_fail_or_canceled">ऐप अपडेट विफल या रद्द हो गया।</string>
+    <string name="open_event_button">इवेंट देखें</string>
+    <string name="tile_preview_description">अगले इवेंट टाइल का पूर्वावलोकन</string>
 </resources>

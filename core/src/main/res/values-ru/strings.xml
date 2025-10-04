@@ -54,4 +54,6 @@
     <string name="restart_app">ПЕРЕЗАПУСТИТЬ</string>
     <string name="checking_updates">Проверка обновлений!</string>
     <string name="update_fail_or_canceled">Обновление приложения не удалось или было отменено.</string>
+    <string name="open_event_button">Посмотреть событие</string>
+    <string name="tile_preview_description">Предпросмотр плитки следующего события</string>
 </resources>

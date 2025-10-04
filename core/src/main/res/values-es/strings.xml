@@ -55,4 +55,6 @@
     <string name="restart_app">REINICIAR</string>
     <string name="checking_updates">¡Buscando actualizaciones!</string>
     <string name="update_fail_or_canceled">La actualización de la aplicación falló o fue cancelada.</string>
+    <string name="open_event_button">Ver evento</string>
+    <string name="tile_preview_description">Vista previa del Tile de próximo evento</string>
 </resources>

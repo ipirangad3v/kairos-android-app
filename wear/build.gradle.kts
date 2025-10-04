@@ -55,10 +55,25 @@ dependencies {
     implementation(libs.wear.tooling.preview)
     implementation(libs.logcat)
     implementation(libs.accompanist.permissions)
+
+    //watchface
     implementation(libs.androidx.watchface)
     implementation(libs.androidx.watchface.complications.data.source)
     implementation(libs.androidx.watchface.complications.data.source.ktx)
     implementation(libs.androidx.watchface.complications.rendering)
+
+    //tiles
+    implementation(libs.androidx.wear.tiles)
+    implementation(libs.androidx.wear.tiles.material)
+    implementation(libs.androidx.wear.tiles.proto)
+    implementation(libs.androidx.wear.holoristic.tiles)
+
+    //protolayout
+    implementation(libs.androidx.wear.protolayout)
+    implementation(libs.androidx.wear.protolayout.material)
+    implementation(libs.androidx.wear.protolayout.material3)
+    implementation(libs.androidx.wear.protolayout.expression)
+
 
     // hilt
     implementation(libs.hilt.android)
