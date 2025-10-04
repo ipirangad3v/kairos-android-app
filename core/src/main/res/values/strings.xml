@@ -52,4 +52,8 @@
     <string name="no_upcoming_events_ranged_description">Nenhum evento futuro agendado.</string>
     <string name="complication_long_text_description_event">Detalhes do próximo evento agendado</string>
     <string name="complication_long_text_description_no_event">Nenhum evento futuro encontrado</string>
+    <string name="update_downloaded_message">Atualização baixada. Reinicie o app para aplicar.</string>
+    <string name="restart_app">REINICIAR</string>
+    <string name="checking_updates">Verificando atualizações!</string>
+    <string name="update_fail_or_canceled">Atualização do app falhou ou foi cancelada.</string>
 </resources>

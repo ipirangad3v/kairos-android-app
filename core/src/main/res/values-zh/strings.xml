@@ -46,4 +46,8 @@
     <string name="no_upcoming_events_ranged_description">未安排未来的事件。</string>
     <string name="complication_long_text_description_event">下一次预定事件的详细信息</string>
     <string name="complication_long_text_description_no_event">未找到未来的事件</string>
+    <string name="update_downloaded_message">更新已下载。重启应用以应用更新。</string>
+    <string name="restart_app">重新启动</string>
+    <string name="checking_updates">正在检查更新！</string>
+    <string name="update_fail_or_canceled">应用更新失败或已取消。</string>
 </resources>

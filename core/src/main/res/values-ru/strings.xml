@@ -50,4 +50,8 @@
     <string name="no_upcoming_events_ranged_description">Будущие события не запланированы.</string>
     <string name="complication_long_text_description_event">Подробности следующего запланированного события</string>
     <string name="complication_long_text_description_no_event">Будущие события не найдены</string>
+    <string name="update_downloaded_message">Обновление загружено. Перезапустите приложение, чтобы применить.</string>
+    <string name="restart_app">ПЕРЕЗАПУСТИТЬ</string>
+    <string name="checking_updates">Проверка обновлений!</string>
+    <string name="update_fail_or_canceled">Обновление приложения не удалось или было отменено.</string>
 </resources>

@@ -35,13 +35,13 @@
 
         <receiver android:name="digital.tonima.core.receiver.AlarmReceiver" android:exported="false" />
 
-        <receiver android:name=".service.AlarmNotificationReceiver" android:exported="false">
+        <receiver android:name=".receivers.AlarmNotificationReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="digital.tonima.core.ALARM_TRIGGERED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".service.AlarmActionReceiver" android:exported="false" />
+        <receiver android:name=".receivers.AlarmActionReceiver" android:exported="false" />
 
         <service android:name="digital.tonima.core.service.AlarmSoundAndVibrateService" />
 

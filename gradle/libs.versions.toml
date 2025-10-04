@@ -36,6 +36,7 @@ coroutines= "1.10.2"
 core-testing= "2.2.0"
 turbine = "1.2.1"
 jetbrainsKotlinJvm = "2.2.20"
+inapp-update = "2.1.0"
 
 
 [libraries]
@@ -75,6 +76,8 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "core-testing" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+google-inapp-update = { group = "com.google.android.play", name = "app-update", version.ref = "inapp-update" }
+google-inapp-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "inapp-update" }
 
 # -- bibliotecas para Wear OS --
 androidx-wear-material-compose = { group = "androidx.wear.compose", name = "compose-material", version.ref = "wear-compose" }

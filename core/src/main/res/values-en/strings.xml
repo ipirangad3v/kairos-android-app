@@ -50,4 +50,8 @@
     <string name="no_upcoming_events_ranged_description">No future events scheduled.</string>
     <string name="complication_long_text_description_event">Details of the next scheduled event</string>
     <string name="complication_long_text_description_no_event">No future events found</string>
+    <string name="update_downloaded_message">Update downloaded. Restart the app to apply.</string>
+    <string name="restart_app">RESTART</string>
+    <string name="checking_updates">Checking for updates!</string>
+    <string name="update_fail_or_canceled">App update failed or was canceled.</string>
 </resources>

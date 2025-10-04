@@ -46,4 +46,8 @@
     <string name="no_upcoming_events_ranged_description">今後のイベントは予定されていません。</string>
     <string name="complication_long_text_description_event">次の予定イベントの詳細</string>
     <string name="complication_long_text_description_no_event">今後のイベントは見つかりませんでした</string>
+    <string name="update_downloaded_message">アップデートがダウンロードされました。アプリを再起動して適用してください。</string>
+    <string name="restart_app">再起動</string>
+    <string name="checking_updates">アップデートを確認しています！</string>
+    <string name="update_fail_or_canceled">アプリのアップデートに失敗したか、キャンセルされました。</string>
 </resources>

@@ -1,4 +1,4 @@
-package digital.tonima.kairos.service
+package digital.tonima.kairos.receivers
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
