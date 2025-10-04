@@ -51,4 +51,8 @@
     <string name="no_upcoming_events_ranged_description">No hay eventos futuros programados.</string>
     <string name="complication_long_text_description_event">Detalles del próximo evento programado</string>
     <string name="complication_long_text_description_no_event">No se encontraron eventos futuros</string>
+    <string name="update_downloaded_message">Actualización descargada. Reinicia la aplicación para aplicarla.</string>
+    <string name="restart_app">REINICIAR</string>
+    <string name="checking_updates">¡Buscando actualizaciones!</string>
+    <string name="update_fail_or_canceled">La actualización de la aplicación falló o fue cancelada.</string>
 </resources>

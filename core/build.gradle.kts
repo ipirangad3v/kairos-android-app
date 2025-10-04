@@ -42,13 +42,14 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.billing.ktx)
-
+    implementation(libs.google.inapp.update)
+    implementation(libs.google.inapp.update.ktx)
+    implementation(libs.androidx.datastore.core)
     implementation(libs.logcat)
 
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
-    implementation(libs.androidx.datastore.core)
     ksp(libs.hilt.compiler)
     ksp(libs.androidx.hilt.compiler)
     implementation(libs.hilt.binder)

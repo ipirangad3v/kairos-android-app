@@ -1,4 +1,4 @@
-package digital.tonima.kairos.service
+package digital.tonima.kairos.receivers
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

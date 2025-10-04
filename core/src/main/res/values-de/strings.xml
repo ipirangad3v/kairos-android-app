@@ -51,4 +51,8 @@
     <string name="no_upcoming_events_ranged_description">Keine zukünftigen Ereignisse geplant.</string>
     <string name="complication_long_text_description_event">Details des nächsten geplanten Ereignisses</string>
     <string name="complication_long_text_description_no_event">Keine zukünftigen Ereignisse gefunden</string>
+    <string name="update_downloaded_message">Update heruntergeladen. Starten Sie die App neu, um es anzuwenden.</string>
+    <string name="restart_app">NEUSTARTEN</string>
+    <string name="checking_updates">Suche nach Updates!</string>
+    <string name="update_fail_or_canceled">App-Update fehlgeschlagen oder abgebrochen.</string>
 </resources>

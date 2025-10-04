@@ -49,4 +49,8 @@
     <string name="no_upcoming_events_ranged_description">لا توجد أحداث مستقبلية مجدولة.</string>
     <string name="complication_long_text_description_event">تفاصيل الحدث القادم المجدول</string>
     <string name="complication_long_text_description_no_event">لم يتم العثور على أحداث مستقبلية</string>
+    <string name="update_downloaded_message">تم تنزيل التحديث. أعد تشغيل التطبيق لتطبيقه.</string>
+    <string name="restart_app">إعادة التشغيل</string>
+    <string name="checking_updates">جارٍ التحقق من وجود تحديثات!</string>
+    <string name="update_fail_or_canceled">فشل تحديث التطبيق أو تم إلغاؤه.</string>
 </resources>

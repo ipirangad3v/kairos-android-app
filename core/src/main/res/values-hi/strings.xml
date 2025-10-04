@@ -49,4 +49,8 @@
     <string name="no_upcoming_events_ranged_description">कोई भविष्य का कार्यक्रम निर्धारित नहीं है।</string>
     <string name="complication_long_text_description_event">अगले निर्धारित कार्यक्रम का विवरण</string>
     <string name="complication_long_text_description_no_event">कोई भविष्य का कार्यक्रम नहीं मिला</string>
+    <string name="update_downloaded_message">अपडेट डाउनलोड हो गया है। लागू करने के लिए ऐप को पुनरारंभ करें।</string>
+    <string name="restart_app">पुनरारंभ करें</string>
+    <string name="checking_updates">अपडेट की जांच हो रही है!</string>
+    <string name="update_fail_or_canceled">ऐप अपडेट विफल या रद्द हो गया।</string>
 </resources>

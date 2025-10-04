@@ -52,4 +52,8 @@
     <string name="no_upcoming_events_ranged_description">Aucun événement futur programmé.</string>
     <string name="complication_long_text_description_event">Détails du prochain événement programmé</string>
     <string name="complication_long_text_description_no_event">Aucun événement futur trouvé</string>
+    <string name="update_downloaded_message">Mise à jour téléchargée. Redémarrez l\'application pour l\'appliquer.</string>
+    <string name="restart_app">REDÉMARRER</string>
+    <string name="checking_updates">Vérification des mises à jour !</string>
+    <string name="update_fail_or_canceled">La mise à jour de l\'application a échoué ou a été annulée.</string>
 </resources>
