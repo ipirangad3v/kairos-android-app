@@ -124,10 +124,6 @@ jobs:
       - name: Install Fastlane dependencies
         run: |
           bundle install
-      - name: Decode Signing Key
-        run: |
-          echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > app/release-key.jks
-          echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > wear/release-key.jks
 
       - name: Create google-services.json for App Module
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
