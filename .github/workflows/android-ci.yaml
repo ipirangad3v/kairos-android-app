@@ -89,6 +89,7 @@ jobs:
           echo "Bumping versionName to $NEW_VERSION_NAME"
           sed -i "s/APP_VERSION_NAME=.*/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
           echo "version_name=$NEW_VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$NEW_VERSION_CODE" >> $GITHUB_OUTPUT
 
           git add gradle.properties
           if ! git diff --staged --quiet; then
@@ -114,6 +115,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Setup Ruby and install Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.x'
+          bundler-cache: true
+
+      - name: Install Fastlane dependencies
+        run: |
+          bundle install
+      - name: Decode Signing Key
+        run: |
+          echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > app/release-key.jks
+          echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > wear/release-key.jks
+
       - name: Create google-services.json for App Module
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
 
@@ -123,46 +138,34 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Release App Bundle (Phone)
-        run: ./gradlew :app:bundleRelease
 
-      - name: Build Release App Bundle (Wear OS)
-        run: ./gradlew :wear:bundleRelease
+      - name: Run Fastlane Deploy for Phone App
+        env:
+          PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+        run: |
+          fastlane deploy_phone \
+            version_code:${{ steps.version_bumper.outputs.version_code }} \
+            version_name:${{ steps.version_bumper.outputs.version_name }}
 
-      - name: Sign App Bundle (Phone)
-        id: sign_phone_app
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/bundle/release/
-          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
-          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          keyPassword: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
-
-      - name: Sign App Bundle (Wear OS)
-        id: sign_wear_app
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: wear/build/outputs/bundle/release/
-          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
-          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          keyPassword: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
-
-      - name: Upload Phone App Bundle to Google Play
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
-          packageName: digital.tonima.kairos
-          releaseFiles: ${{ steps.sign_phone_app.outputs.signedReleaseFile }}
-          track: internal
+          - name: Run Fastlane Deploy for Wear OS App
+          env:
+          PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+          run: |
+          fastlane deploy_wear \
+            version_code:${{ steps.version_bumper.outputs.version_code }} \
+            version_name:${{ steps.version_bumper.outputs.version_name }}
 
       - name: Create GitHub Tag and Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.version_bumper.outputs.version_name }}
           name: Release v${{ steps.version_bumper.outputs.version_name }}
-          files: |
-            ${{ steps.sign_phone_app.outputs.signedReleaseFile }}
-            ${{ steps.sign_wear_app.outputs.signedReleaseFile }}
           body: "Release automático da versão ${{ steps.version_bumper.outputs.version_name }} via GitHub Actions para telefone e Wear OS."

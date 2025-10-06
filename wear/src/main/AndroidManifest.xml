@@ -1,41 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="digital.tonima.kairos">
+    xmlns:tools="http://schemas.android.com/tools" package="digital.tonima.kairos">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-feature android:name="android.hardware.type.watch" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
 
-    <application
-        android:name=".wear.KairosWearApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
+    <application android:name=".wear.KairosWearApplication" android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
-        <uses-library
-            android:name="com.google.android.wearable"
-            android:required="true" />
-        <uses-library
-            android:name="wear-sdk"
-            android:required="false" />
+        <uses-library android:name="com.google.android.wearable" android:required="true" />
+        <uses-library android:name="wear-sdk" android:required="false" />
 
-        <meta-data
-            android:name="com.google.android.wearable.standalone"
-            android:value="true" />
+        <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
 
-        <receiver
-            android:name="digital.tonima.core.receiver.AlarmReceiver"
-            android:exported="false" />
+        <receiver android:name="digital.tonima.core.receiver.AlarmReceiver" android:exported="false" />
 
-        <receiver
-            android:name=".wear.service.WearAlarmReceiver"
-            android:exported="false">
+        <receiver android:name=".wear.service.WearAlarmReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="digital.tonima.core.ALARM_TRIGGERED" />
             </intent-filter>
@@ -45,10 +30,7 @@
 
         <service android:name="digital.tonima.core.service.AlarmSoundAndVibrateService" />
 
-        <activity
-            android:name=".wear.MainActivity"
-            android:exported="true"
-            android:taskAffinity=""
+        <activity android:name=".wear.MainActivity" android:exported="true" android:taskAffinity=""
             android:theme="@style/Theme.Kairos">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,21 +38,14 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="merge">
+        <provider android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup" android:exported="false" tools:node="merge">
 
-            <meta-data
-                android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup"
+            <meta-data android:name="androidx.work.WorkManagerInitializer" android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
 
-        <service
-            android:label="@string/complication_label"
-            android:name=".wear.data.KairosComplicationService"
+        <service android:label="@string/complication_label" android:name=".wear.data.KairosComplicationService"
             android:exported="true"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -82,22 +57,17 @@
                 android:value="0" />
             <meta-data android:name="android.support.wearable.complications.PRIMARY_PROVIDER"
                 android:value="true" />
-            <meta-data
-                android:name="android.support.wearable.complications.PROVIDER_ICON"
+            <meta-data android:name="android.support.wearable.complications.PROVIDER_ICON"
                 android:resource="@drawable/date_range" />
         </service>
 
-        <service
-            android:name=".wear.service.NextEventTileService"
-            android:label="@string/next_event"
-            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER"
-            android:exported="true">
+        <service android:name=".wear.service.NextEventTileService" android:label="@string/next_event"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER" android:exported="true">
             <intent-filter>
                 <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
             </intent-filter>
 
-            <meta-data
-                android:name="androidx.wear.tiles.PREVIEW"
+            <meta-data android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@drawable/tile_preview_next_event" />
         </service>
 

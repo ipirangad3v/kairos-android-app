@@ -18,30 +18,30 @@ import digital.tonima.kairos.core.R as coreR
 @Composable
 fun WearOsPermissionsScreenContent(
     onSettingsClick: () -> Unit,
-    onRetryClick: () -> Unit
+    onRetryClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 24.dp, start = 8.dp, end = 8.dp, bottom = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(coreR.string.initial_permissions_required),
             style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
         Text(
             text = stringResource(coreR.string.permissions_disclaimer),
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
         )
         Chip(
             onClick = onRetryClick,
             label = { Text(stringResource(coreR.string.provide_permission)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 8.dp),
         )
         Spacer(Modifier.height(8.dp))
         Chip(
@@ -49,7 +49,7 @@ fun WearOsPermissionsScreenContent(
             label = { Text(stringResource(coreR.string.open_settings)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 8.dp),
         )
     }
 }

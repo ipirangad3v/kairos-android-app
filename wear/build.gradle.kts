@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.spotless)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.jacoco)
@@ -15,8 +16,19 @@ android {
         applicationId = "digital.tonima.kairos"
         minSdk = rootProject.extra["MIN_SDK_VERSION"].toString().toInt()
         targetSdk = rootProject.extra["TARGET_SDK_VERSION"].toString().toInt()
-        versionCode = rootProject.extra["APP_VERSION_CODE"].toString().toInt() + 1
-        versionName = (rootProject.extra["APP_VERSION_NAME"]).toString() + "-wear"
+        versionCode = rootProject.extra["APP_VERSION_CODE"].toString().toInt()
+        versionName = rootProject.extra["APP_VERSION_NAME"].toString()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("release-key.jks")
+            storePassword = System.getenv("ANDROID_SIGNING_KEY_PASSWORD") ?: "default_store_password_wear"
+            keyAlias = System.getenv("ANDROID_SIGNING_KEY_ALIAS") ?: "default_key_alias_wear"
+            keyPassword = System.getenv("ANDROID_SIGNING_KEY_ALIAS_PASSWORD") ?: "default_key_password_wear"
+        }
     }
 
     buildTypes {
@@ -27,6 +39,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -74,7 +87,6 @@ dependencies {
     implementation(libs.androidx.wear.protolayout.material3)
     implementation(libs.androidx.wear.protolayout.expression)
 
-
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
@@ -89,3 +101,4 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
+apply(from = "../spotless.gradle")

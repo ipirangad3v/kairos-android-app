@@ -10,7 +10,6 @@ val Purple40 = Color(0xFF6650a4) // Poderia ser usado para variações escuras
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-
 object ColorTokens {
     // Cores Primárias (ajustadas para tema escuro)
     val Primary = Purple80 // Geralmente uma cor mais clara para tema escuro

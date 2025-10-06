@@ -58,7 +58,7 @@ class KairosWearApplication :
         workManager.enqueueUniqueWork(
             "wear-initial-event-scheduler",
             ExistingWorkPolicy.KEEP,
-            initialRequest
+            initialRequest,
         )
 
         val repeatingRequest =
@@ -69,7 +69,7 @@ class KairosWearApplication :
         workManager.enqueueUniquePeriodicWork(
             "wear-event-scheduler",
             ExistingPeriodicWorkPolicy.KEEP,
-            repeatingRequest
+            repeatingRequest,
         )
     }
 }

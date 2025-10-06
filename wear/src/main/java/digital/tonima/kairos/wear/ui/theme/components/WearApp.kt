@@ -48,7 +48,7 @@ import digital.tonima.kairos.core.R as coreR
 @Composable
 fun WearApp(
     viewModel: EventViewModel = hiltViewModel(),
-    permissionManager: PermissionManager
+    permissionManager: PermissionManager,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberScalingLazyListState()
@@ -85,13 +85,13 @@ fun WearApp(
     Scaffold(
         timeText = { TimeText(modifier = Modifier.scrollAway(listState)) },
         vignette = { Vignette(vignettePosition = VignettePosition.TopAndBottom) },
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState) }
+        positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
     ) {
         ScalingLazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(top = 24.dp, start = 8.dp, end = 8.dp, bottom = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            state = listState
+            state = listState,
         ) {
             if (!uiState.hasCalendarPermission) {
                 item {
@@ -100,11 +100,11 @@ fun WearApp(
                             context.startActivity(
                                 Intent(
                                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.fromParts("package", context.packageName, null)
-                                )
+                                    Uri.fromParts("package", context.packageName, null),
+                                ),
                             )
                         },
-                        onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() }
+                        onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() },
                     )
                 }
             } else {
@@ -124,14 +124,14 @@ fun WearApp(
                         toggleControl = { Switch(checked = uiState.isGlobalAlarmEnabled) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 16.dp),
                     )
                 }
                 item {
                     Spacer(Modifier.height(16.dp))
                     Text(
                         text = stringResource(coreR.string.events_for_today),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                     Spacer(Modifier.height(8.dp))
                 }

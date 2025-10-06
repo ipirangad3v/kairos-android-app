@@ -1,0 +1,98 @@
+require 'base64'
+
+platform :android do
+  before_all do
+    ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"] = ENV["PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT"]
+    ENV["PACKAGE_NAME"] = "digital.tonima.kairos"
+
+    ENV["SIGNING_KEY_ALIAS"] = ENV["ANDROID_SIGNING_KEY_ALIAS"]
+    ENV["SIGNING_KEY_PASSWORD"] = ENV["ANDROID_SIGNING_KEY_PASSWORD"]
+    ENV["SIGNING_KEY_ALIAS_PASSWORD"] = ENV["ANDROID_SIGNING_KEY_ALIAS_PASSWORD"]
+
+    unless ENV["GOOGLE_SERVICES_JSON_BASE64"].nil? || ENV["GOOGLE_SERVICES_JSON_BASE64"].empty?
+      File.open("google-services.json", "w") do |f|
+        f.write(Base64.decode64(ENV["GOOGLE_SERVICES_JSON_BASE64"]))
+      end
+      UI.message "Decoded google-services.json from environment variable."
+    else
+      UI.important "GOOGLE_SERVICES_JSON_BASE64 not found in environment. Make sure it's set."
+    end
+  end
+
+  after_all do |lane|
+    File.delete("google-services.json") if File.exist?("google-services.json")
+    UI.message "Cleaned up temporary google-services.json."
+  end
+
+  desc "Build and upload release AAB for the phone app to Google Play"
+  lane :deploy_phone do |options|
+    version_code = options[:version_code]
+    version_name = options[:version_name]
+
+    sh "cp google-services.json app/google-services.json"
+
+    gradle(
+      task: "bundleRelease",
+      project: "app",
+      properties: {
+        "android.injected.version.code" => version_code,
+        "android.injected.version.name" => version_name,
+        "android.injected.signing.store.file" => "release-key.jks",
+        "android.injected.signing.store.password" => ENV["SIGNING_KEY_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["SIGNING_KEY_ALIAS_PASSWORD"]
+      }
+    )
+
+    aab_path = Dir["app/build/outputs/bundle/release/*.aab"].first
+    UI.user_error! "Could not find release AAB for phone app in #{aab_path}" unless File.exist?(aab_path)
+
+    supply(
+      package_name: ENV["PACKAGE_NAME"],
+      aab: aab_path,
+      track: "internal",
+      json_key_data: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"],
+      version_code: version_code,
+      version_name: version_name,
+      skip_metadata: true,
+      skip_screenshots: true,
+      skip_upload_changelogs: true,
+    )
+  end
+
+  desc "Build and upload release AAB for the Wear OS app to Google Play"
+  lane :deploy_wear do |options|
+    version_code = options[:version_code]
+    version_name = options[:version_name]
+
+    sh "cp google-services.json wear/google-services.json"
+
+    gradle(
+      task: "bundleRelease",
+      project: "wear",
+      properties: {
+        "android.injected.version.code" => version_code,
+        "android.injected.version.name" => version_name,
+        "android.injected.signing.store.file" => "release-key.jks",
+        "android.injected.signing.store.password" => ENV["SIGNING_KEY_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["SIGNING_KEY_ALIAS_PASSWORD"]
+      }
+    )
+
+    aab_path = Dir["wear/build/outputs/bundle/release/*.aab"].first
+    UI.user_error! "Could not find release AAB for wear app in #{aab_path}" unless File.exist?(aab_path)
+
+    supply(
+      package_name: ENV["PACKAGE_NAME"],
+      aab: aab_path,
+      track: "internal",
+      json_key_data: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"],
+      version_code: version_code,
+      version_name: version_name,
+      skip_metadata: true,
+      skip_screenshots: true,
+      skip_upload_changelogs: true
+    )
+  end
+end
