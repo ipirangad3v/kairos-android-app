@@ -28,7 +28,6 @@ import java.time.format.FormatStyle
 import javax.inject.Inject
 import digital.tonima.kairos.core.R as coreR
 
-
 @AndroidEntryPoint
 class KairosComplicationService : ComplicationDataSourceService() {
 
@@ -40,13 +39,13 @@ class KairosComplicationService : ComplicationDataSourceService() {
             context,
             0,
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE,
         )
     }
 
     override fun onComplicationRequest(
         request: ComplicationRequest,
-        listener: ComplicationRequestListener
+        listener: ComplicationRequestListener,
     ) {
         logcat { "onComplicationRequest para tipo: ${request.complicationType}" }
 
@@ -60,7 +59,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
             ComplicationType.LONG_TEXT -> createLongTextComplicationData(nextEvent, tapAction)
             ComplicationType.RANGED_VALUE -> createRangedValueComplicationData(
                 nextEvent,
-                tapAction
+                tapAction,
             )
 
             else -> {
@@ -75,29 +74,29 @@ class KairosComplicationService : ComplicationDataSourceService() {
         return when (type) {
             ComplicationType.SHORT_TEXT -> ShortTextComplicationData.Builder(
                 text = PlainComplicationText.Builder("10:30").build(),
-                contentDescription = PlainComplicationText.Builder("Evento").build()
+                contentDescription = PlainComplicationText.Builder("Evento").build(),
             )
                 .setMonochromaticImage(
                     MonochromaticImage.Builder(
                         image = Icon.createWithResource(
                             this@KairosComplicationService,
-                            coreR.drawable.date_range
+                            coreR.drawable.date_range,
                         ),
-                    ).build()
+                    ).build(),
                 )
                 .build()
 
             ComplicationType.LONG_TEXT -> LongTextComplicationData.Builder(
                 text = PlainComplicationText.Builder("Reunião - 10:30").build(),
-                contentDescription = PlainComplicationText.Builder("Próximo").build()
+                contentDescription = PlainComplicationText.Builder("Próximo").build(),
             )
                 .setMonochromaticImage(
                     MonochromaticImage.Builder(
                         image = Icon.createWithResource(
                             this,
-                            coreR.drawable.date_range
+                            coreR.drawable.date_range,
                         ),
-                    ).build()
+                    ).build(),
                 )
                 .build()
 
@@ -105,7 +104,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
                 value = 50f,
                 min = 0f,
                 max = 100f,
-                contentDescription = PlainComplicationText.Builder("Tempo para evento").build()
+                contentDescription = PlainComplicationText.Builder("Tempo para evento").build(),
             )
                 .setText(PlainComplicationText.Builder("50m").build())
                 .setTitle(PlainComplicationText.Builder("Prox. Evento").build())
@@ -115,10 +114,9 @@ class KairosComplicationService : ComplicationDataSourceService() {
         }
     }
 
-
     private fun createShortTextComplicationData(
         nextEvent: Event?,
-        tapAction: PendingIntent
+        tapAction: PendingIntent,
     ): ComplicationData {
         val text = if (nextEvent != null) {
             val localTime = Instant.ofEpochMilli(nextEvent.startTime)
@@ -133,13 +131,13 @@ class KairosComplicationService : ComplicationDataSourceService() {
         val icon = MonochromaticImage.Builder(
             image = Icon.createWithResource(
                 this,
-                coreR.drawable.date_range
+                coreR.drawable.date_range,
             ),
         ).build()
 
         return ShortTextComplicationData.Builder(
             text = text,
-            contentDescription = PlainComplicationText.Builder("Próximo").build()
+            contentDescription = PlainComplicationText.Builder("Próximo").build(),
         )
             .setTapAction(tapAction)
             .setMonochromaticImage(icon)
@@ -148,7 +146,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
 
     private fun createLongTextComplicationData(
         nextEvent: Event?,
-        tapAction: PendingIntent
+        tapAction: PendingIntent,
     ): ComplicationData {
         val mainDisplayBody: PlainComplicationText
         val detailTitle: PlainComplicationText
@@ -160,25 +158,31 @@ class KairosComplicationService : ComplicationDataSourceService() {
                 .toLocalTime()
             val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
 
-            mainDisplayBody = PlainComplicationText.Builder("${nextEvent.title} - ${formatter.format(localTime)}").build()
-            detailTitle = PlainComplicationText.Builder(getString(coreR.string.next_event_title_placeholder)).build()
-            contentDesc = PlainComplicationText.Builder(getString(coreR.string.complication_long_text_description_event)).build()
+            mainDisplayBody = PlainComplicationText
+                .Builder("${nextEvent.title} - ${formatter.format(localTime)}").build()
+            detailTitle = PlainComplicationText
+                .Builder(getString(coreR.string.next_event_title_placeholder)).build()
+            contentDesc = PlainComplicationText
+                .Builder(getString(coreR.string.complication_long_text_description_event)).build()
         } else {
-            mainDisplayBody = PlainComplicationText.Builder(getString(coreR.string.no_upcoming_events)).build()
-            detailTitle = PlainComplicationText.Builder(getString(coreR.string.no_events_title_placeholder)).build()
-            contentDesc = PlainComplicationText.Builder(getString(coreR.string.complication_long_text_description_no_event)).build()
+            mainDisplayBody = PlainComplicationText
+                .Builder(getString(coreR.string.no_upcoming_events)).build()
+            detailTitle = PlainComplicationText
+                .Builder(getString(coreR.string.no_events_title_placeholder)).build()
+            contentDesc = PlainComplicationText
+                .Builder(getString(coreR.string.complication_long_text_description_no_event)).build()
         }
 
         val icon = MonochromaticImage.Builder(
             image = Icon.createWithResource(
                 this,
-                coreR.drawable.date_range
+                coreR.drawable.date_range,
             ),
         ).build()
 
         return LongTextComplicationData.Builder(
             text = mainDisplayBody,
-            contentDescription = contentDesc
+            contentDescription = contentDesc,
         )
             .setTitle(detailTitle)
             .setTapAction(tapAction)
@@ -187,7 +191,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
     }
     private fun createRangedValueComplicationData(
         nextEvent: Event?,
-        tapAction: PendingIntent
+        tapAction: PendingIntent,
     ): ComplicationData {
         return if (nextEvent != null) {
             val now = Instant.now()
@@ -203,7 +207,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
                 value = value,
                 min = minRange,
                 max = maxRange,
-                contentDescription = PlainComplicationText.Builder("Tempo para o próximo evento").build()
+                contentDescription = PlainComplicationText.Builder("Tempo para o próximo evento").build(),
             )
                 .setText(PlainComplicationText.Builder("${minutesUntil}m").build())
                 .setTitle(PlainComplicationText.Builder(nextEvent.title).build())
@@ -218,7 +222,9 @@ class KairosComplicationService : ComplicationDataSourceService() {
                 value = value,
                 min = minRange,
                 max = maxRange,
-                contentDescription = PlainComplicationText.Builder(getString(coreR.string.no_upcoming_events_ranged_description)).build()
+                contentDescription = PlainComplicationText.Builder(
+                    getString(coreR.string.no_upcoming_events_ranged_description),
+                ).build(),
             )
                 .setText(PlainComplicationText.Builder(getString(coreR.string.no_upcoming_events_short)).build())
                 .setTitle(PlainComplicationText.Builder(getString(coreR.string.no_upcoming_events_title)).build())
@@ -226,7 +232,6 @@ class KairosComplicationService : ComplicationDataSourceService() {
                 .build()
         }
     }
-
 
     override fun onComplicationDeactivated(complicationInstanceId: Int) {
         logcat { "Complication $complicationInstanceId desativada." }

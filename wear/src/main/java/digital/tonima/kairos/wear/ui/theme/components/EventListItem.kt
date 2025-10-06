@@ -30,12 +30,12 @@ fun EventListItem(event: Event) {
         onClick = { },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 16.dp)
+            .padding(vertical = 4.dp, horizontal = 16.dp),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(12.dp),
         ) {
             Text(text = event.title)
             Spacer(modifier = Modifier.height(4.dp))
@@ -46,4 +46,3 @@ fun EventListItem(event: Event) {
         }
     }
 }
-

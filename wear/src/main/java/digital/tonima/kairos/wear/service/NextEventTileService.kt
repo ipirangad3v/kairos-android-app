@@ -38,12 +38,15 @@ private const val RESOURCES_VERSION = "1"
 private const val ID_UPDATE_BUTTON = "update_button"
 
 val customTileColors = Colors(
-    /* primary = */ 0xFF6200EE.toInt(),
-    /* onPrimary = */ 0xFFFFFFFF.toInt(),
-    /* surface = */ 0xFF212121.toInt(),
-    /* onSurface = */ 0xFFFFFFFF.toInt(),
+    /* primary = */
+    0xFF6200EE.toInt(),
+    /* onPrimary = */
+    0xFFFFFFFF.toInt(),
+    /* surface = */
+    0xFF212121.toInt(),
+    /* onSurface = */
+    0xFFFFFFFF.toInt(),
 )
-
 
 @AndroidEntryPoint
 @OptIn(ExperimentalHorologistApi::class)
@@ -67,10 +70,10 @@ class NextEventTileService : SuspendingTileService() {
                 TimelineBuilders.Timeline.Builder().addTimelineEntry(
                     TimelineBuilders.TimelineEntry.Builder().setLayout(
                         LayoutElementBuilders.Layout.Builder().setRoot(
-                            layout(this@NextEventTileService, deviceParameters, nextEvent)
-                        ).build()
-                    ).build()
-                ).build()
+                            layout(this@NextEventTileService, deviceParameters, nextEvent),
+                        ).build(),
+                    ).build(),
+                ).build(),
             ).build()
     }
 
@@ -79,14 +82,14 @@ class NextEventTileService : SuspendingTileService() {
     private fun layout(
         context: Context,
         deviceParameters: DeviceParametersBuilders.DeviceParameters,
-        event: Event?
+        event: Event?,
     ): LayoutElementBuilders.LayoutElement {
         val launchAppAction = ActionBuilders.LaunchAction.Builder()
             .setAndroidActivity(
                 ActionBuilders.AndroidActivity.Builder()
                     .setClassName("digital.tonima.kairos.wear.MainActivity")
                     .setPackageName(context.packageName)
-                    .build()
+                    .build(),
             )
             .build()
 
@@ -103,11 +106,11 @@ class NextEventTileService : SuspendingTileService() {
                             .setFontStyle(
                                 LayoutElementBuilders.FontStyle.Builder()
                                     .setSize(DimensionBuilders.sp(24f))
-                                    .build()
+                                    .build(),
                             )
-                            .build()
+                            .build(),
                     )
-                    .build()
+                    .build(),
             )
             .addContent(
                 Column.Builder()
@@ -116,15 +119,15 @@ class NextEventTileService : SuspendingTileService() {
                             .setPadding(
                                 ModifiersBuilders.Padding.Builder()
                                     .setTop(DimensionBuilders.dp(32f))
-                                    .build()
+                                    .build(),
                             )
                             .setClickable(
                                 ModifiersBuilders.Clickable.Builder()
                                     .setId("whole_tile_clickable")
                                     .setOnClick(launchAppAction)
-                                    .build()
+                                    .build(),
                             )
-                            .build()
+                            .build(),
                     )
                     .addContent(
                         Row.Builder()
@@ -132,9 +135,9 @@ class NextEventTileService : SuspendingTileService() {
                                 Text.Builder(context, context.getString(R.string.next_event))
                                     .setTypography(Typography.TYPOGRAPHY_TITLE3)
                                     .setColor(ColorBuilders.ColorProp.Builder(customTileColors.onSurface).build())
-                                    .build()
+                                    .build(),
                             )
-                            .build()
+                            .build(),
                     )
                     .addContent(smallSpacer())
                     .apply {
@@ -144,7 +147,7 @@ class NextEventTileService : SuspendingTileService() {
                                     .setTypography(Typography.TYPOGRAPHY_BODY1)
                                     .setMaxLines(2)
                                     .setColor(ColorBuilders.ColorProp.Builder(customTileColors.onSurface).build())
-                                    .build()
+                                    .build(),
                             )
                             addContent(smallSpacer())
                             addContent(
@@ -158,9 +161,9 @@ class NextEventTileService : SuspendingTileService() {
                                 CompactChip.Builder(
                                     context,
                                     context.getString(R.string.open_event_button),
-                                    clickable(launchAppAction,ID_UPDATE_BUTTON),
-                                    deviceParameters
-                                ).build()
+                                    clickable(launchAppAction, ID_UPDATE_BUTTON),
+                                    deviceParameters,
+                                ).build(),
                             )
                         } else {
                             addContent(
@@ -168,20 +171,20 @@ class NextEventTileService : SuspendingTileService() {
                                     .setTypography(Typography.TYPOGRAPHY_BODY1)
                                     .setColor(ColorBuilders.ColorProp.Builder(customTileColors.onSurface).build())
                                     .setMaxLines(3)
-                                    .build()
+                                    .build(),
                             )
                             addContent(smallSpacer())
                             addContent(
                                 CompactChip.Builder(
                                     context,
                                     context.getString(R.string.open_calendar),
-                                    clickable( launchAppAction,ID_UPDATE_BUTTON),
-                                    deviceParameters
-                                ).build()
+                                    clickable(launchAppAction, ID_UPDATE_BUTTON),
+                                    deviceParameters,
+                                ).build(),
                             )
                         }
                     }
-                    .build()
+                    .build(),
             )
             .build()
     }

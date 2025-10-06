@@ -7,10 +7,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import digital.tonima.kairos.core.R
 import digital.tonima.core.receiver.AlarmReceiver.Companion.ACTION_ALARM_TRIGGERED
 import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
 import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
+import digital.tonima.kairos.core.R
 import digital.tonima.kairos.wear.MainActivity
 
 class WearAlarmReceiver : BroadcastReceiver() {
@@ -28,7 +28,7 @@ class WearAlarmReceiver : BroadcastReceiver() {
         val channel = NotificationChannel(
             channelId,
             context.getString(R.string.event_alarm),
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_HIGH,
         ).apply {
             description = context.getString(R.string.notification_description)
         }
@@ -38,8 +38,10 @@ class WearAlarmReceiver : BroadcastReceiver() {
             putExtra(EXTRA_UNIQUE_ID, uniqueId)
         }
         val stopActionPendingIntent = PendingIntent.getBroadcast(
-            context, uniqueId + 1, stopActionIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            uniqueId + 1,
+            stopActionIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
         val notificationTitle = context.getString(R.string.commitment)
@@ -49,7 +51,7 @@ class WearAlarmReceiver : BroadcastReceiver() {
             context,
             uniqueId,
             contentIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
         val notificationBuilder = NotificationCompat.Builder(context, channelId)

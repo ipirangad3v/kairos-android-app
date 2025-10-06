@@ -33,16 +33,16 @@ private val DarkColorScheme = ColorScheme(
     errorDim = ColorTokens.ErrorDim,
     errorContainer = ColorTokens.ErrorContainer,
     onError = ColorTokens.OnError,
-    onErrorContainer = ColorTokens.OnErrorContainer
+    onErrorContainer = ColorTokens.OnErrorContainer,
 )
 
 @Composable
 fun KairosTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     MaterialTheme(
         colorScheme = DarkColorScheme,
         typography = Typography,
-        content = content
+        content = content,
     )
 }

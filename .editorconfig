@@ -58,3 +58,7 @@ ij_continuation_indent_size = 4
 ij_groovy_class_count_to_use_import_on_demand = 5
 ij_groovy_names_count_to_use_import_on_demand = 3
 ij_groovy_use_single_class_imports = true
+
+[*.{yaml,yml}]
+ij_yaml_keep_indents_on_empty_lines = false
+ij_yaml_keep_line_breaks = true
