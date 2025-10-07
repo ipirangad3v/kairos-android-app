@@ -13,8 +13,7 @@ platform :android do
     version_name = options[:version_name]
 
     gradle(
-      task: "bundleRelease",
-      project: "app",
+      task: ":app:bundleRelease",
       properties: {
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
@@ -47,8 +46,7 @@ platform :android do
     version_name = options[:version_name]
 
     gradle(
-      task: "bundleRelease",
-      project: "wear",
+      task: ":wear:bundleRelease",
       properties: {
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
