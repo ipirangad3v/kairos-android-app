@@ -1,60 +1,16 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:android)
-
-require 'base64'
 
 platform :android do
   before_all do
     ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"] = ENV["PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT"]
     ENV["PACKAGE_NAME"] = "digital.tonima.kairos"
-
-    unless ENV["GOOGLE_SERVICES_JSON_BASE64"].nil? || ENV["GOOGLE_SERVICES_JSON_BASE64"].empty?
-      File.open("google-services.json", "w") do |f|
-        f.write(Base64.decode64(ENV["GOOGLE_SERVICES_JSON_BASE64"]))
-      end
-      UI.message "Decoded google-services.json from environment variable."
-    else
-      UI.important "GOOGLE_SERVICES_JSON_BASE64 not found in environment. Make sure it's set."
-      UI.user_error!("google-services.json content is missing. Cannot proceed.")
-    end
-
-    unless ENV["SIGNING_KEY_BASE64"].nil? || ENV["SIGNING_KEY_BASE64"].empty?
-      File.open("release-key.jks", "w") do |f|
-        f.write(Base64.decode64(ENV["SIGNING_KEY_BASE64"]))
-      end
-      UI.message "Decoded release-key.jks from environment variable."
-    else
-      UI.user_error!("SIGNING_KEY_BASE64 not found in environment. Cannot proceed with signing.")
-    end
   end
 
-  after_all do |lane|
-    File.delete("google-services.json") if File.exist?("google-services.json")
-    File.delete("release-key.jks") if File.exist?("release-key.jks")
-    UI.message "Cleaned up temporary google-services.json and release-key.jks."
-  end
 
   desc "Build and upload release AAB for the phone app to Google Play"
   lane :deploy_phone do |options|
     version_code = options[:version_code]
     version_name = options[:version_name]
-
-    sh "cp google-services.json app/google-services.json"
-    sh "cp release-key.jks app/release-key.jks"
 
     gradle(
       task: "bundleRelease",
@@ -63,9 +19,9 @@ platform :android do
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
         "android.injected.signing.store.file" => "app/release-key.jks",
-        "android.injected.signing.store.password" => ENV["SIGNING_KEY_PASSWORD"],
-        "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"],
-        "android.injected.signing.key.password" => ENV["SIGNING_KEY_ALIAS_PASSWORD"]
+        "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_ALIAS_PASSWORD"]
       }
     )
 
@@ -90,9 +46,6 @@ platform :android do
     version_code = options[:version_code]
     version_name = options[:version_name]
 
-    sh "cp google-services.json wear/google-services.json"
-    sh "cp release-key.jks wear/release-key.jks"
-
     gradle(
       task: "bundleRelease",
       project: "wear",
@@ -100,9 +53,9 @@ platform :android do
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
         "android.injected.signing.store.file" => "wear/release-key.jks",
-        "android.injected.signing.store.password" => ENV["SIGNING_KEY_PASSWORD"],
-        "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"],
-        "android.injected.signing.key.password" => ENV["SIGNING_KEY_ALIAS_PASSWORD"]
+        "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_ALIAS_PASSWORD"]
       }
     )
 
