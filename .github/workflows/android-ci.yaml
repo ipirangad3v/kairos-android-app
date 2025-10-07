@@ -149,8 +149,8 @@ jobs:
             version_code:${{ steps.version_bumper.outputs.version_code }} \
             version_name:${{ steps.version_bumper.outputs.version_name }}
 
-          - name: Run Fastlane Deploy for Wear OS App
-          env:
+      - name: Run Fastlane Deploy for Wear OS App
+        env:
           PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
@@ -159,7 +159,7 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
           SIGNING_KEY_BASE64: ${{ secrets.SIGNING_KEY_BASE64 }}
-          run: |
+        run: |
           bundle exec fastlane deploy_wear \
             version_code:${{ steps.version_bumper.outputs.version_code }} \
             version_name:${{ steps.version_bumper.outputs.version_name }}
