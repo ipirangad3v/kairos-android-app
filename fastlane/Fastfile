@@ -16,7 +16,7 @@ platform :android do
       properties: {
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
-        "android.injected.signing.store.file" => "release-key.jks",
+        "android.injected.signing.store.file" => File.absolute_path("app/release-key.jks"),
         "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
         "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_KEY_ALIAS"],
         "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_ALIAS_PASSWORD"]
@@ -49,7 +49,7 @@ platform :android do
       properties: {
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
-        "android.injected.signing.store.file" => "release-key.jks",
+        "android.injected.signing.store.file" => File.absolute_path("wear/release-key.jks"),
         "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
         "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_KEY_ALIAS"],
         "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_ALIAS_PASSWORD"]
@@ -62,7 +62,7 @@ platform :android do
     supply(
       package_name: ENV["PACKAGE_NAME"],
       aab: aab_path,
-      track: "internal",
+      track: "wear:internal",
       json_key_data: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"],
       version_code: version_code,
       version_name: version_name,
