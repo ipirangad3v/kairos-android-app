@@ -39,8 +39,8 @@ platform :android do
       json_key_data: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"],
       version_code: version_code,
       version_name: version_name,
-      skip_metadata: true,
-      skip_screenshots: true,
+      skip_upload_metadata: true,
+      skip_upload_screenshots: true,
       skip_upload_changelogs: true,
     )
   end
@@ -75,8 +75,8 @@ platform :android do
       json_key_data: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"],
       version_code: version_code,
       version_name: version_name,
-      skip_metadata: true,
-      skip_screenshots: true,
+      skip_upload_metadata: true,
+      skip_upload_screenshots: true,
       skip_upload_changelogs: true
     )
   end
