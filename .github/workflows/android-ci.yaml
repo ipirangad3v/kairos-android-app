@@ -44,7 +44,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     outputs:
-      version_code: ${{ steps.version_bumper_script.outputs.version_code }}
+      phone_version_code: ${{ steps.version_bumper_script.outputs.phone_version_code }}
+      wear_version_code: ${{ steps.version_bumper_script.outputs.wear_version_code }}
       version_name: ${{ steps.version_bumper_script.outputs.version_name }}
     steps:
       - uses: actions/checkout@v4
@@ -56,21 +57,26 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-          NEW_VERSION_CODE=$(($GITHUB_RUN_NUMBER * 2))
+          BASE_VERSION_CODE=$(($GITHUB_RUN_NUMBER * 2))
 
-          sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$NEW_VERSION_CODE/" gradle.properties
+          PHONE_VERSION_CODE=$BASE_VERSION_CODE
+          WEAR_VERSION_CODE=$(($BASE_VERSION_CODE + 1))
+
+          sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$PHONE_VERSION_CODE/" gradle.properties
 
           VERSION_NAME=$(grep "APP_VERSION_NAME" gradle.properties | cut -d'=' -f2)
           IFS='.' read -r -a VERSION_PARTS <<< "$VERSION_NAME"
           VERSION_PARTS[2]=$((VERSION_PARTS[2] + 1))
           NEW_VERSION_NAME="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
           sed -i "s/APP_VERSION_NAME=.*/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
+
+          echo "phone_version_code=$PHONE_VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "wear_version_code=$WEAR_VERSION_CODE" >> $GITHUB_OUTPUT
           echo "version_name=$NEW_VERSION_NAME" >> $GITHUB_OUTPUT
-          echo "version_code=$NEW_VERSION_CODE" >> $GITHUB_OUTPUT
 
           git add gradle.properties
           if ! git diff --staged --quiet; then
-            git commit -m "ci: Bump version to $NEW_VERSION_NAME ($NEW_VERSION_CODE)"
+            git commit -m "ci: Bump version to $NEW_VERSION_NAME (Phone: $PHONE_VERSION_CODE, Wear: $WEAR_VERSION_CODE)"
             git push
           else
             echo "No version changes to commit."
@@ -115,7 +121,7 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_phone \
-            version_code:${{ needs.version_bumper.outputs.version_code }} \
+            version_code:${{ needs.version_bumper.outputs.phone_version_code }} \
             version_name:${{ needs.version_bumper.outputs.version_name }}
 
   deploy_wear:
@@ -156,7 +162,7 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_wear \
-            version_code:${{ needs.version_bumper.outputs.version_code }} \
+            version_code:${{ needs.version_bumper.outputs.wear_version_code }} \
             version_name:${{ needs.version_bumper.outputs.version_name }}
 
   create_release:

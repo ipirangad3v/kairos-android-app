@@ -11,7 +11,7 @@ platform :android do
 
   desc "Build and upload release AAB for the phone app to Google Play"
   lane :deploy_phone do |options|
-    version_code = options[:version_code]
+    version_code = options[:phone_version_code]
     version_name = options[:version_name]
 
     app_signing_store_file = File.join(ENV["REPO_ROOT"], "app", "release-key.jks")
@@ -47,7 +47,7 @@ platform :android do
 
   desc "Build and upload release AAB for the Wear OS app to Google Play"
   lane :deploy_wear do |options|
-    version_code = options[:version_code]
+    version_code = options[:wear_version_code]
     version_name = options[:version_name]
 
     wear_signing_store_file = File.join(ENV["REPO_ROOT"], "wear", "release-key.jks")
