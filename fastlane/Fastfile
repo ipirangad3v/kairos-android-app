@@ -4,6 +4,10 @@ platform :android do
   before_all do
     ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"] = ENV["PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT"]
     ENV["PACKAGE_NAME"] = "digital.tonima.kairos"
+
+    root_dir = Dir.pwd
+
+    UI.message "Root directory: #{root_dir}"
   end
 
   desc "Build and upload release AAB for the phone app to Google Play"
@@ -11,12 +15,15 @@ platform :android do
     version_code = options[:version_code]
     version_name = options[:version_name]
 
+    app_signing_store_file = File.join(Dir.pwd, "app", "release-key.jks")
+    UI.message "App signing store file: #{app_signing_store_file}"
+
     gradle(
       task: ":app:bundleRelease",
       properties: {
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
-        "android.injected.signing.store.file" => File.absolute_path("app/release-key.jks"),
+        "android.injected.signing.store.file" => app_signing_store_file,
         "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
         "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_KEY_ALIAS"],
         "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_ALIAS_PASSWORD"]
@@ -44,12 +51,15 @@ platform :android do
     version_code = options[:version_code]
     version_name = options[:version_name]
 
+    wear_signing_store_file = File.join(Dir.pwd, "wear", "release-key.jks")
+    UI.message "Wear signing store file: #{wear_signing_store_file}"
+
     gradle(
       task: ":wear:bundleRelease",
       properties: {
         "android.injected.version.code" => version_code,
         "android.injected.version.name" => version_name,
-        "android.injected.signing.store.file" => File.absolute_path("wear/release-key.jks"),
+        "android.injected.signing.store.file" => wear_signing_store_file,
         "android.injected.signing.store.password" => ENV["ANDROID_SIGNING_KEY_PASSWORD"],
         "android.injected.signing.key.alias" => ENV["ANDROID_SIGNING_KEY_ALIAS"],
         "android.injected.signing.key.password" => ENV["ANDROID_SIGNING_KEY_ALIAS_PASSWORD"]
