@@ -5,9 +5,8 @@ platform :android do
     ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY"] = ENV["PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT"]
     ENV["PACKAGE_NAME"] = "digital.tonima.kairos"
 
-    root_dir = Dir.pwd
-
-    UI.message "Root directory: #{root_dir}"
+    repo_root = ENV["REPO_ROOT"]
+    UI.message "REPO_ROOT: #{repo_root}"
   end
 
   desc "Build and upload release AAB for the phone app to Google Play"
@@ -15,7 +14,7 @@ platform :android do
     version_code = options[:version_code]
     version_name = options[:version_name]
 
-    app_signing_store_file = File.join(Dir.pwd, "app", "release-key.jks")
+    app_signing_store_file = File.join(ENV["REPO_ROOT"], "app", "release-key.jks")
     UI.message "App signing store file: #{app_signing_store_file}"
 
     gradle(
@@ -30,7 +29,7 @@ platform :android do
       }
     )
 
-    aab_path = Dir["app/build/outputs/bundle/release/*.aab"].first
+    aab_path = Dir["#{ENV["REPO_ROOT"]}/app/build/outputs/bundle/release/*.aab"].first
     UI.user_error! "Could not find release AAB for phone app in #{aab_path}" unless File.exist?(aab_path)
 
     supply(
@@ -51,7 +50,7 @@ platform :android do
     version_code = options[:version_code]
     version_name = options[:version_name]
 
-    wear_signing_store_file = File.join(Dir.pwd, "wear", "release-key.jks")
+    wear_signing_store_file = File.join(ENV["REPO_ROOT"], "wear", "release-key.jks")
     UI.message "Wear signing store file: #{wear_signing_store_file}"
 
     gradle(
@@ -66,7 +65,7 @@ platform :android do
       }
     )
 
-    aab_path = Dir["wear/build/outputs/bundle/release/*.aab"].first
+    aab_path = Dir["#{ENV["REPO_ROOT"]}/wear/build/outputs/bundle/release/*.aab"].first
     UI.user_error! "Could not find release AAB for wear app in #{aab_path}" unless File.exist?(aab_path)
 
     supply(

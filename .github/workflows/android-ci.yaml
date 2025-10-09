@@ -110,6 +110,7 @@ jobs:
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+          REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_phone \
             version_code:${{ steps.version_bumper.outputs.version_code }} \
@@ -120,6 +121,7 @@ jobs:
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+          REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_wear \
             version_code:${{ steps.version_bumper.outputs.version_code }} \
