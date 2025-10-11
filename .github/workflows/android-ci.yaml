@@ -44,8 +44,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     outputs:
-      phone_version_code: ${{ steps.version_bumper_script.outputs.phone_version_code }}
-      wear_version_code: ${{ steps.version_bumper_script.outputs.wear_version_code }}
+      new_version_code: ${{ steps.version_bumper_script.outputs.new_version_code }}
       version_name: ${{ steps.version_bumper_script.outputs.version_name }}
     steps:
       - uses: actions/checkout@v4
@@ -109,16 +108,20 @@ jobs:
       - run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
       - run: echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > app/release-key.jks
 
-      - env:
+      - name: Set environment variables for Fastlane
+        env:
           PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
           REPO_ROOT: ${{ github.workspace }}
-          run: |
-            bundle exec fastlane deploy_phone \
-              version_code:${{ needs.version_bumper.outputs.version_code }} \
-              version_name:${{ needs.version_bumper.outputs.version_name }}
+        run: echo "Environment variables set."
+
+      - name: Run Fastlane Deploy Phone
+        run: |
+          bundle exec fastlane deploy_phone \
+            version_code:${{ needs.version_bumper.outputs.new_version_code }} \
+            version_name:${{ needs.version_bumper.outputs.version_name }}
 
   deploy_wear:
     name: Build, Sign and Deploy Wear OS App
@@ -150,20 +153,24 @@ jobs:
       - run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
       - run: echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > wear/release-key.jks
 
-      - env:
+      - name: Set environment variables for Fastlane
+        env:
           PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
           REPO_ROOT: ${{ github.workspace }}
+        run: echo "Environment variables set."
+
+      - name: Run Fastlane Deploy Wear
         run: |
           bundle exec fastlane deploy_wear \
-            version_code:${{ needs.version_bumper.outputs.version_code }} \
+            version_code:${{ needs.version_bumper.outputs.new_version_code }} \
             version_name:${{ needs.version_bumper.outputs.version_name }}
 
   create_release:
     name: Create GitHub Tag and Release
-    needs: [deploy_phone, deploy_wear]
+    needs: [ deploy_phone, deploy_wear ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
