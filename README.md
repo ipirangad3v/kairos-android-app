@@ -1,5 +1,7 @@
 <img src="/images/kairos-banner.png" width="1024" height="500">
 
+[![Android CI - Kairos Multi-Module](https://github.com/ipirangad3v/kairos-android-app/actions/workflows/android-ci.yaml/badge.svg)](https://github.com/ipirangad3v/kairos-android-app/actions/workflows/android-ci.yaml)
+
 # Kairós - Calendar Alarms for Android & Wear OS
 
 Kairós is a modern application designed to ensure you never miss a calendar event again, **whether on your smartphone or directly from your wrist with Wear OS**. It intelligently syncs with your device's calendar and turns your appointments into unmissable, full-screen alarms, similar to a native alarm clock.
