@@ -176,11 +176,8 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
 
-      - run: |
-          echo "VERSION_NAME=${{ needs.version_bumper.outputs.version_name }}" >> $GITHUB_ENV
-
       - uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ env.VERSION_NAME }}
-          name: Release v${{ env.VERSION_NAME }}
-          body: "Automatic release of version ${{ env.VERSION_NAME }} via GitHub Actions to Android and Wear OS."
+          tag_name: v${{ needs.version_bumper.outputs.version_name }}
+          name: Release v${{ needs.version_bumper.outputs.version_name }}
+          body: "Automatic release of version ${{ needs.version_bumper.outputs.version_name }} via GitHub Actions to Android and Wear OS."
