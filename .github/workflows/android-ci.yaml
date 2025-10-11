@@ -118,6 +118,12 @@ jobs:
         run: echo "Environment variables set."
 
       - name: Run Fastlane Deploy Phone
+        env:
+          PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+          REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_phone \
             version_code:${{ needs.version_bumper.outputs.new_version_code }} \
@@ -163,6 +169,12 @@ jobs:
         run: echo "Environment variables set."
 
       - name: Run Fastlane Deploy Wear
+        env:
+          PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
+          REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_wear \
             version_code:${{ needs.version_bumper.outputs.new_version_code }} \
