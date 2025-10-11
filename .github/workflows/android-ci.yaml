@@ -170,7 +170,7 @@ jobs:
 
   create_release:
     name: Create GitHub Tag and Release
-    needs: [ deploy_phone, deploy_wear ]
+    needs: [ version_bumper, deploy_phone, deploy_wear ]
     runs-on: ubuntu-latest
     permissions:
       contents: write

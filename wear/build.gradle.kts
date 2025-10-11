@@ -16,8 +16,10 @@ android {
         applicationId = "digital.tonima.kairos"
         minSdk = rootProject.extra["MIN_SDK_VERSION"].toString().toInt()
         targetSdk = rootProject.extra["TARGET_SDK_VERSION"].toString().toInt()
-        versionCode = rootProject.extra["WEAR_APP_VERSION_CODE"].toString().toInt()
-        versionName = rootProject.extra["APP_VERSION_NAME"].toString() + "-wear"
+        versionCode = findProperty("android.injected.version.code")?.toString()?.toInt()
+            ?: rootProject.extra["WEAR_APP_VERSION_CODE"].toString().toInt()
+        versionName = findProperty("android.injected.version.name")?.toString()
+            ?: (rootProject.extra["APP_VERSION_NAME"].toString() + "-wear")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
