@@ -70,6 +70,8 @@ jobs:
           NEW_VERSION_NAME="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
           sed -i "s/APP_VERSION_NAME=.*/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
 
+            sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$PHONE_VERSION_CODE/" gradle.properties
+
           echo "phone_version_code=$PHONE_VERSION_CODE" >> $GITHUB_OUTPUT
           echo "wear_version_code=$WEAR_VERSION_CODE" >> $GITHUB_OUTPUT
           echo "version_name=$NEW_VERSION_NAME" >> $GITHUB_OUTPUT
