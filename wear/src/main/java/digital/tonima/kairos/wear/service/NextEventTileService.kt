@@ -7,6 +7,7 @@ import androidx.wear.protolayout.DeviceParametersBuilders
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.LayoutElementBuilders
+import androidx.wear.protolayout.LayoutElementBuilders.ARC_DIRECTION_COUNTER_CLOCKWISE
 import androidx.wear.protolayout.LayoutElementBuilders.Arc
 import androidx.wear.protolayout.LayoutElementBuilders.ArcText
 import androidx.wear.protolayout.LayoutElementBuilders.Box
@@ -102,10 +103,29 @@ class NextEventTileService : SuspendingTileService() {
                     .setAnchorType(LayoutElementBuilders.ARC_ANCHOR_CENTER)
                     .addContent(
                         ArcText.Builder()
-                            .setText(formatCurrentTime())
+                            .setText(formatCurrentTimeLocalized(context))
                             .setFontStyle(
                                 LayoutElementBuilders.FontStyle.Builder()
-                                    .setSize(DimensionBuilders.sp(24f))
+                                    .setSize(DimensionBuilders.sp(16f))
+                                    .build(),
+                            )
+                            .build(),
+                    )
+                    .build(),
+            )
+            .addContent(
+                Arc.Builder()
+                    .setAnchorAngle(DimensionBuilders.degrees(180f))
+                    .setAnchorType(LayoutElementBuilders.ARC_ANCHOR_CENTER)
+                    .addContent(
+                        ArcText.Builder()
+                            .setArcDirection(
+                                ARC_DIRECTION_COUNTER_CLOCKWISE,
+                            )
+                            .setText(formatCurrentDateLocalized(context))
+                            .setFontStyle(
+                                LayoutElementBuilders.FontStyle.Builder()
+                                    .setSize(DimensionBuilders.sp(16f))
                                     .build(),
                             )
                             .build(),
@@ -151,7 +171,7 @@ class NextEventTileService : SuspendingTileService() {
                             )
                             addContent(smallSpacer())
                             addContent(
-                                Text.Builder(context, formatEventTime(event.startTime))
+                                Text.Builder(context, formatEventTimeLocalized(context, event.startTime))
                                     .setTypography(Typography.TYPOGRAPHY_CAPTION1)
                                     .setColor(ColorBuilders.ColorProp.Builder(customTileColors.onSurface).build())
                                     .build(),
@@ -189,17 +209,32 @@ class NextEventTileService : SuspendingTileService() {
             .build()
     }
 
-    private fun formatEventTime(epochMillis: Long): String {
+    private fun formatEventTimeLocalized(context: Context, epochMillis: Long): String {
         val instant = Instant.ofEpochMilli(epochMillis)
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+        val locale = context.resources.configuration.locales[0]
         val formatter = DateTimeFormatter.ofPattern("EEE, HH:mm")
+            .withLocale(locale)
         return formatter.format(zonedDateTime)
     }
 
-    private fun formatCurrentTime(): String {
+    private fun formatCurrentTimeLocalized(context: Context): String {
         val instant = Instant.now()
         val zonedDateTime = instant.atZone(ZoneId.systemDefault())
-        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+        val locale = context.resources.configuration.locales[0]
+        val formatter =
+            DateTimeFormatter.ofLocalizedTime(java.time.format.FormatStyle.SHORT)
+                .withLocale(locale)
+        return formatter.format(zonedDateTime)
+    }
+
+    private fun formatCurrentDateLocalized(context: Context): String {
+        val instant = Instant.now()
+        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+        val locale = context.resources.configuration.locales[0]
+        val formatter =
+            DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.MEDIUM)
+                .withLocale(locale)
         return formatter.format(zonedDateTime)
     }
 }
