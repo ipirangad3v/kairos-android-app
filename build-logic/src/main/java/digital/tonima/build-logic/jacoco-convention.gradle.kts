@@ -1,8 +1,7 @@
 plugins {
     id("jacoco")
-    id("com.android.base")
 }
-tasks.register<JacocoReport>("createDebugCoverageReport") {
+tasks.register<JacocoReport>("createJacocoDebugCoverageReport") {
     dependsOn("testDebugUnitTest")
 
     reports {

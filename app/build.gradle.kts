@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.jacoco)
+    alias(libs.plugins.jacoco.convention)
 }
 
 android {
