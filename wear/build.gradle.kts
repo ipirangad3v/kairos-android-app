@@ -37,7 +37,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
         }
@@ -69,19 +69,19 @@ dependencies {
     implementation(libs.logcat)
     implementation(libs.accompanist.permissions)
 
-    //watchface
+    // watchface
     implementation(libs.androidx.watchface)
     implementation(libs.androidx.watchface.complications.data.source)
     implementation(libs.androidx.watchface.complications.data.source.ktx)
     implementation(libs.androidx.watchface.complications.rendering)
 
-    //tiles
+    // tiles
     implementation(libs.androidx.wear.tiles)
     implementation(libs.androidx.wear.tiles.material)
     implementation(libs.androidx.wear.tiles.proto)
     implementation(libs.androidx.wear.holoristic.tiles)
 
-    //protolayout
+    // protolayout
     implementation(libs.androidx.wear.protolayout)
     implementation(libs.androidx.wear.protolayout.material)
     implementation(libs.androidx.wear.protolayout.material3)

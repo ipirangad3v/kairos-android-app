@@ -1,10 +1,13 @@
 spotless {
     kotlin {
-        target '**/*.kt'
+        target '**/*.kt', '**/*.kts'
 
-        targetExclude("$layout.buildDirectory/**/*.kt", "$layout.buildDirectory/**/*.kts")
+        targetExclude("$buildDir/**/*.kt", "$buildDir/**/*.kts")
 
         ktlint("0.50.0").setEditorConfigPath("$rootDir/.editorconfig")
+
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 
     format 'xml', {
