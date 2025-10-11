@@ -59,7 +59,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-          BASE_VERSION_CODE=$(($GITHUB_RUN_NUMBER * 2))
+          BASE_VERSION_CODE=$(($GITHUB_RUN_NUMBER * 100))
 
           PHONE_VERSION_CODE=$BASE_VERSION_CODE
           WEAR_VERSION_CODE=$(($BASE_VERSION_CODE + 1))
