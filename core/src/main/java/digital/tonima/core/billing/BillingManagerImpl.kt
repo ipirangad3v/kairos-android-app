@@ -2,7 +2,6 @@ package digital.tonima.core.billing
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
@@ -22,7 +21,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import logcat.LogPriority
-import logcat.LogcatLogger
 import logcat.logcat
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -75,7 +73,7 @@ constructor(
 
                 override fun onBillingServiceDisconnected() {
                     logcat(LogPriority.WARN) { "Billing service disconnected. Retrying..." }
-                    connect() // Try to restart the connection
+                    connect()
                 }
             }
         )
