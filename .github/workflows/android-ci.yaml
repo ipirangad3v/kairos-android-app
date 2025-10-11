@@ -65,6 +65,7 @@ jobs:
           WEAR_VERSION_CODE=$(($BASE_VERSION_CODE + 1))
 
           sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$PHONE_VERSION_CODE/" gradle.properties
+          sed -i "s/WEAR_APP_VERSION_CODE=.*/WEAR_APP_VERSION_CODE=$WEAR_VERSION_CODE/" gradle.properties
 
           VERSION_NAME=$(grep "APP_VERSION_NAME" gradle.properties | cut -d'=' -f2)
           IFS='.' read -r -a VERSION_PARTS <<< "$VERSION_NAME"
