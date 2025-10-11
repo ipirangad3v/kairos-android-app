@@ -121,7 +121,7 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_phone \
-            version_code:${{ needs.version_bumper.outputs.phone_version_code }} \
+            phone_version_code:${{ needs.version_bumper.outputs.phone_version_code }} \
             version_name:${{ needs.version_bumper.outputs.version_name }}
 
   deploy_wear:
@@ -160,7 +160,7 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: |
           bundle exec fastlane deploy_wear \
-            version_code:${{ needs.version_bumper.outputs.wear_version_code }} \
+            wear_version_code:${{ needs.version_bumper.outputs.wear_version_code }} \
             version_name:${{ needs.version_bumper.outputs.version_name }}
 
   create_release:
