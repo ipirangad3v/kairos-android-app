@@ -5,9 +5,6 @@ spotless {
         targetExclude("$buildDir/**/*.kt", "$buildDir/**/*.kts")
 
         ktlint("0.50.0").setEditorConfigPath("$rootDir/.editorconfig")
-
-        trimTrailingWhitespace()
-        endWithNewline()
     }
 
     format 'xml', {
