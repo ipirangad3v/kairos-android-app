@@ -42,6 +42,7 @@ platform :android do
       skip_upload_metadata: true,
       skip_upload_screenshots: true,
       skip_upload_changelogs: true,
+      timeout: 600 # App uploads can take a while (up to 10 minutes)
     )
   end
 
@@ -78,6 +79,7 @@ platform :android do
       skip_upload_metadata: true,
       skip_upload_screenshots: true,
       skip_upload_changelogs: true,
+      timeout: 600 # wear uploads can take a while (up to 10 minutes)
     )
   end
 end
