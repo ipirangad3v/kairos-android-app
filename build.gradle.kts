@@ -27,3 +27,41 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.jacoco.convention) apply false
 }
+
+tasks.register<JacocoReport>("createJacocoMergedCoverageReport") {
+    group = "Reporting"
+    description = "Generates a merged Jacoco code coverage report for all modules."
+
+    val modulesToInclude = listOf(
+        ":app",
+        ":core",
+        ":wear"
+    )
+
+
+    dependsOn(modulesToInclude.map { "$it:createJacocoDebugCoverageReport" })
+
+    sourceDirectories.setFrom(files(subprojects.map {
+        "${it.projectDir}/src/main/java"
+    }))
+
+    classDirectories.setFrom(files(subprojects.map {
+        fileTree("${it.buildDir}/tmp/kotlin-classes/debug") {
+            exclude(
+                "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+                "**/*Test*.*", "android/**/*.*", "**/*_Hilt*.class", "**/Dagger*Component.class",
+                "**/Dagger*Module.class", "**/Dagger*Module_Provide*Factory.class",
+                "**/*_Provide*Factory*.*", "**/*_Factory*.*"
+            )
+        }
+    }))
+
+    executionData.setFrom(files(subprojects.map {
+        "${it.buildDir}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    }))
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}

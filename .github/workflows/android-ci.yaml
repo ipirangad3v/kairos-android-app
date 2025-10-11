@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Lint and Test
+    name: Lint, Test and Coverage Report
     if: "!contains(github.event.head_commit.message, 'ci: Bump version')"
     runs-on: ubuntu-latest
 
@@ -31,11 +31,21 @@ jobs:
       - run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
       - run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
 
-      - run: chmod +x gradlew
-      - run: ./gradlew spotlessCheck
-      - run: ./gradlew :core:testDebugUnitTest
-      - run: ./gradlew :app:testDebugUnitTest
-      - run: ./gradlew :wear:testDebugUnitTest
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Spotless Check
+        run: ./gradlew spotlessCheck
+
+      - name: Run tests and generate merged coverage report
+        run: ./gradlew createJacocoMergedCoverageReport
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: build/reports/jacoco/createMergedCoverageReport/createJacocoMergedCoverageReport.xml
+          fail_ci_if_error: false
 
 
   version_bumper:
