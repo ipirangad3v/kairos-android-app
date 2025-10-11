@@ -90,6 +90,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 'master'
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -130,6 +132,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 'master'
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
