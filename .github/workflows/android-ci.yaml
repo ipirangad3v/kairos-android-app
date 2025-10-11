@@ -120,7 +120,7 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: |
           ./gradlew clean :app:clean
-          bundle exec fastlane deploy_phone version_code:${{ needs.version_bumper.outputs.phone_version_code }} version_name:${{ needs.version_bumper.outputs.version_name }}
+          bundle exec fastlane deploy_phone phone_version_code:${{ needs.version_bumper.outputs.phone_version_code }} version_name:${{ needs.version_bumper.outputs.version_name }}
 
   deploy_wear:
     name: Build, Sign and Deploy Wear OS App
@@ -159,7 +159,7 @@ jobs:
           REPO_ROOT: ${{ github.workspace }}
         run: |
           ./gradlew clean :wear:clean
-          bundle exec fastlane deploy_wear version_code:${{ needs.version_bumper.outputs.wear_version_code }} version_name:${{ needs.version_bumper.outputs.version_name }}
+          bundle exec fastlane deploy_wear wear_version_code:${{ needs.version_bumper.outputs.wear_version_code }} version_name:${{ needs.version_bumper.outputs.version_name }}
 
   create_release:
     name: Create GitHub Tag and Release
