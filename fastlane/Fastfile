@@ -13,7 +13,6 @@ platform :android do
   lane :deploy_phone do |options|
     version_code = options[:phone_version_code]
     version_name = options[:version_name]
-    UI.message "Fastlane (Phone): Received version_code: #{version_code}, version_name: #{version_name}" # DEBUG LOG
 
     app_signing_store_file = File.join(ENV["REPO_ROOT"], "app", "release-key.jks")
     UI.message "App signing store file: #{app_signing_store_file}"
@@ -32,7 +31,6 @@ platform :android do
 
     aab_path = Dir["#{ENV["REPO_ROOT"]}/app/build/outputs/bundle/release/*.aab"].first
     UI.user_error! "Could not find release AAB for phone app in #{aab_path}" unless File.exist?(aab_path)
-    UI.message "Fastlane (Phone): Found AAB at #{aab_path}" # DEBUG LOG
 
     supply(
       package_name: ENV["PACKAGE_NAME"],
@@ -45,14 +43,12 @@ platform :android do
       skip_upload_screenshots: true,
       skip_upload_changelogs: true,
     )
-    UI.message "Fastlane (Phone): Successfully uploaded AAB with version_code #{version_code}" # DEBUG LOG
   end
 
   desc "Build and upload release AAB for the Wear OS app to Google Play"
   lane :deploy_wear do |options|
     version_code = options[:wear_version_code]
     version_name = options[:version_name]
-    UI.message "Fastlane (Wear): Received version_code: #{version_code} and version_name: #{version_name}" # DEBUG LOG
 
     wear_signing_store_file = File.join(ENV["REPO_ROOT"], "wear", "release-key.jks")
     UI.message "Wear signing store file: #{wear_signing_store_file}"
@@ -71,7 +67,6 @@ platform :android do
 
     aab_path = Dir["#{ENV["REPO_ROOT"]}/wear/build/outputs/bundle/release/*.aab"].first
     UI.user_error! "Could not find release AAB for wear app in #{aab_path}" unless File.exist?(aab_path)
-    UI.message "Fastlane (Wear): Found AAB at #{aab_path}" # DEBUG LOG
 
     supply(
       package_name: ENV["PACKAGE_NAME"],
@@ -84,6 +79,5 @@ platform :android do
       skip_upload_screenshots: true,
       skip_upload_changelogs: true
     )
-    UI.message "Fastlane (Wear): Successfully uploaded AAB with version_code #{version_code}" # DEBUG LOG
   end
 end

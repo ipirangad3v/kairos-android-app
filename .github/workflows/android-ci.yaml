@@ -39,12 +39,10 @@ jobs:
 
 
   version_bumper:
-    name: Bump Version and Start Release Process
+    name: Bump Version
     if: "!contains(github.event.head_commit.message, 'ci: Bump version')"
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: play-store-release
     outputs:
       phone_version_code: ${{ steps.version_bumper_script.outputs.phone_version_code }}
       wear_version_code: ${{ steps.version_bumper_script.outputs.wear_version_code }}
@@ -59,18 +57,18 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-          VERSION_CODE_OFFSET=1000
-          PHONE_VERSION_CODE=$((VERSION_CODE_OFFSET + GITHUB_RUN_NUMBER * 10 + 0))
-          WEAR_VERSION_CODE=$((VERSION_CODE_OFFSET + GITHUB_RUN_NUMBER * 10 + 1))
+          BASE_VERSION_CODE=$(($GITHUB_RUN_NUMBER * 2))
 
+          PHONE_VERSION_CODE=$BASE_VERSION_CODE
+          WEAR_VERSION_CODE=$(($BASE_VERSION_CODE + 1))
+
+          sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$PHONE_VERSION_CODE/" gradle.properties
 
           VERSION_NAME=$(grep "APP_VERSION_NAME" gradle.properties | cut -d'=' -f2)
           IFS='.' read -r -a VERSION_PARTS <<< "$VERSION_NAME"
           VERSION_PARTS[2]=$((VERSION_PARTS[2] + 1))
           NEW_VERSION_NAME="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.${VERSION_PARTS[2]}"
           sed -i "s/APP_VERSION_NAME=.*/APP_VERSION_NAME=$NEW_VERSION_NAME/" gradle.properties
-
-            sed -i "s/APP_VERSION_CODE=.*/APP_VERSION_CODE=$PHONE_VERSION_CODE/" gradle.properties
 
           echo "phone_version_code=$PHONE_VERSION_CODE" >> $GITHUB_OUTPUT
           echo "wear_version_code=$WEAR_VERSION_CODE" >> $GITHUB_OUTPUT
@@ -88,6 +86,8 @@ jobs:
     name: Build, Sign and Deploy Phone App
     needs: version_bumper
     runs-on: ubuntu-latest
+    environment:
+      name: play-store-release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -113,20 +113,23 @@ jobs:
       - run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
       - run: echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > app/release-key.jks
 
-      - name: Run Fastlane Deploy Phone
-        env:
+      - env:
           PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
           REPO_ROOT: ${{ github.workspace }}
         run: |
-          bundle exec fastlane deploy_phone phone_version_code:${{ needs.version_bumper.outputs.phone_version_code }} version_name:${{ needs.version_bumper.outputs.version_name }}
+          bundle exec fastlane deploy_phone \
+            version_code:${{ needs.version_bumper.outputs.phone_version_code }} \
+            version_name:${{ needs.version_bumper.outputs.version_name }}
 
   deploy_wear:
     name: Build, Sign and Deploy Wear OS App
-    needs: deploy_phone
+    needs: version_bumper
     runs-on: ubuntu-latest
+    environment:
+      name: play-store-release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -151,19 +154,20 @@ jobs:
       - run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > wear/google-services.json
       - run: echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > wear/release-key.jks
 
-      - name: Run Fastlane Deploy Wear
-        env:
+      - env:
           PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
           ANDROID_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           ANDROID_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ANDROID_SIGNING_KEY_ALIAS_PASSWORD: ${{ secrets.SIGNING_KEY_ALIAS_PASSWORD }}
           REPO_ROOT: ${{ github.workspace }}
         run: |
-          bundle exec fastlane deploy_wear wear_version_code:${{ needs.version_bumper.outputs.wear_version_code }} version_name:${{ needs.version_bumper.outputs.version_name }}
+          bundle exec fastlane deploy_wear \
+            version_code:${{ needs.version_bumper.outputs.wear_version_code }} \
+            version_name:${{ needs.version_bumper.outputs.version_name }}
 
   create_release:
     name: Create GitHub Tag and Release
-    needs: [ deploy_wear ]
+    needs: [ deploy_phone, deploy_wear ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
