@@ -26,6 +26,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.jacoco.convention) apply false
+    id("jacoco")
 }
 
 tasks.register<JacocoReport>("createJacocoMergedCoverageReport") {
@@ -38,30 +39,44 @@ tasks.register<JacocoReport>("createJacocoMergedCoverageReport") {
         ":wear"
     )
 
-
     dependsOn(modulesToInclude.map { "$it:createJacocoDebugCoverageReport" })
 
-    sourceDirectories.setFrom(files(subprojects.map {
-        "${it.projectDir}/src/main/java"
+    sourceDirectories.setFrom(files(subprojects.flatMap {
+        listOf("${it.projectDir}/src/main/java", "${it.projectDir}/src/main/kotlin")
     }))
 
-    classDirectories.setFrom(files(subprojects.map {
-        fileTree("${it.buildDir}/tmp/kotlin-classes/debug") {
-            exclude(
-                "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
-                "**/*Test*.*", "android/**/*.*", "**/*_Hilt*.class", "**/Dagger*Component.class",
-                "**/Dagger*Module.class", "**/Dagger*Module_Provide*Factory.class",
-                "**/*_Provide*Factory*.*", "**/*_Factory*.*"
-            )
-        }
+    classDirectories.setFrom(files(subprojects.flatMap { sp ->
+        listOf(
+            fileTree("${sp.buildDir}/tmp/kotlin-classes/debug") {
+                exclude(
+                    "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+                    "**/*Test*.*", "android/**/*.*", "**/*_Hilt*.class", "**/Dagger*Component.class",
+                    "**/Dagger*Module.class", "**/Dagger*Module_Provide*Factory.class",
+                    "**/*_Provide*Factory*.*", "**/*_Factory*.*"
+                )
+            },
+            fileTree("${sp.buildDir}/intermediates/javac/debug/classes") {
+                exclude(
+                    "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+                    "**/*Test*.*", "android/**/*.*", "**/*_Hilt*.class", "**/Dagger*Component.class",
+                    "**/Dagger*Module.class", "**/Dagger*Module_Provide*Factory.class",
+                    "**/*_Provide*Factory*.*", "**/*_Factory*.*"
+                )
+            }
+        )
     }))
 
-    executionData.setFrom(files(subprojects.map {
-        "${it.buildDir}/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    executionData.setFrom(files(subprojects.flatMap { sp ->
+        listOf(
+            fileTree(sp.buildDir) { include("jacoco/testDebugUnitTest.exec") },
+            fileTree(sp.buildDir) { include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec") }
+        )
     }))
 
     reports {
         xml.required.set(true)
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/createJacocoMergedCoverageReport/createJacocoMergedCoverageReport.xml"))
         html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/createJacocoMergedCoverageReport/html"))
     }
 }

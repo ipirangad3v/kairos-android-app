@@ -40,6 +40,7 @@ inapp-update = "2.1.0"
 tiles = "1.5.0"
 horologist = "0.7.15"
 protolayout = "1.3.0"
+robolectric = "4.13"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -80,6 +81,7 @@ core-testing = { group = "androidx.arch.core", name = "core-testing", version.re
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 google-inapp-update = { group = "com.google.android.play", name = "app-update", version.ref = "inapp-update" }
 google-inapp-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "inapp-update" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 # -- bibliotecas para Wear OS --
 androidx-wear-material-compose = { group = "androidx.wear.compose", name = "compose-material", version.ref = "wear-compose" }
