@@ -24,9 +24,8 @@ class InAppUpdateDelegate(
     private val snackbarHostState: SnackbarHostState,
     private val coroutineScope: CoroutineScope,
     private val updateLauncher: ActivityResultLauncher<IntentSenderRequest>,
+    private val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(activity),
 ) {
-
-    private val appUpdateManager: AppUpdateManager = AppUpdateManagerFactory.create(activity)
 
     private val installStateUpdatedListener: InstallStateUpdatedListener = InstallStateUpdatedListener { state ->
         when (state.installStatus()) {
