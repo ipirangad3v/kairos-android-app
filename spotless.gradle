@@ -10,6 +10,7 @@ spotless {
     format 'xml', {
         target '**/*.xml'
         targetExclude('**/build/**/*.xml')
+        targetExclude('.idea/**/*.xml')
         eclipseWtp('xml').configFile(rootProject.file('spotless/xml.prefs'))
     }
 }
