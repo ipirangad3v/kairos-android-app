@@ -40,7 +40,20 @@ class RingerModeRepositoryImpl
                     intent: Intent?
                 ) {
                     if (intent?.action == AudioManager.RINGER_MODE_CHANGED_ACTION) {
-                        _ringerMode.value = getCurrentRingerMode()
+                        val alarmVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+                        if (alarmVolume == 0) {
+                            _ringerMode.value = AudioWarningState.ALARM_MUTED
+                            return
+                        }
+                        val newMode = intent.getIntExtra(
+                            AudioManager.EXTRA_RINGER_MODE,
+                            audioManager.ringerMode
+                        )
+                        _ringerMode.value = when (newMode) {
+                            AudioManager.RINGER_MODE_VIBRATE -> AudioWarningState.VIBRATE
+                            AudioManager.RINGER_MODE_SILENT -> AudioWarningState.SILENT
+                            else -> AudioWarningState.NORMAL
+                        }
                     }
                 }
             }
