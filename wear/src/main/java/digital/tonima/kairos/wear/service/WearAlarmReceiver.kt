@@ -55,7 +55,7 @@ class WearAlarmReceiver : BroadcastReceiver() {
         )
 
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(digital.tonima.kairos.R.drawable.ic_launcher_foreground)
+            .setSmallIcon(digital.tonima.kairos.core.R.drawable.ic_k_monochrome)
             .setContentTitle(notificationTitle)
             .setContentText(eventTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

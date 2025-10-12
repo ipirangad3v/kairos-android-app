@@ -58,7 +58,7 @@
             <meta-data android:name="android.support.wearable.complications.PRIMARY_PROVIDER"
                 android:value="true" />
             <meta-data android:name="android.support.wearable.complications.PROVIDER_ICON"
-                android:resource="@drawable/date_range" />
+                android:resource="@drawable/ic_k_monochrome" />
         </service>
 
         <service android:name=".wear.service.NextEventTileService" android:label="@string/next_event"

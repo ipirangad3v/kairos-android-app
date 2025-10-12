@@ -80,7 +80,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
                     MonochromaticImage.Builder(
                         image = Icon.createWithResource(
                             this@KairosComplicationService,
-                            coreR.drawable.date_range,
+                            coreR.drawable.ic_k_monochrome,
                         ),
                     ).build(),
                 )
@@ -94,7 +94,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
                     MonochromaticImage.Builder(
                         image = Icon.createWithResource(
                             this,
-                            coreR.drawable.date_range,
+                            coreR.drawable.ic_k_monochrome,
                         ),
                     ).build(),
                 )
@@ -131,7 +131,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
         val icon = MonochromaticImage.Builder(
             image = Icon.createWithResource(
                 this,
-                coreR.drawable.date_range,
+                coreR.drawable.ic_k_monochrome,
             ),
         ).build()
 
@@ -176,7 +176,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
         val icon = MonochromaticImage.Builder(
             image = Icon.createWithResource(
                 this,
-                coreR.drawable.date_range,
+                coreR.drawable.ic_k_monochrome,
             ),
         ).build()
 
