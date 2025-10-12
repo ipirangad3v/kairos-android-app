@@ -103,3 +103,142 @@ This application is built following modern Android development principles and a 
 
 ## Flow:
 <img src="/images/flow.png" width="3840" height="3405">
+
+
+---
+
+## Requirements
+
+- Android Studio (Giraffe or newer recommended; Arctic Fox may not support Kotlin 2.2+ features). As of 2025-10-12, Android Studio Jellyfish/Koala+ should work well.
+- JDK 21 (the Gradle configs use JVM toolchain 21)
+- Android SDK:
+  - Compile SDK: 36
+  - Target SDK: 36
+  - Min SDK: 30
+- Gradle Wrapper: use the provided ./gradlew
+- Ruby (optional, for Fastlane) if you plan to use release lanes
+
+## Project Structure
+
+Multi-module Android project targeting Phone and Wear OS:
+
+- app/ — Android app (phone)
+- wear/ — Wear OS companion app
+- core/ — Shared logic, domain, data, scheduling, repositories
+- build-logic/ — Convention plugins (e.g., Jacoco)
+- fastlane/ — Release automation (Fastlane lanes)
+- images/ — Media used by README and Play assets
+
+## Stack
+
+- Language: Kotlin
+- UI: Jetpack Compose (phone and Wear)
+- DI: Hilt
+- Background: WorkManager, AlarmManager, BroadcastReceivers/Services
+- Data: AndroidX DataStore Preferences
+- Wear OS: Tiles, Complications, ProtoLayout, Watchface APIs
+- Testing: JUnit4, Robolectric, MockK, Turbine, Coroutines Test, AndroidX Core Testing
+- Build: Gradle (Kotlin DSL), AGP 8.13.0, Kotlin 2.2.20
+- Code style: Spotless
+- Analytics/Crash: Firebase Analytics, Crashlytics (app)
+- Ads: Google Mobile Ads (AdMob)
+- Coverage: Jacoco, custom merged report task
+- Distribution: Fastlane (Android Supply)
+
+## Getting Started
+
+1) Clone the repository
+
+- git clone https://github.com/ipirangad3v/kairos-android-app.git
+- cd kairos-android-app
+
+2) Open in Android Studio
+
+- Use the provided Gradle wrapper; Android Studio will sync automatically.
+
+3) Configure local.properties (optional for release)
+
+- Some release values can be injected from local.properties (see env vars below). For normal debug development, defaults and test ad units are used.
+
+4) Run the app(s)
+
+- Phone (app module):
+  - From Android Studio: select app run configuration and Run.
+  - CLI: ./gradlew :app:installDebug and then launch on device/emulator.
+- Wear (wear module):
+  - From Android Studio: select wear run configuration and Run (with a Wear emulator/device).
+  - CLI: ./gradlew :wear:installDebug
+
+
+## Tests
+
+- Run unit tests (all modules): ./gradlew testDebugUnitTest
+- Run unit tests (per module):
+  - Phone: ./gradlew :app:testDebugUnitTest
+  - Core: ./gradlew :core:testDebugUnitTest
+  - Wear: ./gradlew :wear:testDebugUnitTest
+- Coverage (merged Jacoco for all modules): ./gradlew createJacocoMergedCoverageReport
+  - Reports output (HTML): build/reports/jacoco/createJacocoMergedCoverageReport/html/index.html
+
+## Environment Variables and Configuration
+
+Debug builds:
+- Use test AdMob IDs automatically; no special setup required.
+
+Release builds may use the following environment variables (or fallback to local.properties where supported):
+- ANDROID_SIGNING_KEY_PASSWORD — Keystore password (app and wear)
+- ANDROID_SIGNING_KEY_ALIAS — Key alias
+- ANDROID_SIGNING_KEY_ALIAS_PASSWORD — Key password
+- ADMOB_APP_ID — AdMob App ID (app, only used during release tasks)
+- ADMOB_BANNER_AD_UNIT_HOME — Ad unit id for home banner (app, only used during release tasks)
+
+Fastlane (distribution):
+- REPO_ROOT — Absolute path to the repo root (used by Fastlane to locate artifacts)
+- PLAY_STORE_SERVICE_ACCOUNT_JSON_PLAINTEXT — The JSON key content (string) for your Google Play service account; Fastlane assigns it to GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_KEY
+
+Optional local.properties keys (release convenience):
+- admob.app.id=<your-admob-app-id>
+- admob.banner.ad.unit.home=<your-banner-ad-unit>
+
+Signing files expected for release:
+- app/release-key.jks — Phone app keystore
+- wear/release-key.jks — Wear app keystore
+
+Google services configuration (Firebase / google-services.json):
+
+If Firebase Analytics or Crashlytics are enabled, the app expects a valid google-services.json. Without it, the app can crash at startup. Provide this file for BOTH modules: app/ and wear/.
+
+How to generate google-services.json (Android):
+- 1) Go to Firebase Console: https://console.firebase.google.com/ and click Add project (or select an existing one).
+- 2) In Project settings > Your apps, click Add app and choose Android.
+- 3) Enter the Android package name: digital.tonima.kairos (same package is used for phone and wear here).
+- 4) App nickname: optional (e.g., Kairos Phone or Kairos Wear).
+- 5) SHA-1/SHA-256: optional but recommended if you will use features like Crashlytics, Dynamic Links, or Google Sign-In. You can obtain SHA-1 with: keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+- 6) Click Register app, then Download google-services.json.
+- 7) Place a copy of the downloaded file at:
+  - app/google-services.json
+  - wear/google-services.json
+- 8) Sync Gradle and rebuild the project (Android Studio will pick up the files automatically).
+
+Notes:
+- Do NOT commit google-services.json to public repos. Treat it as a secret.
+- You can keep separate Firebase projects for debug and release as needed. Make sure the package name matches and that you add the proper SHA certificates for release builds.
+- If you see a crash at startup related to Firebase initialization, verify that each module (app and wear) has its own google-services.json and that the Gradle sync completed successfully.
+
+## CI
+
+- GitHub Actions workflow badge is present and points to .github/workflows/android-ci.yaml
+- Codecov badge indicates coverage upload to Codecov
+
+## Permissions and Special Capabilities
+
+- Calendar read permissions
+- Exact alarms (SCHEDULE_EXACT_ALARM)
+- Full screen intents (USE_FULL_SCREEN_INTENT)
+- Autostart/manufacturer-specific optimizations guidance in-app
+
+## Contributing
+
+- Run ./gradlew spotlessApply before pushing
+- Ensure unit tests pass: ./gradlew testDebugUnitTest
+
