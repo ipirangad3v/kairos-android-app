@@ -30,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.model.Event
 import digital.tonima.core.usecases.GetNextEventUseCase
 import digital.tonima.kairos.core.R
+import logcat.LogPriority
+import logcat.logcat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -63,8 +65,13 @@ class NextEventTileService : SuspendingTileService() {
     }
 
     override suspend fun tileRequest(requestParams: RequestBuilders.TileRequest): TileBuilders.Tile {
-        val nextEvent = getNextEventUseCase.invoke()
         val deviceParameters = requestParams.deviceConfiguration
+        val nextEvent = try {
+            getNextEventUseCase.invoke()
+        } catch (t: Throwable) {
+            logcat(LogPriority.ERROR) { "Erro ao obter o próximo evento: ${t.localizedMessage}" }
+            null
+        }
         return TileBuilders.Tile.Builder()
             .setResourcesVersion(RESOURCES_VERSION)
             .setTileTimeline(

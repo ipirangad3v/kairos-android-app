@@ -52,7 +52,12 @@ class KairosComplicationService : ComplicationDataSourceService() {
         val context = this
         val tapAction = getTapAction(context)
 
-        val nextEvent: Event? = runBlocking { getNextEventUseCase.invoke() }
+        val nextEvent: Event? = try {
+            runBlocking { getNextEventUseCase.invoke() }
+        } catch (t: Throwable) {
+            logcat(LogPriority.ERROR) { "Erro ao obter o próximo evento: ${t.localizedMessage}" }
+            null
+        }
 
         val complicationData = when (request.complicationType) {
             ComplicationType.SHORT_TEXT -> createShortTextComplicationData(nextEvent, tapAction)

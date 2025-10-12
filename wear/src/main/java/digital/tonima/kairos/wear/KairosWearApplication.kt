@@ -37,6 +37,16 @@ class KairosWearApplication :
         setupRecurringWork()
     }
 
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL ||
+            level == android.content.ComponentCallbacks2.TRIM_MEMORY_COMPLETE ||
+            level == android.content.ComponentCallbacks2.TRIM_MEMORY_MODERATE
+        ) {
+            setupRecurringWork()
+        }
+    }
+
     private fun setupLogger() {
         AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = VERBOSE)
     }

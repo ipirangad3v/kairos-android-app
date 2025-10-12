@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.jacoco.convention)
 }
 
+val isRunningReleaseTask: Boolean = gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
+
 android {
     namespace = "digital.tonima.kairos"
     compileSdk = rootProject.extra["COMPILE_SDK_VERSION"].toString().toInt()
@@ -53,8 +55,6 @@ android {
 
             signingConfig = signingConfigs.getByName("release")
 
-            val isRunningReleaseTask =
-                gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) }
 
             val admobAppIdTest = "ca-app-pub-3940256099942544~3347511713"
             val admobBannerAdUnitIdTest = "ca-app-pub-3940256099942544/6300978111"
@@ -92,7 +92,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlin { jvmToolchain(21) }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -100,6 +99,10 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
+}
+
+kotlin {
+    jvmToolchain(21)
 }
 
 dependencies {
