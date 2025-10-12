@@ -1,4 +1,4 @@
-package digital.tonima.kairos.wear.ui.theme.components
+package digital.tonima.kairos.wear.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +42,11 @@ import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.TimeText
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import digital.tonima.core.model.Event
 import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.viewmodel.EventViewModel
+import digital.tonima.kairos.wear.ui.components.EventCard
+import digital.tonima.kairos.wear.ui.components.WearOsPermissionsScreenContent
 import java.time.LocalDate
 import digital.tonima.kairos.core.R as coreR
 
@@ -128,6 +134,18 @@ fun WearApp(
                     )
                 }
                 item {
+                    Spacer(Modifier.height(4.dp))
+                    ToggleChip(
+                        checked = uiState.vibrateOnly,
+                        onCheckedChange = { enabled -> viewModel.onVibrateOnlyChanged(enabled) },
+                        label = { Text(stringResource(coreR.string.vibrate_only)) },
+                        toggleControl = { Switch(checked = uiState.vibrateOnly) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
+                item {
                     Spacer(Modifier.height(16.dp))
                     Text(
                         text = stringResource(coreR.string.events_for_today),
@@ -143,7 +161,53 @@ fun WearApp(
                     }
                 } else {
                     items(uiState.events.sortedBy { it.startTime }) { event ->
-                        EventListItem(event = event)
+                        val pendingToggle = remember { mutableStateOf<Pair<Event, Boolean>?>(null) }
+                        EventCard(
+                            event = event,
+                            isGloballyEnabled = uiState.isGlobalAlarmEnabled,
+                            onToggle = { isEnabled ->
+                                if (event.isRecurring) {
+                                    pendingToggle.value = event to isEnabled
+                                } else {
+                                    viewModel.onEventAlarmToggle(event, isEnabled, false)
+                                }
+                            },
+                        )
+                        pendingToggle.value?.let { (pendingEvent, pendingEnabled) ->
+                            AlertDialog(
+                                onDismissRequest = { pendingToggle.value = null },
+                                title = {
+                                    androidx.compose.material3.Text(
+                                        stringResource(coreR.string.update_alarm_title),
+                                    )
+                                },
+                                text = {
+                                    androidx.compose.material3.Text(
+                                        stringResource(coreR.string.update_alarm_message),
+                                    )
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        viewModel.onEventAlarmToggle(pendingEvent, pendingEnabled, true)
+                                        pendingToggle.value = null
+                                    }) {
+                                        androidx.compose.material3.Text(
+                                            stringResource(coreR.string.recurring_option),
+                                        )
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = {
+                                        viewModel.onEventAlarmToggle(pendingEvent, pendingEnabled, false)
+                                        pendingToggle.value = null
+                                    }) {
+                                        androidx.compose.material3.Text(
+                                            stringResource(coreR.string.only_this_option),
+                                        )
+                                    }
+                                },
+                            )
+                        }
                     }
                 }
             }

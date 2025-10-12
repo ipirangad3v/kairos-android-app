@@ -55,6 +55,7 @@ class EventViewModelTest {
     private val isGlobalAlarmEnabledFlow = MutableStateFlow(true)
     private val autostartSuggestionDismissedFlow = MutableStateFlow(false)
     private val disabledEventIdsFlow = MutableStateFlow(emptySet<String>())
+    private val disabledSeriesIdsFlow = MutableStateFlow(emptySet<String>())
     private val ringerModeFlow = MutableStateFlow(AudioWarningState.NORMAL)
 
     @Before
@@ -64,6 +65,7 @@ class EventViewModelTest {
         every { mockAppPreferencesRepository.isGlobalAlarmEnabled() } returns isGlobalAlarmEnabledFlow
         every { mockAppPreferencesRepository.getAutostartSuggestionDismissed() } returns autostartSuggestionDismissedFlow
         every { mockAppPreferencesRepository.getDisabledEventIds() } returns disabledEventIdsFlow
+        every { mockAppPreferencesRepository.getDisabledSeriesIds() } returns disabledSeriesIdsFlow
         every { mockRingerModeRepository.ringerMode } returns ringerModeFlow
         every { mockRingerModeRepository.startObserving() } just Runs
         every { mockRingerModeRepository.stopObserving() } just Runs

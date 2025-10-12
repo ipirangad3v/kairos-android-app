@@ -56,4 +56,10 @@
     <string name="update_fail_or_canceled">Обновление приложения не удалось или было отменено.</string>
     <string name="open_event_button">Посмотреть событие</string>
     <string name="tile_preview_description">Предпросмотр плитки следующего события</string>
+    <string name="recurring_label">повторяющееся</string>
+    <string name="vibrate_only">Только вибрация</string>
+    <string name="update_alarm_title">Обновить будильник</string>
+    <string name="update_alarm_message">Применить только к этому событию или ко всей серии?</string>
+    <string name="recurring_option">Повторяющееся</string>
+    <string name="only_this_option">Только это</string>
 </resources>

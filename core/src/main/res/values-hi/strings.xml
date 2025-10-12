@@ -55,4 +55,10 @@
     <string name="update_fail_or_canceled">ऐप अपडेट विफल या रद्द हो गया।</string>
     <string name="open_event_button">इवेंट देखें</string>
     <string name="tile_preview_description">अगले इवेंट टाइल का पूर्वावलोकन</string>
+    <string name="recurring_label">आवर्ती</string>
+    <string name="vibrate_only">केवल वाइब्रेट</string>
+    <string name="update_alarm_title">अलार्म अपडेट करें</string>
+    <string name="update_alarm_message">केवल इस ईवेंट पर लागू करें या पूरी श्रृंखला पर?</string>
+    <string name="recurring_option">आवर्ती</string>
+    <string name="only_this_option">केवल यह</string>
 </resources>

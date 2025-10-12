@@ -239,6 +239,7 @@ fun EventScreen(
                             onEventClick = onEventClick,
                             onDismissAutostart = viewModel::dismissAutostartSuggestion,
                             onReturnToToday = viewModel::returnToToday,
+                            onVibrateToggle = viewModel::onVibrateOnlyChanged,
                         )
                     }
                 }

@@ -1,4 +1,4 @@
-package digital.tonima.kairos.wear.ui.theme.components
+package digital.tonima.kairos.wear.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

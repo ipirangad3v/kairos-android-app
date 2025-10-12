@@ -37,7 +37,8 @@ data class EventScreenUiState(
     val hasPostNotificationsPermission: Boolean = false,
     val hasExactAlarmPermission: Boolean = false,
     val hasFullScreenIntentPermission: Boolean = false,
-    val audioWarning: AudioWarningState = AudioWarningState.NORMAL
+    val audioWarning: AudioWarningState = AudioWarningState.NORMAL,
+    val vibrateOnly: Boolean = false
 )
 
 @HiltViewModel
@@ -73,6 +74,10 @@ constructor(
             .onEach { dismissed ->
                 _uiState.update { it.copy(showAutostartSuggestion = !dismissed) }
             }
+            .launchIn(viewModelScope)
+
+        appPreferencesRepository.getVibrateOnly()
+            .onEach { vibrate -> _uiState.update { it.copy(vibrateOnly = vibrate) } }
             .launchIn(viewModelScope)
 
         checkAllPermissions()
@@ -121,10 +126,13 @@ constructor(
             _uiState.update { it.copy(isRefreshing = true, currentMonth = yearMonth) }
 
             val calendarEvents = getEventsForMonthUseCase.invoke(yearMonth)
-            val disabledIds = appPreferencesRepository.getDisabledEventIds().firstOrNull() ?: emptySet()
+            val disabledInstanceIds = appPreferencesRepository.getDisabledEventIds().firstOrNull() ?: emptySet()
+            val disabledSeriesIds = appPreferencesRepository.getDisabledSeriesIds().firstOrNull() ?: emptySet()
 
             val updatedEvents = calendarEvents.map { event ->
-                event.copy(isAlarmEnabled = !disabledIds.contains(event.uniqueIntentId.toString()))
+                val isInstanceDisabled = disabledInstanceIds.contains(event.uniqueIntentId.toString())
+                val isSeriesDisabled = disabledSeriesIds.contains(event.id.toString())
+                event.copy(isAlarmEnabled = !(isInstanceDisabled || isSeriesDisabled))
             }
 
             _uiState.update { currentState ->
@@ -173,17 +181,38 @@ constructor(
         }
     }
 
-    fun onEventAlarmToggle(event: Event, isEnabled: Boolean) {
+    fun onVibrateOnlyChanged(enabled: Boolean) {
         viewModelScope.launch {
-            val currentDisabledIds = appPreferencesRepository.getDisabledEventIds().firstOrNull()?.toMutableSet() ?: mutableSetOf()
-            val eventIdStr = event.uniqueIntentId.toString()
+            appPreferencesRepository.setVibrateOnly(enabled)
+        }
+    }
+
+    fun onEventAlarmToggle(event: Event, isEnabled: Boolean, disableAllOccurrences: Boolean = false) {
+        viewModelScope.launch {
+            val currentDisabledInstanceIds =
+                appPreferencesRepository.getDisabledEventIds().firstOrNull()?.toMutableSet() ?: mutableSetOf()
+            val currentDisabledSeriesIds =
+                appPreferencesRepository.getDisabledSeriesIds().firstOrNull()?.toMutableSet() ?: mutableSetOf()
+            val instanceIdStr = event.uniqueIntentId.toString()
+            val seriesIdStr = event.id.toString()
 
             if (isEnabled) {
-                currentDisabledIds.remove(eventIdStr)
+                if (disableAllOccurrences) {
+                    currentDisabledSeriesIds.remove(seriesIdStr)
+                    appPreferencesRepository.setDisabledSeriesIds(currentDisabledSeriesIds)
+                } else {
+                    currentDisabledInstanceIds.remove(instanceIdStr)
+                    appPreferencesRepository.setDisabledEventIds(currentDisabledInstanceIds)
+                }
             } else {
-                currentDisabledIds.add(eventIdStr)
+                if (disableAllOccurrences) {
+                    currentDisabledSeriesIds.add(seriesIdStr)
+                    appPreferencesRepository.setDisabledSeriesIds(currentDisabledSeriesIds)
+                } else {
+                    currentDisabledInstanceIds.add(instanceIdStr)
+                    appPreferencesRepository.setDisabledEventIds(currentDisabledInstanceIds)
+                }
             }
-            appPreferencesRepository.setDisabledEventIds(currentDisabledIds)
 
             _uiState.update { currentState ->
                 val updatedEvents = currentState.events.map {

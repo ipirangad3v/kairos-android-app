@@ -58,4 +58,10 @@
     <string name="update_fail_or_canceled">Atualização do app falhou ou foi cancelada.</string>
     <string name="open_event_button">Ver Evento</string>
     <string name="tile_preview_description">Prévia do Tile de Próximo Evento</string>
+    <string name="recurring_label">recorrente</string>
+    <string name="vibrate_only">Somente vibrar</string>
+    <string name="update_alarm_title">Atualizar alarme</string>
+    <string name="update_alarm_message">Deseja aplicar ao evento atual ou a todos os recorrentes?</string>
+    <string name="recurring_option">Recorrente</string>
+    <string name="only_this_option">Somente este</string>
 </resources>

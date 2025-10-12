@@ -1,25 +1,35 @@
-package digital.tonima.kairos.wear.ui.theme.components
+package digital.tonima.kairos.wear.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.Switch
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material3.Card
 import androidx.wear.compose.material3.MaterialTheme
 import digital.tonima.core.model.Event
+import digital.tonima.kairos.core.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @Composable
-fun EventListItem(event: Event) {
+fun EventCard(
+    event: Event,
+    isGloballyEnabled: Boolean,
+    onToggle: (Boolean) -> Unit,
+) {
     val formatter = remember { DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT) }
     val localTime = Instant.ofEpochMilli(event.startTime)
         .atZone(ZoneId.systemDefault())
@@ -43,6 +53,29 @@ fun EventListItem(event: Event) {
                 text = formattedTime,
                 style = MaterialTheme.typography.bodyMedium,
             )
+            if (event.isRecurring) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "🔁 " + stringResource(R.string.recurring_label),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = if (event.isAlarmEnabled) "🔔" else "🔕",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Switch(
+                    checked = event.isAlarmEnabled,
+                    enabled = isGloballyEnabled,
+                    onCheckedChange = onToggle,
+                )
+            }
         }
     }
 }

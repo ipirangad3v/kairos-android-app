@@ -55,6 +55,30 @@ class AppPreferencesRepositoryImplTest {
     }
 
     @Test
+    fun `getDisabledSeriesIds defaults to empty and persists values`() = runTest {
+        repository.getDisabledSeriesIds().test {
+            assertEquals(emptySet<String>(), awaitItem())
+            val ids = setOf("10", "20")
+            repository.setDisabledSeriesIds(ids)
+            assertEquals(ids, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `getVibrateOnly defaults to false and can be toggled`() = runTest {
+        repository.getVibrateOnly().test {
+            // default false
+            assertEquals(false, awaitItem())
+            repository.setVibrateOnly(true)
+            assertEquals(true, awaitItem())
+            repository.setVibrateOnly(false)
+            assertEquals(false, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `getAutostartSuggestionDismissed defaults to false and can be set`() = runTest {
         repository.getAutostartSuggestionDismissed().test {
             assertEquals(false, awaitItem())

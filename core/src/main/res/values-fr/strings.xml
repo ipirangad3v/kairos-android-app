@@ -58,4 +58,10 @@
     <string name="update_fail_or_canceled">La mise à jour de l\'application a échoué ou a été annulée.</string>
     <string name="open_event_button">Voir l\'événement</string>
     <string name="tile_preview_description">Aperçu de la tuile Événement suivant</string>
+    <string name="recurring_label">récurrent</string>
+    <string name="vibrate_only">Vibration uniquement</string>
+    <string name="update_alarm_title">Mettre à jour l\'alarme</string>
+    <string name="update_alarm_message">Appliquer uniquement à cet événement ou à toute la série ?</string>
+    <string name="recurring_option">Récurrent</string>
+    <string name="only_this_option">Seulement celui-ci</string>
 </resources>

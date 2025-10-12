@@ -28,13 +28,15 @@ fun EventList(
     uiState: EventScreenUiState,
     eventsByDate: Map<LocalDate, List<Event>>,
     onRefresh: () -> Unit,
-    onEventToggle: (event: Event, isEnabled: Boolean) -> Unit,
+    onEventToggle: (event: Event, isEnabled: Boolean, disableAllOccurrences: Boolean) -> Unit,
     onEventClick: (Event) -> Unit,
 ) {
     val pullRefreshState = rememberPullRefreshState(refreshing = uiState.isRefreshing, onRefresh = onRefresh)
     val eventsInDay = remember(uiState.selectedDate, eventsByDate) {
         eventsByDate[uiState.selectedDate] ?: emptyList()
     }
+
+    val pendingToggle = remember { androidx.compose.runtime.mutableStateOf<Pair<Event, Boolean>?>(null) }
 
     Box(modifier.pullRefresh(pullRefreshState)) {
         if (eventsInDay.isEmpty() && !uiState.isRefreshing) {
@@ -48,7 +50,13 @@ fun EventList(
                     EventCard(
                         event = event,
                         isGloballyEnabled = uiState.isGlobalAlarmEnabled,
-                        onToggle = { isEnabled -> onEventToggle(event, isEnabled) },
+                        onToggle = { isEnabled ->
+                            if (event.isRecurring) {
+                                pendingToggle.value = event to isEnabled
+                            } else {
+                                onEventToggle(event, isEnabled, false)
+                            }
+                        },
                         onEventClick = { onEventClick(event) },
                     )
                 }
@@ -59,5 +67,25 @@ fun EventList(
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter),
         )
+
+        pendingToggle.value?.let { (pendingEvent, pendingEnabled) ->
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = { pendingToggle.value = null },
+                title = { Text(stringResource(R.string.update_alarm_title)) },
+                text = { Text(stringResource(R.string.update_alarm_message)) },
+                confirmButton = {
+                    androidx.compose.material3.TextButton(onClick = {
+                        onEventToggle(pendingEvent, pendingEnabled, true)
+                        pendingToggle.value = null
+                    }) { Text(stringResource(R.string.recurring_option)) }
+                },
+                dismissButton = {
+                    androidx.compose.material3.TextButton(onClick = {
+                        onEventToggle(pendingEvent, pendingEnabled, false)
+                        pendingToggle.value = null
+                    }) { Text(stringResource(R.string.only_this_option)) }
+                },
+            )
+        }
     }
 }

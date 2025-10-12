@@ -20,6 +20,8 @@ class AppPreferencesRepositoryImpl @Inject constructor(
     private object PreferencesKeys {
         val GLOBAL_ALARM_ENABLED = booleanPreferencesKey("global_alarm_enabled")
         val DISABLED_EVENT_IDS = stringSetPreferencesKey("disabled_event_ids")
+        val DISABLED_SERIES_IDS = stringSetPreferencesKey("disabled_series_ids")
+        val VIBRATE_ONLY = booleanPreferencesKey("vibrate_only")
         val AUTOSTART_SUGGESTION_DISMISSED = booleanPreferencesKey("autostart_suggestion_dismissed")
     }
 
@@ -45,6 +47,32 @@ class AppPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setDisabledEventIds(ids: Set<String>) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DISABLED_EVENT_IDS] = ids
+        }
+    }
+
+    override fun getDisabledSeriesIds(): Flow<Set<String>> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[PreferencesKeys.DISABLED_SERIES_IDS] ?: emptySet()
+            }
+    }
+
+    override suspend fun setDisabledSeriesIds(ids: Set<String>) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.DISABLED_SERIES_IDS] = ids
+        }
+    }
+
+    override fun getVibrateOnly(): Flow<Boolean> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[PreferencesKeys.VIBRATE_ONLY] ?: false
+            }
+    }
+
+    override suspend fun setVibrateOnly(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.VIBRATE_ONLY] = enabled
         }
     }
 

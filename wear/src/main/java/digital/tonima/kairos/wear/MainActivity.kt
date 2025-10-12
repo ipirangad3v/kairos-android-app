@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.permissions.PermissionManager
+import digital.tonima.kairos.wear.ui.WearApp
 import digital.tonima.kairos.wear.ui.theme.KairosTheme
-import digital.tonima.kairos.wear.ui.theme.components.WearApp
 import javax.inject.Inject
 
 @AndroidEntryPoint

@@ -15,6 +15,12 @@ interface AppPreferencesRepository {
     fun getDisabledEventIds(): Flow<Set<String>>
     suspend fun setDisabledEventIds(ids: Set<String>)
 
+    fun getDisabledSeriesIds(): Flow<Set<String>>
+    suspend fun setDisabledSeriesIds(ids: Set<String>)
+
+    fun getVibrateOnly(): Flow<Boolean>
+    suspend fun setVibrateOnly(enabled: Boolean)
+
     fun getAutostartSuggestionDismissed(): Flow<Boolean>
     suspend fun setAutostartSuggestionDismissed(dismissed: Boolean)
 }

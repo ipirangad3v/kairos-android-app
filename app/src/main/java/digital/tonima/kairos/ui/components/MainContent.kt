@@ -24,12 +24,13 @@ fun MainContent(
     uiState: EventScreenUiState,
     onRefresh: () -> Unit,
     onToggle: (Boolean) -> Unit,
-    onEventToggle: (event: Event, isEnabled: Boolean) -> Unit,
+    onEventToggle: (event: Event, isEnabled: Boolean, disableAllOccurrences: Boolean) -> Unit,
     onMonthChanged: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onEventClick: (Event) -> Unit,
     onDismissAutostart: () -> Unit,
     onReturnToToday: () -> Unit,
+    onVibrateToggle: (Boolean) -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -55,6 +56,7 @@ fun MainContent(
                     uiState = uiState,
                     onToggle = onToggle,
                     onDismissAutostart = onDismissAutostart,
+                    onVibrateToggle = onVibrateToggle,
                 )
                 CalendarView(
                     modifier = Modifier.padding(top = 8.dp),
@@ -83,6 +85,7 @@ fun MainContent(
                 uiState = uiState,
                 onToggle = onToggle,
                 onDismissAutostart = onDismissAutostart,
+                onVibrateToggle = onVibrateToggle,
             )
             CalendarView(
                 modifier = Modifier.padding(top = 8.dp),

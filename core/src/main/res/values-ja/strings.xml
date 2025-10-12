@@ -52,4 +52,10 @@
     <string name="update_fail_or_canceled">アプリのアップデートに失敗したか、キャンセルされました。</string>
     <string name="open_event_button">イベントを表示</string>
     <string name="tile_preview_description">次のイベントタイルのプレビュー</string>
+    <string name="recurring_label">繰り返し</string>
+    <string name="vibrate_only">バイブのみ</string>
+    <string name="update_alarm_title">アラームを更新</string>
+    <string name="update_alarm_message">このイベントのみに適用しますか、それともシリーズ全体に適用しますか？</string>
+    <string name="recurring_option">繰り返し</string>
+    <string name="only_this_option">このイベントのみ</string>
 </resources>

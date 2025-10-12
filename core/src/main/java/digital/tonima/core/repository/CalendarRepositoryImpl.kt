@@ -36,10 +36,6 @@ class CalendarRepositoryImpl
         private val PROJECTION_TITLE_INDEX = 1
         private val PROJECTION_BEGIN_INDEX = 2
 
-        /**
-         * Busca todos os eventos para um mês específico.
-         * Esta função é otimizada para buscar apenas os dados necessários para o mês visível.
-         */
         override suspend fun getEventsForMonth(yearMonth: YearMonth): List<Event> = withContext(Dispatchers.IO) {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -80,12 +76,16 @@ class CalendarRepositoryImpl
                 }
             }
 
-            return@withContext events
+            val enriched = events.map { e ->
+                val recurring = try {
+                    isRecurring(e.id)
+                } catch (t: Throwable) {
+                    false
+                }
+                e.copy(isRecurring = recurring)
+            }
+            return@withContext enriched
         }
-    /**
-     * Busca o próximo evento futuro mais próximo.
-     * Para complicações, precisamos de dados rápidos e focados.
-     */
     override suspend fun getNextUpcomingEvent(): Event? = withContext(Dispatchers.IO) {
         if (ContextCompat.checkSelfPermission(
                 context,
@@ -127,4 +127,40 @@ class CalendarRepositoryImpl
         }
         return@withContext nextEvent
     }
+
+    override suspend fun isRecurring(eventId: Long): Boolean = withContext(Dispatchers.IO) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CALENDAR
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            logcat { "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR." }
+            return@withContext false
+        }
+
+        val projection = arrayOf(
+            CalendarContract.Events.RRULE,
+            CalendarContract.Events.RDATE
+        )
+        val selection = "${CalendarContract.Events._ID} = ?"
+        val selectionArgs = arrayOf(eventId.toString())
+
+        val cursor = context.contentResolver.query(
+            CalendarContract.Events.CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        var recurring = false
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val rrule = it.getString(0)
+                val rdate = it.getString(1)
+                recurring = !rrule.isNullOrBlank() || !rdate.isNullOrBlank()
+            }
+        }
+        return@withContext recurring
     }
+}

@@ -52,4 +52,10 @@
     <string name="update_fail_or_canceled">应用更新失败或已取消。</string>
     <string name="open_event_button">查看事件</string>
     <string name="tile_preview_description">下一个事件磁贴预览</string>
+    <string name="recurring_label">重复</string>
+    <string name="vibrate_only">仅振动</string>
+    <string name="update_alarm_title">更新闹钟</string>
+    <string name="update_alarm_message">仅应用于此事件还是整个系列？</string>
+    <string name="recurring_option">重复</string>
+    <string name="only_this_option">仅此一次</string>
 </resources>

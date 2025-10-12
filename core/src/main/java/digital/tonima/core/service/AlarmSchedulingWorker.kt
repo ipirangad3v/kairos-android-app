@@ -18,10 +18,6 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-/**
- * Um trabalhador em background que periodicamente verifica os próximos eventos
- * e agenda os alarmes necessários.
- */
 @HiltWorker
 class AlarmSchedulingWorker
 @AssistedInject
