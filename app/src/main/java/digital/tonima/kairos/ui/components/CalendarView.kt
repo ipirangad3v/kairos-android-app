@@ -1,5 +1,6 @@
 package digital.tonima.kairos.ui.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -124,11 +126,19 @@ private fun DaysOfWeekHeader(daysOfWeek: List<DayOfWeek>) {
     Row(modifier = Modifier.fillMaxWidth()) {
         val locale = Locale.getDefault()
         for (dayOfWeek in daysOfWeek) {
+            val isWeekend = dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 text = dayOfWeek.getDisplayName(TextStyle.SHORT, locale),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = if (isWeekend) FontWeight.SemiBold else FontWeight.Normal,
+                ),
+                color = if (isWeekend) {
+                    MaterialTheme.colorScheme.secondary
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
             )
         }
     }
@@ -142,19 +152,25 @@ private fun Day(
     onClick: (CalendarDay) -> Unit,
 ) {
     val isToday = day.date == LocalDate.now()
+    val targetBg = when {
+        isSelected -> MaterialTheme.colorScheme.primary
+        isToday -> MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+        else -> Color.Transparent
+    }
+    val bgColor by animateColorAsState(targetValue = targetBg, label = "dayBg")
 
     Box(
         modifier = Modifier
             .aspectRatio(1f)
-            .padding(2.dp)
+            .padding(4.dp)
             .background(
-                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                shape = MaterialTheme.shapes.medium,
+                color = bgColor,
+                shape = CircleShape,
             )
             .border(
-                width = if (isToday && !isSelected) 1.5.dp else 0.dp,
-                color = MaterialTheme.colorScheme.primary,
-                shape = MaterialTheme.shapes.medium,
+                width = if (isToday && !isSelected) 1.dp else 0.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = if (isSelected) 0f else 1f),
+                shape = CircleShape,
             )
             .clickable(enabled = day.position == DayPosition.MonthDate) { onClick(day) },
         contentAlignment = Alignment.Center,
@@ -164,8 +180,7 @@ private fun Day(
                 text = day.date.dayOfMonth.toString(),
                 color = when {
                     isSelected -> MaterialTheme.colorScheme.onPrimary
-                    isToday -> MaterialTheme.colorScheme.primary
-                    day.position != DayPosition.MonthDate -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                    day.position != DayPosition.MonthDate -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.35f)
                     else -> MaterialTheme.colorScheme.onSurface
                 },
                 fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal,
@@ -173,8 +188,8 @@ private fun Day(
             if (hasEvents && day.position == DayPosition.MonthDate) {
                 Box(
                     modifier = Modifier
-                        .padding(top = 2.dp)
-                        .size(4.dp)
+                        .padding(top = 3.dp)
+                        .size(6.dp)
                         .background(
                             color = if (isSelected) {
                                 MaterialTheme.colorScheme.onPrimary
