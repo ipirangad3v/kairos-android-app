@@ -45,9 +45,7 @@
 
         <receiver android:name=".receivers.AlarmActionReceiver" android:exported="false" />
 
-        <service
-            android:name="digital.tonima.core.service.AlarmSoundAndVibrateService"
-            android:exported="false"
+        <service android:name="digital.tonima.core.service.AlarmSoundAndVibrateService" android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
