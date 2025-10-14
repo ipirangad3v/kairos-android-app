@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.wear.tooling.preview)
     implementation(libs.logcat)
     implementation(libs.accompanist.permissions)
+    implementation(libs.play.services.wearable)
 
     // watchface
     implementation(libs.androidx.watchface)

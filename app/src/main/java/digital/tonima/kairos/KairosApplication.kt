@@ -12,8 +12,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import digital.tonima.core.service.AlarmSchedulingWorker
+import digital.tonima.kairos.service.PhoneEventSyncWorker.Companion.enqueuePeriodic
 import logcat.AndroidLogcatLogger
+import logcat.LogPriority
 import logcat.LogPriority.VERBOSE
+import logcat.logcat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -33,15 +36,23 @@ class KairosApplication :
 
     override fun onCreate() {
         super.onCreate()
+        try {
+            WorkManager.initialize(this, workManagerConfiguration)
+        } catch (e: IllegalStateException) {
+            logcat(LogPriority.WARN) {
+                "WorkManager already initialized, probably by a ContentProvider. Ignoring."
+            }
+        }
         setupLogger()
         setupRecurringWork()
+        enqueuePeriodic(this)
     }
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL ||
-            level == android.content.ComponentCallbacks2.TRIM_MEMORY_COMPLETE ||
-            level == android.content.ComponentCallbacks2.TRIM_MEMORY_MODERATE
+        if (level >= TRIM_MEMORY_RUNNING_CRITICAL ||
+            level == TRIM_MEMORY_COMPLETE ||
+            level == TRIM_MEMORY_MODERATE
         ) {
             setupRecurringWork()
         }

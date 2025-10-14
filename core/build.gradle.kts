@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.logcat)
 
     // Wear provider (for WearableCalendarContract)
-    implementation("androidx.wear:wear:1.3.0")
+    implementation(libs.androidx.wear)
 
     // hilt
     implementation(libs.hilt.android)

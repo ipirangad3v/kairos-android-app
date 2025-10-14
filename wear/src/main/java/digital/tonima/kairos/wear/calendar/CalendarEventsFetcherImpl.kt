@@ -4,11 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.provider.CalendarContract
 import com.paulrybitskyi.hiltbinder.BindType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import digital.tonima.core.model.Event
-import digital.tonima.core.usecases.GetEventsNext24HoursUseCase
+import digital.tonima.kairos.wear.sync.WearEventCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -30,7 +29,6 @@ class CalendarEventsFetcherImpl
     @Inject
     constructor(
         @ApplicationContext private val appContext: Context,
-        private val getEventsNext24Hours: GetEventsNext24HoursUseCase,
     ) : CalendarEventsFetcher {
 
         private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -41,53 +39,24 @@ class CalendarEventsFetcherImpl
         @Volatile
         private var scanInProgress = false
 
-        private var isReceiverRegistered = false
-
-        private val authority: String = "com.google.android.wearable.provider.calendar"
-        private val backupAuthority: String = CalendarContract.AUTHORITY
-
-        private val broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                handleProviderChanged(intent, authority)
+        private val eventsUpdatedReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                requestRescan()
             }
         }
 
-        private val broadcastReceiverBackup = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                handleProviderChanged(intent, backupAuthority)
-            }
-        }
+        private var receiverRegistered = false
 
         init {
-            registerReceivers()
-            // initial scan
             requestRescan()
-        }
-
-        private fun handleProviderChanged(intent: Intent, auth: String) {
-            if (Intent.ACTION_PROVIDER_CHANGED == intent.action) {
-                logcat { "Calendar provider changed for authority($auth); rescan requested." }
-                requestRescan()
-            } else {
-                logcat { "Ignoring broadcast action(${intent.action}) for authority($auth)" }
+            try {
+                val filter =
+                    IntentFilter(digital.tonima.kairos.wear.sync.WearEventListenerService.ACTION_EVENTS_UPDATED)
+                appContext.registerReceiver(eventsUpdatedReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+                receiverRegistered = true
+            } catch (e: Throwable) {
+                logcat { "Failed to register eventsUpdatedReceiver: ${e.message}" }
             }
-        }
-
-        private fun registerReceivers() {
-            if (isReceiverRegistered) return
-            val filter = IntentFilter(Intent.ACTION_PROVIDER_CHANGED).apply {
-                addDataScheme("content")
-                addDataAuthority(authority, null)
-            }
-            appContext.registerReceiver(broadcastReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
-
-            val filterBackup = IntentFilter(Intent.ACTION_PROVIDER_CHANGED).apply {
-                addDataScheme("content")
-                addDataAuthority(backupAuthority, null)
-            }
-            appContext.registerReceiver(broadcastReceiverBackup, filterBackup, Context.RECEIVER_NOT_EXPORTED)
-
-            isReceiverRegistered = true
         }
 
         override fun requestRescan() {
@@ -98,11 +67,11 @@ class CalendarEventsFetcherImpl
             scanInProgress = true
             scope.launch {
                 try {
-                    val list = getEventsNext24Hours()
+                    val list = WearEventCache.load(appContext)
                     _events.value = list
-                    logcat { "Rescan complete. events=${list.size}" }
+                    logcat { "Loaded ${list.size} cached events from phone." }
                 } catch (t: Throwable) {
-                    logcat { "Rescan failed: ${t.message}" }
+                    logcat { "Cache load failed: ${t.message}" }
                 } finally {
                     scanInProgress = false
                 }
@@ -110,11 +79,10 @@ class CalendarEventsFetcherImpl
         }
 
         override fun kill() {
-            if (isReceiverRegistered) {
-                try { appContext.unregisterReceiver(broadcastReceiver) } catch (_: Throwable) {}
-                try { appContext.unregisterReceiver(broadcastReceiverBackup) } catch (_: Throwable) {}
+            if (receiverRegistered) {
+                try { appContext.unregisterReceiver(eventsUpdatedReceiver) } catch (_: Throwable) {}
+                receiverRegistered = false
             }
-            isReceiverRegistered = false
             scope.cancel()
         }
     }

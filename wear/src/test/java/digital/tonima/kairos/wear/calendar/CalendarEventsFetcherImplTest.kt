@@ -2,15 +2,13 @@ package digital.tonima.kairos.wear.calendar
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.test.core.app.ApplicationProvider
 import digital.tonima.core.model.Event
-import digital.tonima.core.usecases.GetEventsNext24HoursUseCase
+import digital.tonima.kairos.wear.sync.WearEventCache
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -22,14 +20,6 @@ class CalendarEventsFetcherImplTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private class FakeUseCase(var toReturn: List<Event> = emptyList()) : GetEventsNext24HoursUseCase {
-        var callCount = 0
-        override suspend fun invoke(): List<Event> {
-            callCount++
-            return toReturn
-        }
-    }
-
     @After
     fun tearDown() {
         // nothing persistent
@@ -37,10 +27,9 @@ class CalendarEventsFetcherImplTest {
 
     @Test
     fun `requestRescan updates events flow`() = runBlocking {
-        val fake = FakeUseCase(
-            toReturn = listOf(Event(1, "A", 10L), Event(2, "B", 20L)),
-        )
-        val fetcher = CalendarEventsFetcherImpl(context, fake)
+        // seed cache
+        WearEventCache.save(context, listOf(Event(1, "A", 10L), Event(2, "B", 20L)))
+        val fetcher = CalendarEventsFetcherImpl(context)
 
         // allow background coroutine to run
         delay(50)
@@ -48,8 +37,8 @@ class CalendarEventsFetcherImplTest {
         assertEquals(2, fetcher.events.value.size)
         assertEquals("A", fetcher.events.value[0].title)
 
-        // update data and rescan
-        fake.toReturn = listOf(Event(3, "C", 30L))
+        // update cache and rescan
+        WearEventCache.save(context, listOf(Event(3, "C", 30L)))
         fetcher.requestRescan()
         delay(50)
         assertEquals(1, fetcher.events.value.size)
@@ -58,26 +47,18 @@ class CalendarEventsFetcherImplTest {
         fetcher.kill()
     }
 
-    @Ignore(
-        "Robolectric does not dispatch " +
-            "flagged receivers reliably in this setup; broadcast path covered indirectly by requestRescan",
-    )
     @Test
-    fun `provider changed broadcast triggers rescan`() = runBlocking {
-        val fake = FakeUseCase(
-            toReturn = listOf(Event(1, "First", 10L)),
-        )
-        val fetcher = CalendarEventsFetcherImpl(context, fake)
+    fun `events updated broadcast triggers rescan`() = runBlocking {
+        WearEventCache.save(context, listOf(Event(1, "First", 10L)))
+        val fetcher = CalendarEventsFetcherImpl(context)
         delay(50)
         assertEquals(1, fetcher.events.value.size)
 
-        // change underlying data but do not call requestRescan directly
-        fake.toReturn = listOf(Event(2, "Second", 20L), Event(3, "Third", 30L))
+        // change underlying cache but do not call requestRescan directly
+        WearEventCache.save(context, listOf(Event(2, "Second", 20L), Event(3, "Third", 30L)))
 
-        // send broadcast matching authority
-        val intent = Intent(Intent.ACTION_PROVIDER_CHANGED).apply {
-            data = Uri.parse("content://com.google.android.wearable.provider.calendar")
-        }
+        // send our app broadcast
+        val intent = Intent(digital.tonima.kairos.wear.sync.WearEventListenerService.ACTION_EVENTS_UPDATED)
         context.sendBroadcast(intent)
 
         // wait a bit for broadcast handling

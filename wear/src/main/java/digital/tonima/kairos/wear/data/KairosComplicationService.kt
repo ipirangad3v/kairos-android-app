@@ -1,5 +1,6 @@
 package digital.tonima.kairos.wear.data
 
+// removed usecase import; now reading from WearEventCache only
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -15,9 +16,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceSe
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.model.Event
-import digital.tonima.core.usecases.GetEventsNext24HoursUseCase
 import digital.tonima.kairos.wear.MainActivity
-import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
 import logcat.logcat
 import java.time.Duration
@@ -25,14 +24,11 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import javax.inject.Inject
 import digital.tonima.kairos.core.R as coreR
 
 @AndroidEntryPoint
 class KairosComplicationService : ComplicationDataSourceService() {
 
-    @Inject
-    lateinit var getEventsNext24HoursUseCase: GetEventsNext24HoursUseCase
     private fun getTapAction(context: Context): PendingIntent {
         val intent = Intent(context, MainActivity::class.java)
         return PendingIntent.getActivity(
@@ -53,7 +49,8 @@ class KairosComplicationService : ComplicationDataSourceService() {
         val tapAction = getTapAction(context)
 
         val nextEvent: Event? = try {
-            runBlocking { getEventsNext24HoursUseCase.invoke().firstOrNull() }
+            val cached = digital.tonima.kairos.wear.sync.WearEventCache.load(this)
+            cached.minByOrNull { it.startTime }
         } catch (t: Throwable) {
             logcat(LogPriority.ERROR) { "Erro ao obter o próximo evento: ${t.localizedMessage}" }
             null

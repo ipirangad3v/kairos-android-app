@@ -63,7 +63,7 @@ class CalendarRepositoryImpl
                 eventProjection,
                 null,
                 null,
-                "${CalendarContract.Instances.BEGIN} ASC"
+                null
             )
 
             cursor?.use {
@@ -76,14 +76,16 @@ class CalendarRepositoryImpl
                 }
             }
 
-            val enriched = events.map { e ->
-                val recurring = try {
-                    isRecurring(e.id)
-                } catch (t: Throwable) {
-                    false
+            val enriched = events
+                .sortedBy { it.startTime }
+                .map { e ->
+                    val recurring = try {
+                        isRecurring(e.id)
+                    } catch (t: Throwable) {
+                        false
+                    }
+                    e.copy(isRecurring = recurring)
                 }
-                e.copy(isRecurring = recurring)
-            }
             return@withContext enriched
         }
     override suspend fun getNextUpcomingEvent(): Event? = withContext(Dispatchers.IO) {
@@ -113,7 +115,7 @@ class CalendarRepositoryImpl
             eventProjection,
             selection,
             selectionArgs,
-            "${CalendarContract.Instances.BEGIN} ASC"
+            null
         )
 
         var nextEvent: Event? = null
@@ -190,14 +192,12 @@ class CalendarRepositoryImpl
             CalendarContract.Instances.BEGIN
         )
 
-        val sortOrder = "${CalendarContract.Instances.BEGIN} ASC"
-
         val cursor = context.contentResolver.query(
             uri,
             projection,
             null,
             null,
-            sortOrder
+            null
         )
 
         var rowCount = 0
@@ -217,10 +217,11 @@ class CalendarRepositoryImpl
             logcat { "WearableCalendarContract.Instances retornou 0 eventos para o intervalo [$now, $in24h)." }
         }
 
-        // Enrich with recurring info (safe-guarded)
-        val enriched = events.map { e ->
-            val recurring = try { isRecurring(e.id) } catch (_: Throwable) { false }
-            e.copy(isRecurring = recurring)
+        val enriched = events.map { event ->
+            val recurring = try { isRecurring(event.id) } catch (e: Throwable) {
+                logcat { "Falha ao verificar se o evento ${event.id} é recorrente: ${e.message}" }
+                false }
+            event.copy(isRecurring = recurring)
         }
         return@withContext enriched
     }
