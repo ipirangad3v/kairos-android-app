@@ -58,4 +58,6 @@
     <string name="update_alarm_message">仅应用于此事件还是整个系列？</string>
     <string name="recurring_option">重复</string>
     <string name="only_this_option">仅此一次</string>
+    <string name="allow_exact_alarms">允许精确闹钟</string>
+    <string name="allow_fullscreen_intents">允许闹钟使用全屏</string>
 </resources>

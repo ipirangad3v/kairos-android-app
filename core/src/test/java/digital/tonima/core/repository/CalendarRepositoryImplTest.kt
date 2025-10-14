@@ -1,47 +1,32 @@
 package digital.tonima.core.repository
 
-import android.content.Context
 import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Before
+import androidx.test.core.app.ApplicationProvider
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.YearMonth
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [30])
 class CalendarRepositoryImplTest {
 
-    private lateinit var context: Context
-    private lateinit var repository: CalendarRepository
-
-    @Before
-    fun setup() {
-        context = mockk(relaxed = true)
-        repository = CalendarRepositoryImpl(context)
-        mockkStatic(ContextCompat::class)
-    }
-
     @Test
-    fun `getEventsForMonth returns empty list when permission denied`() = runTest {
-        every { ContextCompat.checkSelfPermission(any(), any()) } returns PackageManager.PERMISSION_DENIED
+    fun `getEventsNext24Hours returns empty when calendar permission denied`() = runBlocking {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        // Robolectric by default denies dangerous permissions; ensure our assumption
+        val permissionState = context.checkSelfPermission(android.Manifest.permission.READ_CALENDAR)
+        assertTrue(
+            "Precondition failed: permission should be denied in test (was $permissionState)",
+            permissionState != PackageManager.PERMISSION_GRANTED
+        )
 
-        val result = repository.getEventsForMonth(YearMonth.of(2024, 10))
+        val repo = CalendarRepositoryImpl(context)
 
-        assertEquals(emptyList<digital.tonima.core.model.Event>(), result)
-    }
+        val events = repo.getEventsNext24Hours()
 
-    @Test
-    fun `getNextUpcomingEvent returns null when permission denied`() = runTest {
-        every { ContextCompat.checkSelfPermission(any(), any()) } returns PackageManager.PERMISSION_DENIED
-
-        val result = repository.getNextUpcomingEvent()
-
-        assertNull(result)
+        assertTrue(events.isEmpty())
     }
 }

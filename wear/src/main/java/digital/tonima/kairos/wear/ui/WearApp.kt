@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -47,7 +48,8 @@ import digital.tonima.core.permissions.PermissionManager
 import digital.tonima.core.viewmodel.EventViewModel
 import digital.tonima.kairos.wear.ui.components.EventCard
 import digital.tonima.kairos.wear.ui.components.WearOsPermissionsScreenContent
-import java.time.LocalDate
+import logcat.LogPriority
+import logcat.logcat
 import digital.tonima.kairos.core.R as coreR
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -57,6 +59,8 @@ fun WearApp(
     permissionManager: PermissionManager,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val wearCalendarViewModel: WearCalendarViewModel = hiltViewModel()
+    val next24hEvents by wearCalendarViewModel.next24hEvents.collectAsStateWithLifecycle()
     val listState = rememberScalingLazyListState()
     val context = LocalContext.current
 
@@ -79,7 +83,7 @@ fun WearApp(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 viewModel.checkAllPermissions()
-                viewModel.onDateSelected(LocalDate.now())
+                wearCalendarViewModel.requestRescan()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -99,7 +103,10 @@ fun WearApp(
             horizontalAlignment = Alignment.CenterHorizontally,
             state = listState,
         ) {
-            if (!uiState.hasCalendarPermission) {
+            val needsStandardPermissions = !standardPermissionState.allPermissionsGranted
+            val needsExactAlarmPermission = !uiState.hasExactAlarmPermission
+            val needsFullScreenIntentPermission = !uiState.hasFullScreenIntentPermission
+            if (needsStandardPermissions || needsExactAlarmPermission || needsFullScreenIntentPermission) {
                 item {
                     WearOsPermissionsScreenContent(
                         onSettingsClick = {
@@ -112,6 +119,47 @@ fun WearApp(
                         },
                         onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() },
                     )
+                }
+                if (needsExactAlarmPermission) {
+                    item {
+                        androidx.wear.compose.material.Chip(
+                            onClick = {
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                                    val i = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                                        data = "package:${context.packageName}".toUri()
+                                    }
+                                    context.startActivity(i)
+                                }
+                            },
+                            label = { Text(stringResource(coreR.string.allow_exact_alarms)) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
+                }
+                if (needsFullScreenIntentPermission) {
+                    item {
+                        androidx.wear.compose.material.Chip(
+                            onClick = {
+                                if (android.os.Build.VERSION.SDK_INT >= 34) {
+                                    val i = Intent("android.settings.MANAGE_APP_USE_FULL_SCREEN_INTENT").apply {
+                                        data = "package:${context.packageName}".toUri()
+                                    }
+                                    context.startActivity(i)
+                                } else {
+                                    val i = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                    }
+                                    context.startActivity(i)
+                                }
+                            },
+                            label = { Text(stringResource(coreR.string.allow_fullscreen_intents)) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             } else {
                 item {
@@ -153,14 +201,15 @@ fun WearApp(
                     )
                     Spacer(Modifier.height(8.dp))
                 }
-                if (uiState.events.isEmpty() && !uiState.isRefreshing) {
+                val displayEvents = next24hEvents
+                if (displayEvents.isEmpty() && !uiState.isRefreshing) {
                     item {
                         Text(
                             text = stringResource(coreR.string.no_events_found_for_this_day),
                         )
                     }
                 } else {
-                    items(uiState.events.sortedBy { it.startTime }) { event ->
+                    items(displayEvents.sortedBy { it.startTime }) { event ->
                         val pendingToggle = remember { mutableStateOf<Pair<Event, Boolean>?>(null) }
                         EventCard(
                             event = event,
@@ -210,13 +259,17 @@ fun WearApp(
                         }
                     }
                 }
-                // Footer with app version at the end of the screen
                 item {
                     Spacer(Modifier.height(12.dp))
                     val versionName = try {
                         val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
                         pInfo.versionName ?: ""
-                    } catch (e: Exception) { "" }
+                    } catch (e: Exception) {
+                        logcat(LogPriority.ERROR) {
+                            "Erro ao obter a versão da app: ${e.localizedMessage}"
+                        }
+                        ""
+                    }
                     Text(
                         text = "v$versionName",
                         style = MaterialTheme.typography.labelSmall,

@@ -61,4 +61,6 @@
     <string name="update_alarm_message">هل تريد التطبيق على هذا الحدث فقط أم على السلسلة بالكامل؟</string>
     <string name="recurring_option">متكرر</string>
     <string name="only_this_option">هذا فقط</string>
+    <string name="allow_exact_alarms">السماح بالمنبّهات الدقيقة</string>
+    <string name="allow_fullscreen_intents">السماح بملء الشاشة للتنبيهات</string>
 </resources>

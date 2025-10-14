@@ -58,4 +58,6 @@
     <string name="update_alarm_message">このイベントのみに適用しますか、それともシリーズ全体に適用しますか？</string>
     <string name="recurring_option">繰り返し</string>
     <string name="only_this_option">このイベントのみ</string>
+    <string name="allow_exact_alarms">正確なアラームを許可</string>
+    <string name="allow_fullscreen_intents">アラームの全画面表示を許可</string>
 </resources>

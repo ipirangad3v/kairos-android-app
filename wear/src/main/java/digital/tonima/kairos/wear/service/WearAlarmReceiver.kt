@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import digital.tonima.core.receiver.AlarmReceiver.Companion.ACTION_ALARM_TRIGGERED
 import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
 import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
+import digital.tonima.core.service.AlarmSoundAndVibrateService
 import digital.tonima.kairos.core.R
 import digital.tonima.kairos.wear.MainActivity
 
@@ -21,6 +22,8 @@ class WearAlarmReceiver : BroadcastReceiver() {
 
         val eventTitle = intent.getStringExtra(EXTRA_EVENT_TITLE) ?: context.getString(R.string.upcoming_event)
         val uniqueId = intent.getIntExtra(EXTRA_UNIQUE_ID, System.currentTimeMillis().toInt())
+
+        AlarmSoundAndVibrateService.startAlarm(context)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "wear_alarm_channel"
@@ -55,7 +58,7 @@ class WearAlarmReceiver : BroadcastReceiver() {
         )
 
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(digital.tonima.kairos.core.R.drawable.ic_k_monochrome)
+            .setSmallIcon(R.drawable.ic_k_monochrome)
             .setContentTitle(notificationTitle)
             .setContentText(eventTitle)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

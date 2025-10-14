@@ -64,4 +64,6 @@
     <string name="update_alarm_message">Deseja aplicar ao evento atual ou a todos os recorrentes?</string>
     <string name="recurring_option">Recorrente</string>
     <string name="only_this_option">Somente este</string>
+    <string name="allow_exact_alarms">Permitir alarmes exatos</string>
+    <string name="allow_fullscreen_intents">Permitir tela cheia para alarmes</string>
 </resources>

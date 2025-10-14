@@ -63,4 +63,6 @@
     <string name="update_alarm_message">¿Aplicar solo a este evento o a toda la serie?</string>
     <string name="recurring_option">Recurrente</string>
     <string name="only_this_option">Solo este</string>
+    <string name="allow_exact_alarms">Permitir alarmas exactas</string>
+    <string name="allow_fullscreen_intents">Permitir pantalla completa para alarmas</string>
 </resources>

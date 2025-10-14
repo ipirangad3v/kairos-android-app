@@ -62,4 +62,6 @@
     <string name="update_alarm_message">Apply to just this event or the entire series?</string>
     <string name="recurring_option">Recurring</string>
     <string name="only_this_option">Only this</string>
+    <string name="allow_exact_alarms">Allow exact alarms</string>
+    <string name="allow_fullscreen_intents">Allow full-screen for alarms</string>
 </resources>

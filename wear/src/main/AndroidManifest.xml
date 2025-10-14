@@ -28,7 +28,8 @@
 
         <receiver android:name=".wear.service.WearAlarmActionReceiver" android:exported="false" />
 
-        <service android:name="digital.tonima.core.service.AlarmSoundAndVibrateService" />
+        <service android:name="digital.tonima.core.service.AlarmSoundAndVibrateService" android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <activity android:name=".wear.MainActivity" android:exported="true" android:taskAffinity=""
             android:theme="@style/Theme.Kairos">
