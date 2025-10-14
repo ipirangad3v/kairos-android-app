@@ -127,11 +127,14 @@ dependencies {
     implementation(libs.google.inapp.update.ktx)
 
     implementation(libs.logcat)
+    implementation(libs.play.services.wearable)
 
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+    // Required for @HiltWorker / WorkManager integration codegen
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.hilt.binder)
     implementation(libs.hilt.worker)
     ksp(libs.hilt.binder.compiler)

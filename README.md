@@ -104,6 +104,25 @@ This application is built following modern Android development principles and a 
 ## Flow:
 <img src="/images/flow.png" width="3840" height="3405">
 
+### Phone → Wear events sync (Data Layer)
+To improve reliability on Wear OS, Kairos now syncs upcoming events from the phone to the watch using Google Play Services Wearable Data Layer:
+
+- On the phone, PhoneEventSyncWorker collects the next 24h of events and sends them as a DataItem to the path `/kairos/events24h`.
+- On the watch, WearEventListenerService receives the DataItem, parses the events and stores them locally using WearEventCache.
+- CachedEventSchedulingWorker on Wear reads the cached events and schedules alarms locally (respecting global toggle and per‑event disables).
+- The NextEvent Tile and the Complication read from the same cache to display the upcoming event.
+
+Notes and setup
+- The phone app enqueues a periodic worker to send updates every ~15 minutes, plus an initial one at app start.
+- The Wear app reacts to incoming Data Layer changes immediately; no polling needed.
+- Both modules depend on `com.google.android.gms:play-services-wearable` (managed via the version catalog `libs.play.services.wearable`).
+- Ensure Google Play Services is available on both devices and that the watch is paired and connected.
+- Required permissions must be granted on phone (READ_CALENDAR, notifications as applicable) and on Wear (exact alarm and notifications for alerts).
+
+Troubleshooting
+- If no events show on the watch, open the phone app once to trigger an immediate sync, and verify calendar permission is granted on the phone.
+- Check Logcat for tags: "Phone→Wear sync" (phone) and "Wear received ... events from phone" (watch).
+- You can also clear the watch cache via app data to reset the cached list.
 
 ---
 

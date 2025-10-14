@@ -72,6 +72,15 @@
                 android:resource="@drawable/tile_preview_next_event" />
         </service>
 
+        <!-- Listener for phone→wear events sync -->
+        <service android:name=".wear.sync.WearEventListenerService" android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_LISTENER">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/kairos/events24h" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
