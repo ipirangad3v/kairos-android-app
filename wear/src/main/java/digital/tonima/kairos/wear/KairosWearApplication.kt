@@ -39,9 +39,9 @@ class KairosWearApplication :
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL ||
-            level == android.content.ComponentCallbacks2.TRIM_MEMORY_COMPLETE ||
-            level == android.content.ComponentCallbacks2.TRIM_MEMORY_MODERATE
+        if (level >= TRIM_MEMORY_RUNNING_CRITICAL ||
+            level == TRIM_MEMORY_COMPLETE ||
+            level == TRIM_MEMORY_MODERATE
         ) {
             setupRecurringWork()
         }

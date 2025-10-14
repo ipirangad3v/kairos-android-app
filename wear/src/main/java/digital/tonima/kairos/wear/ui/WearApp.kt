@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Switch
@@ -105,8 +106,7 @@ fun WearApp(
         ) {
             val needsStandardPermissions = !standardPermissionState.allPermissionsGranted
             val needsExactAlarmPermission = !uiState.hasExactAlarmPermission
-            val needsFullScreenIntentPermission = !uiState.hasFullScreenIntentPermission
-            if (needsStandardPermissions || needsExactAlarmPermission || needsFullScreenIntentPermission) {
+            if (needsStandardPermissions || needsExactAlarmPermission) {
                 item {
                     WearOsPermissionsScreenContent(
                         onSettingsClick = {
@@ -122,7 +122,7 @@ fun WearApp(
                 }
                 if (needsExactAlarmPermission) {
                     item {
-                        androidx.wear.compose.material.Chip(
+                        Chip(
                             onClick = {
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                                     val i = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
@@ -132,29 +132,6 @@ fun WearApp(
                                 }
                             },
                             label = { Text(stringResource(coreR.string.allow_exact_alarms)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        )
-                    }
-                }
-                if (needsFullScreenIntentPermission) {
-                    item {
-                        androidx.wear.compose.material.Chip(
-                            onClick = {
-                                if (android.os.Build.VERSION.SDK_INT >= 34) {
-                                    val i = Intent("android.settings.MANAGE_APP_USE_FULL_SCREEN_INTENT").apply {
-                                        data = "package:${context.packageName}".toUri()
-                                    }
-                                    context.startActivity(i)
-                                } else {
-                                    val i = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                                    }
-                                    context.startActivity(i)
-                                }
-                            },
-                            label = { Text(stringResource(coreR.string.allow_fullscreen_intents)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
