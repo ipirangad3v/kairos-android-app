@@ -163,4 +163,51 @@ class CalendarRepositoryImpl
         }
         return@withContext recurring
     }
+
+    override suspend fun getEventsNext24Hours(): List<Event> = withContext(Dispatchers.IO) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CALENDAR
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            logcat { "Tentativa de aceder ao calendário sem a permissão READ_CALENDAR." }
+            return@withContext emptyList()
+        }
+
+        val events = mutableListOf<Event>()
+        // WearableCalendarContract describes a 24h window starting now and exposes Instances
+        val uri = androidx.wear.provider.WearableCalendarContract.Instances.CONTENT_URI
+        val projection = arrayOf(
+            CalendarContract.Instances.EVENT_ID,
+            CalendarContract.Instances.TITLE,
+            CalendarContract.Instances.BEGIN
+        )
+
+        val cursor = context.contentResolver.query(
+            uri,
+            projection,
+            null,
+            null,
+            "${CalendarContract.Instances.BEGIN} ASC"
+        )
+
+        cursor?.use {
+            val idxId = 0
+            val idxTitle = 1
+            val idxBegin = 2
+            while (it.moveToNext()) {
+                val eventId = it.getLong(idxId)
+                val title = it.getString(idxTitle)
+                val begin = it.getLong(idxBegin)
+                events.add(Event(id = eventId, title = title, startTime = begin))
+            }
+        }
+
+        // Enrich with recurring info (safe-guarded)
+        val enriched = events.map { e ->
+            val recurring = try { isRecurring(e.id) } catch (_: Throwable) { false }
+            e.copy(isRecurring = recurring)
+        }
+        return@withContext enriched
+    }
 }

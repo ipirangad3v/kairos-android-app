@@ -210,6 +210,19 @@ fun WearApp(
                         }
                     }
                 }
+                // Footer with app version at the end of the screen
+                item {
+                    Spacer(Modifier.height(12.dp))
+                    val versionName = try {
+                        val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+                        pInfo.versionName ?: ""
+                    } catch (e: Exception) { "" }
+                    Text(
+                        text = "v$versionName",
+                        style = MaterialTheme.typography.labelSmall,
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
             }
         }
     }

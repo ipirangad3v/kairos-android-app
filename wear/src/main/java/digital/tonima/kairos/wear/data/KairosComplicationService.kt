@@ -15,7 +15,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceSe
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.model.Event
-import digital.tonima.core.usecases.GetNextEventUseCase
+import digital.tonima.core.usecases.GetEventsNext24HoursUseCase
 import digital.tonima.kairos.wear.MainActivity
 import kotlinx.coroutines.runBlocking
 import logcat.LogPriority
@@ -32,7 +32,7 @@ import digital.tonima.kairos.core.R as coreR
 class KairosComplicationService : ComplicationDataSourceService() {
 
     @Inject
-    lateinit var getNextEventUseCase: GetNextEventUseCase
+    lateinit var getEventsNext24HoursUseCase: GetEventsNext24HoursUseCase
     private fun getTapAction(context: Context): PendingIntent {
         val intent = Intent(context, MainActivity::class.java)
         return PendingIntent.getActivity(
@@ -53,7 +53,7 @@ class KairosComplicationService : ComplicationDataSourceService() {
         val tapAction = getTapAction(context)
 
         val nextEvent: Event? = try {
-            runBlocking { getNextEventUseCase.invoke() }
+            runBlocking { getEventsNext24HoursUseCase.invoke().firstOrNull() }
         } catch (t: Throwable) {
             logcat(LogPriority.ERROR) { "Erro ao obter o próximo evento: ${t.localizedMessage}" }
             null

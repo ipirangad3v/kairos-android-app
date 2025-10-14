@@ -28,7 +28,7 @@ import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.model.Event
-import digital.tonima.core.usecases.GetNextEventUseCase
+import digital.tonima.core.usecases.GetEventsNext24HoursUseCase
 import digital.tonima.kairos.core.R
 import logcat.LogPriority
 import logcat.logcat
@@ -56,7 +56,7 @@ val customTileColors = Colors(
 class NextEventTileService : SuspendingTileService() {
 
     @Inject
-    lateinit var getNextEventUseCase: GetNextEventUseCase
+    lateinit var getEventsNext24HoursUseCase: GetEventsNext24HoursUseCase
 
     override suspend fun resourcesRequest(requestParams: RequestBuilders.ResourcesRequest): ResourceBuilders.Resources {
         return ResourceBuilders.Resources.Builder()
@@ -67,7 +67,7 @@ class NextEventTileService : SuspendingTileService() {
     override suspend fun tileRequest(requestParams: RequestBuilders.TileRequest): TileBuilders.Tile {
         val deviceParameters = requestParams.deviceConfiguration
         val nextEvent = try {
-            getNextEventUseCase.invoke()
+            getEventsNext24HoursUseCase.invoke().firstOrNull()
         } catch (t: Throwable) {
             logcat(LogPriority.ERROR) { "Erro ao obter o próximo evento: ${t.localizedMessage}" }
             null
