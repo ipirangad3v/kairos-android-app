@@ -174,33 +174,47 @@ class CalendarRepositoryImpl
             return@withContext emptyList()
         }
 
+        val now = System.currentTimeMillis()
+        val in24h = now + 24 * 60 * 60 * 1000L
+
+        // Build a time-bounded URI for wearable calendar instances [start, end)
+        val builder = androidx.wear.provider.WearableCalendarContract.Instances.CONTENT_URI.buildUpon()
+        ContentUris.appendId(builder, now)
+        ContentUris.appendId(builder, in24h)
+        val uri = builder.build()
+
         val events = mutableListOf<Event>()
-        // WearableCalendarContract describes a 24h window starting now and exposes Instances
-        val uri = androidx.wear.provider.WearableCalendarContract.Instances.CONTENT_URI
         val projection = arrayOf(
             CalendarContract.Instances.EVENT_ID,
             CalendarContract.Instances.TITLE,
             CalendarContract.Instances.BEGIN
         )
 
+        val sortOrder = "${CalendarContract.Instances.BEGIN} ASC"
+
         val cursor = context.contentResolver.query(
             uri,
             projection,
             null,
             null,
-            "${CalendarContract.Instances.BEGIN} ASC"
+            sortOrder
         )
 
+        var rowCount = 0
         cursor?.use {
-            val idxId = 0
-            val idxTitle = 1
-            val idxBegin = 2
+            val idxId = it.getColumnIndexOrThrow(CalendarContract.Instances.EVENT_ID)
+            val idxTitle = it.getColumnIndexOrThrow(CalendarContract.Instances.TITLE)
+            val idxBegin = it.getColumnIndexOrThrow(CalendarContract.Instances.BEGIN)
             while (it.moveToNext()) {
+                rowCount++
                 val eventId = it.getLong(idxId)
-                val title = it.getString(idxTitle)
+                val title = it.getString(idxTitle) ?: "(sem título)"
                 val begin = it.getLong(idxBegin)
                 events.add(Event(id = eventId, title = title, startTime = begin))
             }
+        }
+        if (rowCount == 0) {
+            logcat { "WearableCalendarContract.Instances retornou 0 eventos para o intervalo [$now, $in24h)." }
         }
 
         // Enrich with recurring info (safe-guarded)
