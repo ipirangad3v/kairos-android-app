@@ -77,7 +77,7 @@
             android:permission="com.google.android.gms.permission.BIND_LISTENER">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/kairos/events24h" />
+                <data android:scheme="wear" android:host="*" android:path="/kairos/events24h" />
             </intent-filter>
         </service>
 

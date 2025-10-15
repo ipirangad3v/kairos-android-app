@@ -12,12 +12,18 @@ import logcat.logcat
 
 class WearEventListenerService : WearableListenerService() {
 
+    override fun onCreate() {
+        super.onCreate()
+        logcat { "WearEventListenerService created" }
+    }
+
     override fun onDataChanged(dataEvents: DataEventBuffer) {
         super.onDataChanged(dataEvents)
         val events = mutableListOf<Event>()
         dataEvents.use { buffer ->
             buffer.forEach { event ->
-                if (event.type == DataEvent.TYPE_CHANGED && event.dataItem.uri.path == PATH_EVENTS_24H) {
+                val path = event.dataItem.uri.path ?: ""
+                if (event.type == DataEvent.TYPE_CHANGED && (path == PATH_EVENTS_24H || path.startsWith(PATH_EVENTS_24H))) {
                     try {
                         val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
                         val list = dataMap.getDataMapArrayList(KEY_EVENTS)
