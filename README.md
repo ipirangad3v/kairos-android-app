@@ -104,25 +104,44 @@ This application is built following modern Android development principles and a 
 ## Flow:
 <img src="/images/flow.png" width="3840" height="3405">
 
-### Phone → Wear events sync (Data Layer)
-To improve reliability on Wear OS, Kairos now syncs upcoming events from the phone to the watch using Google Play Services Wearable Data Layer:
+### Event Sync Phone → Wear OS (Data Layer)
+To ensure reliability on the watch, Kairos syncs upcoming events from the phone to Wear OS using the Google Play Services Wearable Data Layer. The flow is as follows:
 
-- On the phone, PhoneEventSyncWorker collects the next 24h of events and sends them as a DataItem to the path `/kairos/events24h`.
-- On the watch, WearEventListenerService receives the DataItem, parses the events and stores them locally using WearEventCache.
-- CachedEventSchedulingWorker on Wear reads the cached events and schedules alarms locally (respecting global toggle and per‑event disables).
-- The NextEvent Tile and the Complication read from the same cache to display the upcoming event.
+- Phone (app): `PhoneEventSyncWorker` collects events from the next 24 hours and sends them as a DataItem to the `/kairos/events24h` path.
+- Watch (wear): `WearEventListenerService` receives the DataItem, parses it, and saves it locally in the `WearEventCache`.
+- Watch (wear): `CachedEventSchedulingWorker` reads the cache and schedules alarms locally (respecting the global toggle and event/series deactivations).
+- Tile/Complication use the same cache to display the next event.
 
-Notes and setup
-- The phone app enqueues a periodic worker to send updates every ~15 minutes, plus an initial one at app start.
-- The Wear app reacts to incoming Data Layer changes immediately; no polling needed.
-- Both modules depend on `com.google.android.gms:play-services-wearable` (managed via the version catalog `libs.play.services.wearable`).
-- Ensure Google Play Services is available on both devices and that the watch is paired and connected.
-- Required permissions must be granted on phone (READ_CALENDAR, notifications as applicable) and on Wear (exact alarm and notifications for alerts).
+Technical Details
+- Shared schema (paths and keys): `core/src/main/java/digital/tonima/core/sync/WearSyncSchema.kt`
+- `PATH_EVENTS_24H = "/kairos/events24h"`
+- `KEY_EVENTS`, `KEY_ID`, `KEY_TITLE`, `KEY_START`, `KEY_RECUR`, `KEY_GENERATED_AT`
+- Phone side (sending): `app/src/main/java/digital/tonima/kairos/service/PhoneEventSyncWorker.kt`
+- Filters the next 24 hours, sorts by time, and sends the list (DataMapArrayList) to `PATH_EVENTS_24H`.
+- WorkManager: 15-minute frequency (+ one initial trigger). `UNIQUE_WORK_NAME = "phone-event-sync"`. - Watch side (receive): `wear/src/main/java/digital/tonima/kairos/wear/sync/WearEventListenerService.kt`
+- Declared in the Manifest with `<action name="com.google.android.gms.wearable.DATA_CHANGED"/>` and `pathPrefix="/kairos"`.
+- Converts the DataItem to an `Event` list and saves it via `WearEventCache`.
+- Emits a local broadcast `SyncActions.ACTION_EVENTS_UPDATED` and triggers an immediate schedule with `WorkManager` (unique work `WorkNames.UNIQUE_SCHEDULE_NOW`).
+- Scheduler on Wear: `wear/src/main/java/digital/tonima/kairos/wear/sync/CachedEventSchedulingWorker.kt`
+- Scheduling window: now...+75 min; ignores past events. - Respects user preferences via DataStore (`AppPreferencesRepository`):
+- Global ON/OFF, disabled instance IDs (`uniqueIntentId`) and series IDs (`id`).
+- Executed periodically every 15 minutes by `KairosWearApplication.setupRecurringWork()` using `WorkNames.UNIQUE_PERIODIC_SCHEDULER`.
+- Local cache on Wear: `wear/src/main/java/digital/tonima/kairos/wear/sync/WearEventCache.kt` (SharedPreferences + plain JSON).
 
-Troubleshooting
-- If no events show on the watch, open the phone app once to trigger an immediate sync, and verify calendar permission is granted on the phone.
-- Check Logcat for tags: "Phone→Wear sync" (phone) and "Wear received ... events from phone" (watch).
-- You can also clear the watch cache via app data to reset the cached list.
+Permissions and Dependencies
+- Phone: `READ_CALENDAR` (read events) and notification permissions as needed. - Wearable: `POST_NOTIFICATIONS`, `SCHEDULE_EXACT_ALARM`, `VIBRATE`, and `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (for the alarm service).
+- Dependency: `com.google.android.gms:play-services-wearable` in the app and wearable (via the Version Catalog).
+
+How to test manually
+1. Install the app on your phone and watch; ensure they are paired and have Google Play Services enabled.
+2. Open the app on your phone to grant permissions and generate a first push.
+3. On your watch, open Kairos: the list should show upcoming events (future events only).
+4. Create an event in the next few minutes and wait: the watch should receive it, and the worker will schedule the alarm.
+
+Debugging Tips (Logcat)
+- Phone: Look for `Phone→Wear sync: sending ... events.`
+- Wear (listener): `Wear received N events from phone.`
+- Wear (worker): `Wear: Evaluating ... cached events for scheduling window ...` and `Wear: Scheduling '...' at ...`.
 
 ---
 

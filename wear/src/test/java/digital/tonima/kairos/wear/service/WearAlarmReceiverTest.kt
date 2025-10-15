@@ -1,13 +1,11 @@
 package digital.tonima.kairos.wear.service
 
 import android.app.Application
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import digital.tonima.core.receiver.AlarmReceiver.Companion.ACTION_ALARM_TRIGGERED
 import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_EVENT_TITLE
 import digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_UNIQUE_ID
-import digital.tonima.kairos.core.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -28,9 +26,9 @@ class WearAlarmReceiverTest {
     }
 
     @Test
-    fun `onReceive posts a high-priority alarm notification with expected content`() {
+    fun `onReceive starts foreground service with event title extra`() {
         val eventTitle = "Team Sync"
-        val uniqueId = 12345
+        val uniqueId = 12345 // kept for parity with previous test, not used in new behavior
 
         val intent = Intent(ACTION_ALARM_TRIGGERED).apply {
             putExtra(EXTRA_EVENT_TITLE, eventTitle)
@@ -41,15 +39,20 @@ class WearAlarmReceiverTest {
         val receiver = WearAlarmReceiver()
         receiver.onReceive(context, intent)
 
-        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val shadowNm = shadowOf(nm)
-        val posted = shadowNm.allNotifications
+        val shadowApp = shadowOf(context as Application)
+        val startedIntent = shadowApp.nextStartedService
 
-        assertEquals(1, posted.size)
-        val notification = posted.first()
-
-        assertEquals(context.getString(R.string.commitment), notification.extras.getString("android.title"))
-        assertEquals(eventTitle, notification.extras.getString("android.text"))
-        assertNotNull("Notification should have a contentIntent to open the app", notification.contentIntent)
+        assertNotNull("Alarm service should be started", startedIntent)
+        // Verify service and action
+        assertEquals(
+            digital.tonima.core.service.AlarmSoundAndVibrateService::class.java.name,
+            startedIntent!!.component?.className,
+        )
+        assertEquals(
+            digital.tonima.core.service.AlarmSoundAndVibrateService.ACTION_START_ALARM,
+            startedIntent.action,
+        )
+        // Verify the title extra was passed along
+        assertEquals(eventTitle, startedIntent.getStringExtra(EXTRA_EVENT_TITLE))
     }
 }

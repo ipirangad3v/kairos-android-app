@@ -69,5 +69,4 @@ class WearEventListenerService : WearableListenerService() {
                 work,
             )
     }
-
 }

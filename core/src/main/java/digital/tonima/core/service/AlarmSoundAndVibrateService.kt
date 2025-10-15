@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
@@ -33,18 +34,20 @@ class AlarmSoundAndVibrateService : Service() {
         private const val NOTIFICATION_CHANNEL_ID = "calendar_alarm_channel"
         private const val NOTIFICATION_ID = 0xA11A7
 
-        fun startAlarm(context: Context) {
+        fun startAlarm(context: Context, eventTitle: String? = null) {
             val intent = Intent(context, AlarmSoundAndVibrateService::class.java).apply {
                 action = ACTION_START_ALARM
+                if (!eventTitle.isNullOrEmpty()) {
+                    putExtra(digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_EVENT_TITLE, eventTitle)
+                }
             }
             ContextCompat.startForegroundService(context, intent)
         }
 
         fun stopAlarm(context: Context) {
-            val intent = Intent(context, AlarmSoundAndVibrateService::class.java).apply {
-                action = ACTION_STOP_ALARM
-            }
-            ContextCompat.startForegroundService(context, intent)
+            // Do NOT start a foreground service just to stop it, as it must call startForeground() within 5s.
+            // Simply request the system to stop the service if it's running; if not, this is a no-op.
+            context.stopService(Intent(context, AlarmSoundAndVibrateService::class.java))
         }
     }
 
@@ -64,7 +67,8 @@ class AlarmSoundAndVibrateService : Service() {
             ACTION_START_ALARM -> {
                 stopAndReleaseResources()
 
-                ensureForeground()
+                val eventTitle = intent.getStringExtra(digital.tonima.core.receiver.AlarmReceiver.Companion.EXTRA_EVENT_TITLE)
+                ensureForeground(eventTitle)
 
                 val vibrateOnly = try {
                     runBlocking { AppPreferencesRepositoryImpl(applicationContext).getVibrateOnly().first() }
@@ -83,14 +87,48 @@ class AlarmSoundAndVibrateService : Service() {
                 vibrator?.vibrate(VibrationEffect.createWaveform(VIBRATION_PATTERN, VIBRATION_REPEAT_INDEX))
 
                 if (!vibrateOnly) {
-                    val alarmUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-                    ringtone = RingtoneManager.getRingtone(applicationContext, alarmUri)
-                    ringtone?.apply {
-                        isLooping = true
-                        play()
-                        logcat { "AlarmSoundAndVibrateService: Ringtone iniciado." }
-                    } ?: run {
-                        logcat(logcat.LogPriority.ERROR) { "AlarmSoundAndVibrateService: Falha ao obter Ringtone." }
+                    // Try ALARM first, then NOTIFICATION, then RINGTONE as a last resort
+                    val candidateUris = listOf(
+                        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM),
+                        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
+                        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+                    ).filterNotNull()
+
+                    var obtained: Ringtone? = null
+                    var usedUri: Uri? = null
+                    for (u in candidateUris) {
+                        val r = RingtoneManager.getRingtone(applicationContext, u)
+                        if (r != null) {
+                            obtained = r
+                            usedUri = u
+                            break
+                        }
+                    }
+
+                    if (obtained != null) {
+                        ringtone = obtained
+                        // Ensure we use proper audio attributes for alarms
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            try {
+                                ringtone?.audioAttributes = AudioAttributes.Builder()
+                                    .setUsage(AudioAttributes.USAGE_ALARM)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                                    .build()
+                            } catch (e: Throwable) {
+                                logcat { "AlarmSoundAndVibrateService: Falha ao definir AudioAttributes: ${e.localizedMessage}" }
+                            }
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            try { ringtone?.isLooping = true } catch (_: Throwable) {}
+                        }
+                        try {
+                            ringtone?.play()
+                            logcat { "AlarmSoundAndVibrateService: Ringtone iniciado. Uri usada: $usedUri" }
+                        } catch (e: Throwable) {
+                            logcat(logcat.LogPriority.ERROR) { "AlarmSoundAndVibrateService: Erro ao tocar Ringtone: ${e.localizedMessage}" }
+                        }
+                    } else {
+                        logcat(logcat.LogPriority.ERROR) { "AlarmSoundAndVibrateService: Falha ao obter Ringtone (todas as URIs padrão retornaram null)." }
                     }
                 } else {
                     logcat { "AlarmSoundAndVibrateService: Modo somente vibrar ativado. Som não será reproduzido." }
@@ -110,7 +148,7 @@ class AlarmSoundAndVibrateService : Service() {
         return START_NOT_STICKY
     }
 
-    private fun ensureForeground() {
+    private fun ensureForeground(eventTitle: String?) {
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
@@ -130,12 +168,14 @@ class AlarmSoundAndVibrateService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val contentText = eventTitle ?: getString(R.string.upcoming_event)
         val notification: Notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_k_monochrome)
             .setContentTitle(getString(R.string.event_alarm))
-            .setContentText(getString(R.string.upcoming_event))
+            .setContentText(contentText)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(Notification.CATEGORY_ALARM)
             .addAction(0, getString(R.string.stop), stopPendingIntent)
             .build()
 
