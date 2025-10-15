@@ -29,6 +29,7 @@ import com.google.android.horologist.tiles.SuspendingTileService
 import dagger.hilt.android.AndroidEntryPoint
 import digital.tonima.core.model.Event
 import digital.tonima.kairos.core.R
+import digital.tonima.kairos.wear.sync.WearEventCache.load
 import logcat.LogPriority
 import logcat.logcat
 import java.time.Instant
@@ -62,7 +63,7 @@ class NextEventTileService : SuspendingTileService() {
     override suspend fun tileRequest(requestParams: RequestBuilders.TileRequest): TileBuilders.Tile {
         val deviceParameters = requestParams.deviceConfiguration
         val nextEvent = try {
-            val cached = digital.tonima.kairos.wear.sync.WearEventCache.load(this@NextEventTileService)
+            val cached = load(this@NextEventTileService)
             cached.minByOrNull { it.startTime }
         } catch (t: Throwable) {
             logcat(LogPriority.ERROR) { "Erro ao obter o próximo evento: ${t.localizedMessage}" }

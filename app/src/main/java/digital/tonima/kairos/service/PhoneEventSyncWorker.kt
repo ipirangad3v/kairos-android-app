@@ -40,7 +40,6 @@ class PhoneEventSyncWorker
             return try {
                 val now = System.currentTimeMillis()
                 val end = now + TimeUnit.HOURS.toMillis(24)
-                // Fallback implementation without relying on getEventsBetween
                 val ymNow = java.time.YearMonth.now()
                 val ymNext = ymNow.plusMonths(1)
                 val monthEvents = (
@@ -87,7 +86,6 @@ class PhoneEventSyncWorker
                     ExistingPeriodicWorkPolicy.UPDATE,
                     periodic,
                 )
-                // also send once quickly
                 val once = OneTimeWorkRequestBuilder<PhoneEventSyncWorker>().setConstraints(constraints).build()
                 WorkManager.getInstance(context).enqueue(once)
             }

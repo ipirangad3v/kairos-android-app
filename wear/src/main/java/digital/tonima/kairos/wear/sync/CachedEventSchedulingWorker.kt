@@ -6,10 +6,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import digital.tonima.core.prefs.PrefsConstants.ALARM_PREFS
-import digital.tonima.core.prefs.PrefsConstants.KEY_DISABLED_EVENT_IDS
-import digital.tonima.core.prefs.PrefsConstants.KEY_GLOBAL_ALARMS_ENABLED
+import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.core.service.EventAlarmScheduler
+import kotlinx.coroutines.flow.firstOrNull
 import logcat.LogPriority
 import logcat.logcat
 import java.text.SimpleDateFormat
@@ -23,20 +22,21 @@ class CachedEventSchedulingWorker
     constructor(
         @Assisted appContext: Context,
         @Assisted workerParams: WorkerParameters,
+        private val appPreferencesRepository: AppPreferencesRepository,
         private val scheduler: EventAlarmScheduler,
     ) : CoroutineWorker(appContext, workerParams) {
 
         override suspend fun doWork(): Result {
             return try {
-                val sharedPreferences = applicationContext.getSharedPreferences(ALARM_PREFS, Context.MODE_PRIVATE)
-                val isGlobalAlarmEnabled = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
+                val isGlobalAlarmEnabled = appPreferencesRepository.isGlobalAlarmEnabled().firstOrNull() ?: true
                 if (!isGlobalAlarmEnabled) {
                     logcat(LogPriority.INFO) { "Wear: Global alarms disabled; not scheduling." }
                     return Result.success()
                 }
 
                 val events = WearEventCache.load(applicationContext).sortedBy { it.startTime }
-                val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet()) ?: emptySet()
+                val disabledInstanceIds = appPreferencesRepository.getDisabledEventIds().firstOrNull() ?: emptySet()
+                val disabledSeriesIds = appPreferencesRepository.getDisabledSeriesIds().firstOrNull() ?: emptySet()
 
                 val now = System.currentTimeMillis()
                 val scheduleWindowEnd = now + TimeUnit.MINUTES.toMillis(75)
@@ -49,7 +49,11 @@ class CachedEventSchedulingWorker
                 }
 
                 val toSchedule = events.filter { it.startTime in (now + 1)..scheduleWindowEnd }
-                    .filter { !disabledIds.contains(it.uniqueIntentId.toString()) }
+                    .filter { e ->
+                        val instanceDisabled = disabledInstanceIds.contains(e.uniqueIntentId.toString())
+                        val seriesDisabled = disabledSeriesIds.contains(e.id.toString())
+                        !(instanceDisabled || seriesDisabled)
+                    }
 
                 if (toSchedule.isEmpty()) {
                     logcat { "Wear: No cached events to schedule in window." }

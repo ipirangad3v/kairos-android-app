@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Looper
 import androidx.test.core.app.ApplicationProvider
 import digital.tonima.core.model.Event
+import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.kairos.wear.sync.SyncActions
 import digital.tonima.kairos.wear.sync.WearEventCache
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,24 +23,45 @@ class WearCalendarViewModelTest {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
+    private class FakePrefsRepo : AppPreferencesRepository {
+        private val global = MutableStateFlow(true)
+        private val disabledInstances = MutableStateFlow<Set<String>>(emptySet())
+        private val disabledSeries = MutableStateFlow<Set<String>>(emptySet())
+        private val vibrateOnly = MutableStateFlow(false)
+        private val autoDismiss = MutableStateFlow(false)
+        override fun isGlobalAlarmEnabled() = global as Flow<Boolean>
+        override suspend fun setGlobalAlarmEnabled(enabled: Boolean) { global.value = enabled }
+        override fun getDisabledEventIds() = disabledInstances as Flow<Set<String>>
+        override suspend fun setDisabledEventIds(ids: Set<String>) { disabledInstances.value = ids }
+        override fun getDisabledSeriesIds() = disabledSeries as Flow<Set<String>>
+        override suspend fun setDisabledSeriesIds(ids: Set<String>) { disabledSeries.value = ids }
+        override fun getVibrateOnly() = vibrateOnly as Flow<Boolean>
+        override suspend fun setVibrateOnly(enabled: Boolean) { vibrateOnly.value = enabled }
+        override fun getAutostartSuggestionDismissed() = autoDismiss as Flow<Boolean>
+        override suspend fun setAutostartSuggestionDismissed(dismissed: Boolean) { autoDismiss.value = dismissed }
+    }
+
     @Test
     fun `loads cached events on init`() {
-        val initial = listOf(Event(1, "A", 10L), Event(2, "B", 20L))
+        val now = System.currentTimeMillis()
+        val initial = listOf(Event(1, "A", now + 60_000L), Event(2, "B", now + 120_000L))
         WearEventCache.save(context, initial)
 
-        val vm = WearCalendarViewModel(context)
+        val vm = WearCalendarViewModel(context, FakePrefsRepo())
 
-        assertEquals(initial, vm.next24hEvents.value)
+        // After mapping, default is global enabled and no disabled ids, so isAlarmEnabled should be true
+        assertEquals(initial.map { it.copy(isAlarmEnabled = true) }, vm.next24hEvents.value)
     }
 
     @Test
     fun `updates when ACTION_EVENTS_UPDATED is broadcast`() {
-        WearEventCache.save(context, listOf(Event(1, "First", 10L)))
-        val vm = WearCalendarViewModel(context)
+        val now = System.currentTimeMillis()
+        WearEventCache.save(context, listOf(Event(1, "First", now + 10_000L)))
+        val vm = WearCalendarViewModel(context, FakePrefsRepo())
         assertEquals(1, vm.next24hEvents.value.size)
 
         // change cache and notify
-        WearEventCache.save(context, listOf(Event(2, "Second", 20L), Event(3, "Third", 30L)))
+        WearEventCache.save(context, listOf(Event(2, "Second", now + 20_000L), Event(3, "Third", now + 30_000L)))
         context.sendBroadcast(Intent(SyncActions.ACTION_EVENTS_UPDATED))
         // Ensure the broadcast is processed on the main looper before assertions
         Shadows.shadowOf(Looper.getMainLooper()).idle()
@@ -48,11 +72,12 @@ class WearCalendarViewModelTest {
 
     @Test
     fun `requestRescan reloads from cache`() {
-        WearEventCache.save(context, listOf(Event(5, "Old", 50L)))
-        val vm = WearCalendarViewModel(context)
+        val now = System.currentTimeMillis()
+        WearEventCache.save(context, listOf(Event(5, "Old", now + 50_000L)))
+        val vm = WearCalendarViewModel(context, FakePrefsRepo())
         assertEquals(1, vm.next24hEvents.value.size)
 
-        WearEventCache.save(context, listOf(Event(6, "New", 60L)))
+        WearEventCache.save(context, listOf(Event(6, "New", now + 60_000L)))
         vm.requestRescan()
 
         assertEquals(1, vm.next24hEvents.value.size)
