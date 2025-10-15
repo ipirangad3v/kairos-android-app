@@ -6,6 +6,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import digital.tonima.core.prefs.PrefsConstants.ALARM_PREFS
+import digital.tonima.core.prefs.PrefsConstants.KEY_DISABLED_EVENT_IDS
+import digital.tonima.core.prefs.PrefsConstants.KEY_GLOBAL_ALARMS_ENABLED
 import digital.tonima.core.service.EventAlarmScheduler
 import logcat.LogPriority
 import logcat.logcat
@@ -25,15 +28,15 @@ class CachedEventSchedulingWorker
 
         override suspend fun doWork(): Result {
             return try {
-                val sharedPreferences = applicationContext.getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
-                val isGlobalAlarmEnabled = sharedPreferences.getBoolean("global_alarms_enabled", true)
+                val sharedPreferences = applicationContext.getSharedPreferences(ALARM_PREFS, Context.MODE_PRIVATE)
+                val isGlobalAlarmEnabled = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
                 if (!isGlobalAlarmEnabled) {
                     logcat(LogPriority.INFO) { "Wear: Global alarms disabled; not scheduling." }
                     return Result.success()
                 }
 
                 val events = WearEventCache.load(applicationContext).sortedBy { it.startTime }
-                val disabledIds = sharedPreferences.getStringSet("disabled_event_ids", emptySet()) ?: emptySet()
+                val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet()) ?: emptySet()
 
                 val now = System.currentTimeMillis()
                 val scheduleWindowEnd = now + TimeUnit.MINUTES.toMillis(75)

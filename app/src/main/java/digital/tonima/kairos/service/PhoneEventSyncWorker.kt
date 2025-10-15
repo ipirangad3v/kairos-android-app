@@ -15,6 +15,13 @@ import com.google.android.gms.wearable.Wearable
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import digital.tonima.core.repository.CalendarRepository
+import digital.tonima.core.sync.WearSyncSchema.KEY_EVENTS
+import digital.tonima.core.sync.WearSyncSchema.KEY_GENERATED_AT
+import digital.tonima.core.sync.WearSyncSchema.KEY_ID
+import digital.tonima.core.sync.WearSyncSchema.KEY_RECUR
+import digital.tonima.core.sync.WearSyncSchema.KEY_START
+import digital.tonima.core.sync.WearSyncSchema.KEY_TITLE
+import digital.tonima.core.sync.WearSyncSchema.PATH_EVENTS_24H
 import kotlinx.coroutines.tasks.await
 import logcat.LogPriority
 import logcat.logcat
@@ -58,7 +65,6 @@ class PhoneEventSyncWorker
                 }
                 map.putDataMapArrayList(KEY_EVENTS, list)
                 map.putLong(KEY_GENERATED_AT, now)
-                // ensure change by setting a different count or timestamp
                 val request = putReq.asPutDataRequest().setUrgent()
                 dataClient.putDataItem(request).await()
                 Result.success()
@@ -70,13 +76,6 @@ class PhoneEventSyncWorker
 
         companion object {
             const val UNIQUE_WORK_NAME = "phone-event-sync"
-            const val PATH_EVENTS_24H = "/kairos/events24h"
-            const val KEY_EVENTS = "events"
-            const val KEY_ID = "id"
-            const val KEY_TITLE = "title"
-            const val KEY_START = "start"
-            const val KEY_RECUR = "recurring"
-            const val KEY_GENERATED_AT = "generated_at"
 
             fun enqueuePeriodic(context: Context) {
                 val constraints = Constraints.Builder().build()
