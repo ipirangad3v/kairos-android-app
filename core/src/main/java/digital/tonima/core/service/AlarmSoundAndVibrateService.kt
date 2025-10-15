@@ -131,7 +131,7 @@ class AlarmSoundAndVibrateService : Service() {
         )
 
         val notification: Notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setSmallIcon(R.drawable.ic_k_monochrome)
             .setContentTitle(getString(R.string.event_alarm))
             .setContentText(getString(R.string.upcoming_event))
             .setOngoing(true)

@@ -7,6 +7,9 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import digital.tonima.core.permissions.PermissionManager
+import digital.tonima.core.prefs.PrefsConstants.ALARM_PREFS
+import digital.tonima.core.prefs.PrefsConstants.KEY_DISABLED_EVENT_IDS
+import digital.tonima.core.prefs.PrefsConstants.KEY_GLOBAL_ALARMS_ENABLED
 import digital.tonima.core.usecases.GetEventsForMonthUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -41,9 +44,9 @@ constructor(
                     }
                     return@withContext Result.success()
                 }
-                val sharedPreferences = applicationContext.getSharedPreferences("AlarmPrefs", Context.MODE_PRIVATE)
+                val sharedPreferences = applicationContext.getSharedPreferences(ALARM_PREFS, Context.MODE_PRIVATE)
 
-                val isGlobalAlarmEnabled = sharedPreferences.getBoolean("global_alarms_enabled", true)
+                val isGlobalAlarmEnabled = sharedPreferences.getBoolean(KEY_GLOBAL_ALARMS_ENABLED, true)
                 if (!isGlobalAlarmEnabled) {
                     logcat(LogPriority.INFO) {
                         "Alarmes globais estão desativados. Worker encerrando sem agendar."
@@ -59,7 +62,7 @@ constructor(
                     "Encontrados ${allUpcomingEvents.size} eventos no total para os próximos 2 meses."
                 }
 
-                val disabledIds = sharedPreferences.getStringSet("disabled_event_ids", emptySet()) ?: emptySet()
+                val disabledIds = sharedPreferences.getStringSet(KEY_DISABLED_EVENT_IDS, emptySet()) ?: emptySet()
 
                 val now = System.currentTimeMillis()
                 val scheduleWindowEnd = now + TimeUnit.MINUTES.toMillis(75)

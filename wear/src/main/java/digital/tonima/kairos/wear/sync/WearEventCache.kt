@@ -1,7 +1,12 @@
 package digital.tonima.kairos.wear.sync
 
 import android.content.Context
+import androidx.core.content.edit
 import digital.tonima.core.model.Event
+import digital.tonima.core.sync.WearSyncSchema.KEY_ID
+import digital.tonima.core.sync.WearSyncSchema.KEY_RECUR
+import digital.tonima.core.sync.WearSyncSchema.KEY_START
+import digital.tonima.core.sync.WearSyncSchema.KEY_TITLE
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -13,18 +18,16 @@ object WearEventCache {
         val arr = JSONArray()
         events.forEach { e ->
             val o = JSONObject()
-            o.put("id", e.id)
-            o.put("title", e.title)
-            o.put("start", e.startTime)
-            o.put("recurring", e.isRecurring)
+            o.put(KEY_ID, e.id)
+            o.put(KEY_TITLE, e.title)
+            o.put(KEY_START, e.startTime)
+            o.put(KEY_RECUR, e.isRecurring)
             arr.put(o)
         }
-        // Use commit() so that subsequent workers reading immediately after this call
-        // can see the persisted data without racing SharedPreferences apply().
         context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
-            .edit()
-            .putString(KEY_JSON, arr.toString())
-            .commit()
+            .edit(commit = true) {
+                putString(KEY_JSON, arr.toString())
+            }
     }
 
     fun load(context: Context): List<Event> {
@@ -37,10 +40,10 @@ object WearEventCache {
                 val o = arr.getJSONObject(i)
                 list.add(
                     Event(
-                        id = o.getLong("id"),
-                        title = o.getString("title"),
-                        startTime = o.getLong("start"),
-                        isRecurring = o.optBoolean("recurring", false),
+                        id = o.getLong(KEY_ID),
+                        title = o.getString(KEY_TITLE),
+                        startTime = o.getLong(KEY_START),
+                        isRecurring = o.optBoolean(KEY_RECUR, false),
                     ),
                 )
             }

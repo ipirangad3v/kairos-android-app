@@ -13,7 +13,9 @@ import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import digital.tonima.kairos.wear.sync.CachedEventSchedulingWorker
 import logcat.AndroidLogcatLogger
+import logcat.LogPriority
 import logcat.LogPriority.VERBOSE
+import logcat.logcat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -33,15 +35,24 @@ class KairosWearApplication :
 
     override fun onCreate() {
         super.onCreate()
-        // Ensure WorkManager is initialized with HiltWorkerFactory config since the default
-        // androidx.startup initializer is disabled in the manifest.
         try {
-            androidx.work.WorkManager.initialize(this, workManagerConfiguration)
-        } catch (_: IllegalStateException) {
-            // Already initialized; ignore
+            WorkManager.initialize(this, workManagerConfiguration)
+        } catch (e: IllegalStateException) {
+            logcat(
+                LogPriority.ERROR,
+            ) { "WorkManager already initialized." }
         }
         setupLogger()
         setupRecurringWork()
+
+        // Schedule an immediate one-time run to ensure alarms are set at startup
+        val initialRequest = OneTimeWorkRequestBuilder<CachedEventSchedulingWorker>().build()
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniqueWork(
+                WorkNames.UNIQUE_SCHEDULE_NOW,
+                ExistingWorkPolicy.REPLACE,
+                initialRequest,
+            )
     }
 
     override fun onTrimMemory(level: Int) {
@@ -67,25 +78,11 @@ class KairosWearApplication :
 
         val workManager = WorkManager.getInstance(applicationContext)
 
-        // Cancel any legacy phone-style schedulers that might have been enqueued in older builds
-        // so Wear only schedules alarms from cached phone events.
         try {
             workManager.cancelUniqueWork("event-scheduler")
             workManager.cancelUniqueWork("initial-event-scheduler")
-            // Best-effort: in case any jobs were tagged with the worker class name
             workManager.cancelAllWorkByTag("digital.tonima.core.service.AlarmSchedulingWorker")
         } catch (_: Throwable) { }
-
-        val initialRequest =
-            OneTimeWorkRequestBuilder<CachedEventSchedulingWorker>()
-                .setConstraints(constraints)
-                .build()
-
-        workManager.enqueueUniqueWork(
-            "wear-initial-event-scheduler",
-            ExistingWorkPolicy.KEEP,
-            initialRequest,
-        )
 
         val repeatingRequest =
             PeriodicWorkRequestBuilder<CachedEventSchedulingWorker>(15, TimeUnit.MINUTES)
@@ -93,7 +90,7 @@ class KairosWearApplication :
                 .build()
 
         workManager.enqueueUniquePeriodicWork(
-            "wear-event-scheduler",
+            WorkNames.UNIQUE_PERIODIC_SCHEDULER,
             ExistingPeriodicWorkPolicy.KEEP,
             repeatingRequest,
         )

@@ -66,7 +66,9 @@ fun WearApp(
     val context = LocalContext.current
 
     val standardPermissionsToRequest = remember {
-        permissionManager.calendarPermissions.toMutableList()
+        permissionManager.calendarPermissions.toMutableList().apply {
+            addAll(permissionManager.notificationPermissions)
+        }
     }
 
     val standardPermissionState =
@@ -106,7 +108,7 @@ fun WearApp(
         ) {
             val needsStandardPermissions = !standardPermissionState.allPermissionsGranted
             val needsExactAlarmPermission = !uiState.hasExactAlarmPermission
-            if (needsStandardPermissions || needsExactAlarmPermission) {
+            if (needsStandardPermissions) {
                 item {
                     WearOsPermissionsScreenContent(
                         onSettingsClick = {
@@ -120,6 +122,7 @@ fun WearApp(
                         onRetryClick = { standardPermissionState.launchMultiplePermissionRequest() },
                     )
                 }
+            } else {
                 if (needsExactAlarmPermission) {
                     item {
                         Chip(
@@ -138,7 +141,6 @@ fun WearApp(
                         )
                     }
                 }
-            } else {
                 item {
                     Spacer(Modifier.height(16.dp))
                     Text(
