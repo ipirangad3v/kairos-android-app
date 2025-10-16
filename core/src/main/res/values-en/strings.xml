@@ -64,4 +64,5 @@
     <string name="only_this_option">Only this</string>
     <string name="allow_exact_alarms">Allow exact alarms</string>
     <string name="allow_fullscreen_intents">Allow full-screen for alarms</string>
+    <string name="open_on_phone">Open on phone</string>
 </resources>

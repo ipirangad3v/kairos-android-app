@@ -12,6 +12,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import digital.tonima.core.service.AlarmSchedulingWorker
+import digital.tonima.kairos.service.CalendarChangeObserver
 import digital.tonima.kairos.service.PhoneEventSyncWorker.Companion.enqueuePeriodic
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
@@ -46,6 +47,14 @@ class KairosApplication :
         setupLogger()
         setupRecurringWork()
         enqueuePeriodic(this)
+        // Register calendar change observer to auto-push new/updated events to Wear
+        try {
+            CalendarChangeObserver.init(this)
+        } catch (t: Throwable) {
+            logcat(
+                LogPriority.ERROR,
+            ) { "KairosApplication: failed to init CalendarChangeObserver: ${t.localizedMessage}" }
+        }
     }
 
     override fun onTrimMemory(level: Int) {

@@ -63,4 +63,5 @@
     <string name="only_this_option">केवल यह</string>
     <string name="allow_exact_alarms">सटीक अलार्म की अनुमति दें</string>
     <string name="allow_fullscreen_intents">अलार्म के लिए फुल‑स्क्रीन की अनुमति दें</string>
+    <string name="open_on_phone">फ़ोन पर खोलें</string>
 </resources>

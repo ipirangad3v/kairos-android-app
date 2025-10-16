@@ -60,4 +60,5 @@
     <string name="only_this_option">仅此一次</string>
     <string name="allow_exact_alarms">允许精确闹钟</string>
     <string name="allow_fullscreen_intents">允许闹钟使用全屏</string>
+    <string name="open_on_phone">在手机上打开</string>
 </resources>

@@ -10,10 +10,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.gms.wearable.Wearable.getMessageClient
+import com.google.android.gms.wearable.Wearable.getNodeClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import digital.tonima.core.model.Event
 import digital.tonima.core.repository.AppPreferencesRepository
+import digital.tonima.core.sync.WearSyncSchema.PATH_REQUEST_SYNC
 import digital.tonima.kairos.wear.WorkNames
 import digital.tonima.kairos.wear.sync.CachedEventSchedulingWorker
 import digital.tonima.kairos.wear.sync.SyncActions
@@ -38,6 +41,9 @@ class WearCalendarViewModel
 
         private val _next24hEvents = MutableStateFlow<List<Event>>(emptyList())
         val next24hEvents: StateFlow<List<Event>> = _next24hEvents.asStateFlow()
+
+        private val _lastUpdated = MutableStateFlow(System.currentTimeMillis())
+        val lastUpdated: StateFlow<Long> = _lastUpdated.asStateFlow()
 
         private val eventsUpdatedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -76,6 +82,44 @@ class WearCalendarViewModel
         }
 
         fun requestRescan() {
+            viewModelScope.launch {
+                try {
+                    val nodeClient = getNodeClient(appContext)
+                    nodeClient.connectedNodes
+                        .addOnSuccessListener { nodes ->
+                            val msgClient = getMessageClient(appContext)
+                            for (node in nodes) {
+                                msgClient
+                                    .sendMessage(
+                                        node.id,
+                                        PATH_REQUEST_SYNC,
+                                        ByteArray(0),
+                                    )
+                                    .addOnSuccessListener {
+                                        logcat {
+                                            "WearCalendarViewModel: Requested sync fro" +
+                                                "m phone (node=${node.displayName})."
+                                        }
+                                    }
+                                    .addOnFailureListener { t ->
+                                        logcat(
+                                            LogPriority.ERROR,
+                                        ) { "WearCalendarViewModel: Failed to request sync: ${t.localizedMessage}" }
+                                    }
+                            }
+                        }
+                        .addOnFailureListener { t ->
+                            logcat(
+                                LogPriority.ERROR,
+                            ) { "WearCalendarViewModel: Failed to obtain connected nodes: ${t.localizedMessage}" }
+                        }
+                } catch (t: Throwable) {
+                    logcat(
+                        LogPriority.ERROR,
+                    ) { "WearCalendarViewModel: Exception while requesting sync: ${t.localizedMessage}" }
+                }
+            }
+
             reloadFromCache()
             try {
                 WorkManager.getInstance(appContext)
@@ -107,6 +151,7 @@ class WearCalendarViewModel
                     e.copy(isAlarmEnabled = isGlobal && !(instanceDisabled || seriesDisabled))
                 }
                 _next24hEvents.value = mapped
+                _lastUpdated.value = System.currentTimeMillis()
             }
         }
 

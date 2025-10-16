@@ -74,10 +74,12 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
+    // Removed SwipeRefreshLayout; using Material3 PullToRefreshBox
     implementation(libs.wear.tooling.preview)
     implementation(libs.logcat)
     implementation(libs.accompanist.permissions)
     implementation(libs.play.services.wearable)
+    implementation(libs.androidx.wear.remote.interactions)
 
     // watchface
     implementation(libs.androidx.watchface)

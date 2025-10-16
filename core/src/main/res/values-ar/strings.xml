@@ -63,4 +63,5 @@
     <string name="only_this_option">هذا فقط</string>
     <string name="allow_exact_alarms">السماح بالمنبّهات الدقيقة</string>
     <string name="allow_fullscreen_intents">السماح بملء الشاشة للتنبيهات</string>
+    <string name="open_on_phone">فتح على الهاتف</string>
 </resources>

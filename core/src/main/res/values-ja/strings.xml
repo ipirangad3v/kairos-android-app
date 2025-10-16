@@ -60,4 +60,5 @@
     <string name="only_this_option">このイベントのみ</string>
     <string name="allow_exact_alarms">正確なアラームを許可</string>
     <string name="allow_fullscreen_intents">アラームの全画面表示を許可</string>
+    <string name="open_on_phone">スマートフォンで開く</string>
 </resources>

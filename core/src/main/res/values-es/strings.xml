@@ -65,4 +65,5 @@
     <string name="only_this_option">Solo este</string>
     <string name="allow_exact_alarms">Permitir alarmas exactas</string>
     <string name="allow_fullscreen_intents">Permitir pantalla completa para alarmas</string>
+    <string name="open_on_phone">Abrir en el teléfono</string>
 </resources>

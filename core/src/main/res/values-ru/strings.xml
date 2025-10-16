@@ -64,4 +64,5 @@
     <string name="only_this_option">Только это</string>
     <string name="allow_exact_alarms">Разрешить точные будильники</string>
     <string name="allow_fullscreen_intents">Разрешить полноэкранные уведомления для будильников</string>
+    <string name="open_on_phone">Открыть на телефоне</string>
 </resources>

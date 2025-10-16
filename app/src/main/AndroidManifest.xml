@@ -30,6 +30,20 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Deep link to allow Wear to open the phone app via ACTION_VIEW + BROWSABLE -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="digital.tonima.kairos" android:host="open" />
+            </intent-filter>
+            <!-- Broad catch-all deep link to handle any host/path for the custom scheme -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="digital.tonima.kairos" />
+            </intent-filter>
         </activity>
         <activity android:name=".ui.view.AlarmActivity" android:exported="false"
             android:launchMode="singleTask" android:showOnLockScreen="true" android:theme="@style/Theme.Kairos"
@@ -59,6 +73,12 @@
             <meta-data android:name="androidx.work.WorkManagerInitializer" android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+        <service android:name=".service.WearMessagesListenerService" android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:scheme="wear" android:host="*" android:path="/kairos/request_sync" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
