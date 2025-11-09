@@ -59,6 +59,7 @@ class EventViewModelTest {
     private val disabledEventIdsFlow = MutableStateFlow(emptySet<String>())
     private val disabledSeriesIdsFlow = MutableStateFlow(emptySet<String>())
     private val ringerModeFlow = MutableStateFlow(AudioWarningState.NORMAL)
+    private val vibrateOnlyEventIdsFlow = MutableStateFlow(emptySet<String>())
 
     @Before
     fun setup() {
@@ -68,6 +69,7 @@ class EventViewModelTest {
         every { mockAppPreferencesRepository.getAutostartSuggestionDismissed() } returns autostartSuggestionDismissedFlow
         every { mockAppPreferencesRepository.getDisabledEventIds() } returns disabledEventIdsFlow
         every { mockAppPreferencesRepository.getDisabledSeriesIds() } returns disabledSeriesIdsFlow
+        every { mockAppPreferencesRepository.getVibrateOnlyEventIds() } returns vibrateOnlyEventIdsFlow
         every { mockRingerModeRepository.ringerMode } returns ringerModeFlow
         every { mockRingerModeRepository.startObserving() } just Runs
         every { mockRingerModeRepository.stopObserving() } just Runs
@@ -283,6 +285,38 @@ class EventViewModelTest {
         viewModel.onVibrateOnlyChanged(false)
         advanceUntilIdle()
         coVerify(exactly = 1) { mockAppPreferencesRepository.setVibrateOnly(false) }
+    }
+
+    @Test
+    fun `onEventVibrateToggle updates event and persists preference`() = runTest {
+        val event = Event(id = 1, title = "Test Event", startTime = 0)
+        coEvery { getEventsForMonthUseCase.invoke(any()) } returns listOf(event)
+        viewModel.onMonthChanged(YearMonth.now())
+        advanceUntilIdle()
+
+        coEvery { mockAppPreferencesRepository.setVibrateOnlyEventIds(any()) } just Runs
+
+        // Toggle on
+        viewModel.onEventVibrateToggle(event, vibrateOnly = true)
+        advanceUntilIdle()
+
+        viewModel.uiState.test {
+            val state = awaitItem()
+            assertTrue(state.events.first().vibrateOnly)
+            coVerify { mockAppPreferencesRepository.setVibrateOnlyEventIds(setOf(event.uniqueIntentId.toString())) }
+            cancelAndConsumeRemainingEvents()
+        }
+
+        // Toggle off
+        viewModel.onEventVibrateToggle(event, vibrateOnly = false)
+        advanceUntilIdle()
+
+        viewModel.uiState.test {
+            val state = awaitItem()
+            assertFalse(state.events.first().vibrateOnly)
+            coVerify { mockAppPreferencesRepository.setVibrateOnlyEventIds(emptySet()) }
+            cancelAndConsumeRemainingEvents()
+        }
     }
 
     @Test

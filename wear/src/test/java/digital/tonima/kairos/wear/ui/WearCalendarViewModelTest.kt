@@ -29,12 +29,15 @@ class WearCalendarViewModelTest {
         private val disabledSeries = MutableStateFlow<Set<String>>(emptySet())
         private val vibrateOnly = MutableStateFlow(false)
         private val autoDismiss = MutableStateFlow(false)
+        private val vibrateOnlyEventIds = MutableStateFlow<Set<String>>(emptySet())
         override fun isGlobalAlarmEnabled() = global as Flow<Boolean>
         override suspend fun setGlobalAlarmEnabled(enabled: Boolean) { global.value = enabled }
         override fun getDisabledEventIds() = disabledInstances as Flow<Set<String>>
         override suspend fun setDisabledEventIds(ids: Set<String>) { disabledInstances.value = ids }
         override fun getDisabledSeriesIds() = disabledSeries as Flow<Set<String>>
         override suspend fun setDisabledSeriesIds(ids: Set<String>) { disabledSeries.value = ids }
+        override fun getVibrateOnlyEventIds(): Flow<Set<String>> = vibrateOnlyEventIds
+        override suspend fun setVibrateOnlyEventIds(ids: Set<String>) { vibrateOnlyEventIds.value = ids }
         override fun getVibrateOnly() = vibrateOnly as Flow<Boolean>
         override suspend fun setVibrateOnly(enabled: Boolean) { vibrateOnly.value = enabled }
         override fun getAutostartSuggestionDismissed() = autoDismiss as Flow<Boolean>
