@@ -1,6 +1,5 @@
 package digital.tonima.kairos.ui.components
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import digital.tonima.kairos.R.drawable.favorite
 import digital.tonima.kairos.R.drawable.star
 import digital.tonima.kairos.core.R
@@ -31,7 +29,8 @@ import digital.tonima.kairos.core.R
 @Composable
 fun DrawerContent(
     isProUser: Boolean,
-    onUpgradeToPro: () -> Unit,
+    onUpgradeToProClick: () -> Unit,
+    onOurOtherAppsClick: () -> Unit,
     onCloseDrawer: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -60,7 +59,7 @@ fun DrawerContent(
                         label = { Text(stringResource(R.string.remove_ads)) },
                         selected = false,
                         onClick = {
-                            onUpgradeToPro()
+                            onUpgradeToProClick()
                             onCloseDrawer()
                         },
                     )
@@ -73,11 +72,7 @@ fun DrawerContent(
                     label = { Text(stringResource(R.string.our_other_apps)) },
                     selected = false,
                     onClick = {
-                        val browserIntent = Intent(
-                            Intent.ACTION_VIEW,
-                            "https://play.google.com/store/apps/dev?id=6594602823307179845".toUri(),
-                        )
-                        context.startActivity(browserIntent)
+                        onOurOtherAppsClick()
                         onCloseDrawer()
                     },
                 )

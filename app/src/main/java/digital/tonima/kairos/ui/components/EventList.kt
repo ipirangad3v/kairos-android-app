@@ -29,6 +29,7 @@ fun EventList(
     eventsByDate: Map<LocalDate, List<Event>>,
     onRefresh: () -> Unit,
     onEventToggle: (event: Event, isEnabled: Boolean, disableAllOccurrences: Boolean) -> Unit,
+    onEventVibrateToggle: (event: Event, vibrateOnly: Boolean) -> Unit,
     onEventClick: (Event) -> Unit,
 ) {
     val pullRefreshState = rememberPullRefreshState(refreshing = uiState.isRefreshing, onRefresh = onRefresh)
@@ -57,6 +58,7 @@ fun EventList(
                                 onEventToggle(event, isEnabled, false)
                             }
                         },
+                        onVibrateToggle = { onEventVibrateToggle(event, it) },
                         onEventClick = { onEventClick(event) },
                     )
                 }

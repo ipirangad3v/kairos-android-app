@@ -128,11 +128,16 @@ constructor(
             val calendarEvents = getEventsForMonthUseCase.invoke(yearMonth)
             val disabledInstanceIds = appPreferencesRepository.getDisabledEventIds().firstOrNull() ?: emptySet()
             val disabledSeriesIds = appPreferencesRepository.getDisabledSeriesIds().firstOrNull() ?: emptySet()
+            val vibrateOnlyEventIds = appPreferencesRepository.getVibrateOnlyEventIds().firstOrNull() ?: emptySet()
 
             val updatedEvents = calendarEvents.map { event ->
                 val isInstanceDisabled = disabledInstanceIds.contains(event.uniqueIntentId.toString())
                 val isSeriesDisabled = disabledSeriesIds.contains(event.id.toString())
-                event.copy(isAlarmEnabled = !(isInstanceDisabled || isSeriesDisabled))
+                val isVibrateOnly = vibrateOnlyEventIds.contains(event.uniqueIntentId.toString())
+                event.copy(
+                    isAlarmEnabled = !(isInstanceDisabled || isSeriesDisabled),
+                    vibrateOnly = isVibrateOnly,
+                )
             }
 
             _uiState.update { currentState ->
@@ -184,6 +189,31 @@ constructor(
     fun onVibrateOnlyChanged(enabled: Boolean) {
         viewModelScope.launch {
             appPreferencesRepository.setVibrateOnly(enabled)
+        }
+    }
+
+    fun onEventVibrateToggle(event: Event, vibrateOnly: Boolean) {
+        viewModelScope.launch {
+            val currentVibrateOnlyIds = appPreferencesRepository.getVibrateOnlyEventIds().firstOrNull()?.toMutableSet() ?: mutableSetOf()
+            val eventIdStr = event.uniqueIntentId.toString()
+
+            if (vibrateOnly) {
+                currentVibrateOnlyIds.add(eventIdStr)
+            } else {
+                currentVibrateOnlyIds.remove(eventIdStr)
+            }
+            appPreferencesRepository.setVibrateOnlyEventIds(currentVibrateOnlyIds)
+
+            _uiState.update { currentState ->
+                val updatedEvents = currentState.events.map {
+                    if (it.uniqueIntentId == event.uniqueIntentId) {
+                        it.copy(vibrateOnly = vibrateOnly)
+                    } else {
+                        it
+                    }
+                }
+                currentState.copy(events = updatedEvents)
+            }
         }
     }
 

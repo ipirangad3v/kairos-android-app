@@ -1,5 +1,7 @@
 package digital.tonima.kairos.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,31 +25,33 @@ fun ControlPanel(
     onVibrateToggle: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
-    AlarmsToggleRow(
-        modifier = Modifier.padding(vertical = 16.dp),
-        alarmsEnabled = uiState.isGlobalAlarmEnabled,
-        onToggle = onToggle,
-    )
-
-    Row(
-        modifier = Modifier
-            .padding(bottom = 8.dp)
-            .fillMaxWidth(),
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
-    ) {
-        Text(stringResource(R.string.vibrate_only))
-        Switch(checked = uiState.vibrateOnly, onCheckedChange = onVibrateToggle)
-    }
-
-    if (uiState.audioWarning != AudioWarningState.NORMAL) {
-        RingerModeWarningCard(ringerMode = uiState.audioWarning)
-    }
-
-    if (uiState.showAutostartSuggestion) {
-        AutostartSuggestionCard(
-            onOpenSettings = { openAutostartSettings(context) },
-            onDismiss = onDismissAutostart,
+    Column {
+        AlarmsToggleRow(
+            modifier = Modifier.padding(vertical = 16.dp),
+            alarmsEnabled = uiState.isGlobalAlarmEnabled,
+            onToggle = onToggle,
         )
+
+        Row(
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(stringResource(R.string.vibrate_only))
+            Switch(checked = uiState.vibrateOnly, onCheckedChange = onVibrateToggle)
+        }
+
+        if (uiState.audioWarning != AudioWarningState.NORMAL) {
+            RingerModeWarningCard(ringerMode = uiState.audioWarning)
+        }
+
+        if (uiState.showAutostartSuggestion) {
+            AutostartSuggestionCard(
+                onOpenSettings = { openAutostartSettings(context) },
+                onDismiss = onDismissAutostart,
+            )
+        }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -40,6 +41,7 @@ fun EventCard(
     event: Event,
     isGloballyEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
+    onVibrateToggle: (Boolean) -> Unit,
     onEventClick: () -> Unit,
 ) {
     if (event.isAlarmEnabled) {
@@ -114,11 +116,27 @@ fun EventCard(
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Switch(
-                checked = event.isAlarmEnabled,
-                onCheckedChange = onToggle,
-                enabled = isGloballyEnabled,
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Switch(
+                    checked = event.isAlarmEnabled,
+                    onCheckedChange = onToggle,
+                    enabled = isGloballyEnabled,
+                )
+                if (event.isAlarmEnabled) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = (if (event.isAlarmEnabled) "🔔 " else "🔕 ") + formatMillisToTime(event.startTime),
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                        Checkbox(
+                            checked = event.vibrateOnly,
+                            onCheckedChange = onVibrateToggle,
+                            enabled = isGloballyEnabled,
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -144,6 +162,7 @@ fun EventCardPreview() {
         event = sampleEvent,
         isGloballyEnabled = true,
         onToggle = {},
+        onVibrateToggle = {},
         onEventClick = {},
     )
 }

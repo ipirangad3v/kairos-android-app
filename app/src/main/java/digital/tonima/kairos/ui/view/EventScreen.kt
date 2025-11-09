@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -133,7 +134,14 @@ fun EventScreen(
         drawerContent = {
             DrawerContent(
                 isProUser = isProUser,
-                onUpgradeToPro = viewModel::onUpgradeToProRequest,
+                onUpgradeToProClick = viewModel::onUpgradeToProRequest,
+                onOurOtherAppsClick = {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        "https://play.google.com/store/apps/dev?id=6594602823307179845".toUri(),
+                    )
+                    context.startActivity(browserIntent)
+                },
                 onCloseDrawer = { scope.launch { drawerState.close() } },
             )
         },
@@ -198,45 +206,46 @@ fun EventScreen(
                     )
 
                     !uiState.hasExactAlarmPermission -> ExactAlarmPermissionScreen(
-                        onAlreadyAuthorizedClick = openExactAlarmSettings,
+                        onAlreadyAuthorizedClick = viewModel::checkAllPermissions,
+                        onProvidePermissionClick = openExactAlarmSettings,
                     )
 
                     !uiState.hasFullScreenIntentPermission -> FullScreenIntentPermissionScreen(
-                        onAlreadyAuthorizedClick = openFullScreenIntentSettings,
+                        onAlreadyAuthorizedClick = viewModel::checkAllPermissions,
+                        onOpenSettingsClick = openFullScreenIntentSettings,
                     )
 
                     else -> {
-                        val onEventClick = { event: Event ->
-                            val uri = ContentUris.withAppendedId(
-                                CalendarContract.Events.CONTENT_URI,
-                                event.id,
-                            )
-                            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-                                putExtra(
-                                    "beginTime",
-                                    event.startTime,
-                                )
-                            }
-                            try {
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.cannot_open_event),
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                            }
-                        }
-
                         MainContent(
                             uiState = uiState,
                             onRefresh = { viewModel.onMonthChanged(uiState.currentMonth, true) },
                             onToggle = viewModel::onAlarmsToggle,
                             onEventToggle = viewModel::onEventAlarmToggle,
+                            onEventVibrateToggle = viewModel::onEventVibrateToggle,
                             onMonthChanged = viewModel::onMonthChanged,
                             onDateSelected = viewModel::onDateSelected,
-                            onEventClick = onEventClick,
+                            onEventClick = { event: Event ->
+                                val uri = ContentUris.withAppendedId(
+                                    CalendarContract.Events.CONTENT_URI,
+                                    event.id,
+                                )
+                                val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                                    putExtra(
+                                        "beginTime",
+                                        event.startTime,
+                                    )
+                                }
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.cannot_open_event),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                }
+                            },
                             onDismissAutostart = viewModel::dismissAutostartSuggestion,
                             onReturnToToday = viewModel::returnToToday,
                             onVibrateToggle = viewModel::onVibrateOnlyChanged,

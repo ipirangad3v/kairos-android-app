@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ fun MainContent(
     onRefresh: () -> Unit,
     onToggle: (Boolean) -> Unit,
     onEventToggle: (event: Event, isEnabled: Boolean, disableAllOccurrences: Boolean) -> Unit,
+    onEventVibrateToggle: (event: Event, vibrateOnly: Boolean) -> Unit,
     onMonthChanged: (YearMonth) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onEventClick: (Event) -> Unit,
@@ -76,11 +79,16 @@ fun MainContent(
                 eventsByDate = eventsByDate,
                 onRefresh = onRefresh,
                 onEventToggle = onEventToggle,
+                onEventVibrateToggle = onEventVibrateToggle,
                 onEventClick = onEventClick,
             )
         }
     } else {
-        Column(Modifier.padding(horizontal = 16.dp)) {
+        Column(
+            Modifier
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
             ControlPanel(
                 uiState = uiState,
                 onToggle = onToggle,
@@ -98,11 +106,12 @@ fun MainContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
             EventList(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.height(400.dp),
                 uiState = uiState,
                 eventsByDate = eventsByDate,
                 onRefresh = onRefresh,
                 onEventToggle = onEventToggle,
+                onEventVibrateToggle = onEventVibrateToggle,
                 onEventClick = onEventClick,
             )
         }
