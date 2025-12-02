@@ -3,8 +3,8 @@
 [![Android CI - Kairos Multi-Module](https://github.com/ipirangad3v/kairos-android-app/actions/workflows/android-ci.yaml/badge.svg)](https://github.com/ipirangad3v/kairos-android-app/actions/workflows/android-ci.yaml) [![codecov](https://codecov.io/gh/ipirangad3v/kairos-android-app/graph/badge.svg?token=TKC92HM5VY)](https://codecov.io/gh/ipirangad3v/kairos-android-app)
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://playbadges.pavi2410.com/badge/full?id=digital.tonim.kairos&theme=dark">
-  <img alt="PlayBadges Card Folo" src="https://playbadges.pavi2410.com/badge/full?id=digital.tonim.kairos">
+  <source media="(prefers-color-scheme: dark)" srcset="https://playbadges.pavi2410.com/badge/full?id=digital.tonima.kairos&theme=dark">
+  <img alt="PlayBadges Card Folo" src="https://playbadges.pavi2410.com/badge/full?id=digital.tonima.kairos">
 </picture>
 
 # Kairós - Calendar Alarms for Android & Wear OS
