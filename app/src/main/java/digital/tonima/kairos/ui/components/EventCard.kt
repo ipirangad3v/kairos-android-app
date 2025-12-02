@@ -125,7 +125,7 @@ fun EventCard(
                 if (event.isAlarmEnabled) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = (if (event.isAlarmEnabled) "🔔 " else "🔕 ") + formatMillisToTime(event.startTime),
+                            text = stringResource(R.string.vibrate_only),
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                         )

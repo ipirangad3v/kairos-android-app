@@ -47,6 +47,7 @@ android {
 
             resValue("string", "admob_app_id", admobAppIdTest)
             buildConfigField("String", "ADMOB_BANNER_AD_UNIT_HOME", "\"$admobBannerAdUnitIdTest\"")
+            buildConfigField("String", "ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY", "\"$admobBannerAdUnitIdTest\"")
         }
         release {
             isMinifyEnabled = true
@@ -61,6 +62,7 @@ android {
 
             val admobAppId: String
             val admobBannerAdUnitIdHome: String
+            val admobBannerAdUnitIdAlarm: String
 
             if (isRunningReleaseTask) {
                 val localProperties = Properties()
@@ -78,13 +80,19 @@ android {
                     System.getenv("ADMOB_BANNER_AD_UNIT_HOME")
                         ?: localProperties.getProperty("admob.banner.ad.unit.home")
                             ?: admobBannerAdUnitIdTest
+                admobBannerAdUnitIdAlarm =
+                    System.getenv("ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY")
+                        ?: localProperties.getProperty("admob.banner.ad.unit.alarm_acitivity")
+                            ?: admobBannerAdUnitIdTest
             } else {
                 admobAppId = admobAppIdTest
                 admobBannerAdUnitIdHome = admobBannerAdUnitIdTest
+                admobBannerAdUnitIdAlarm = admobBannerAdUnitIdTest
             }
 
             resValue("string", "admob_app_id", admobAppId)
             buildConfigField("String", "ADMOB_BANNER_AD_UNIT_HOME", "\"$admobBannerAdUnitIdHome\"")
+            buildConfigField("String", "ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY", "\"$admobBannerAdUnitIdAlarm\"")
         }
     }
 

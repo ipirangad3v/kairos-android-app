@@ -131,6 +131,7 @@ fun EventScreen(
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             DrawerContent(
                 isProUser = isProUser,
