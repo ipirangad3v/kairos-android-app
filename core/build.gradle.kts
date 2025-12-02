@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.google.inapp.update.ktx)
     implementation(libs.androidx.datastore.core)
     implementation(libs.logcat)
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase.crashlytics)
 
     // Wear provider (for WearableCalendarContract)
     implementation(libs.androidx.wear)

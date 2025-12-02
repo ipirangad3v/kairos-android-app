@@ -131,6 +131,7 @@ dependencies {
     implementation(libs.play.services.ads.api)
     implementation(libs.accompanist.permissions)
     implementation(libs.google.firebase.analytics)
+    implementation(libs.google.firebase.crashlytics)
     implementation(libs.google.inapp.update)
     implementation(libs.google.inapp.update.ktx)
 

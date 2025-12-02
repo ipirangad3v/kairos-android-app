@@ -73,6 +73,7 @@ play-services-ads-api = { group = "com.google.android.gms", name = "play-service
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-binder = { group = "com.paulrybitskyi", name = "hilt-binder", version.ref = "hilt-binder" }
