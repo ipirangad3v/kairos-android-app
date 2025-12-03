@@ -40,7 +40,13 @@ fun EventsListSection(
         pendingToggle.value?.let { (pendingEvent, pendingEnabled) ->
             AlertDialog(
                 onDismissRequest = { pendingToggle.value = null },
-                title = { androidx.compose.material3.Text(stringResource(coreR.string.update_alarm_title)) },
+                title = {
+                    Text(
+                        text = stringResource(coreR.string.update_alarm_title),
+                        style = androidx.wear.compose.material3.MaterialTheme.typography.titleSmall,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    )
+                },
                 text = { Text(stringResource(coreR.string.update_alarm_message)) },
                 confirmButton = {
                     TextButton(onClick = {
@@ -52,8 +58,9 @@ fun EventsListSection(
                     TextButton(onClick = {
                         onEventToggle(pendingEvent, pendingEnabled, false)
                         pendingToggle.value = null
-                    }) { androidx.compose.material3.Text(stringResource(coreR.string.only_this_option)) }
+                    }) { Text(stringResource(coreR.string.only_this_option)) }
                 },
+                containerColor = androidx.wear.compose.material3.MaterialTheme.colorScheme.background,
             )
         }
     }
