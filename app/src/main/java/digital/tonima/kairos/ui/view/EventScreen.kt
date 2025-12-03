@@ -97,12 +97,11 @@ fun EventScreen(
         }
     }
     val openFullScreenIntentSettings = {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            context.startActivity(
-                Intent("android.settings.MANAGE_APP_ALL_ALARMS").apply {
-                    data = Uri.fromParts("package", context.packageName, null)
-                },
-            )
+        val intent = Intent("android.settings.MANAGE_APP_ALL_ALARMS").apply {
+            data = Uri.fromParts("package", context.packageName, null)
+        }
+        if (intent.resolveActivity(context.packageManager) != null) {
+            context.startActivity(intent)
         } else {
             Toast.makeText(context, R.string.not_applicable_on_this_android_version, Toast.LENGTH_SHORT).show()
         }
