@@ -15,13 +15,19 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import digital.tonima.core.service.AlarmSoundAndVibrateService
 import digital.tonima.core.viewmodel.EventViewModel
@@ -39,6 +45,22 @@ class AlarmActivity : ComponentActivity() {
         setContent {
             val viewModel: EventViewModel = hiltViewModel()
             val isProUser by viewModel.isProUser.collectAsStateWithLifecycle()
+            var isActivityVisible by remember { mutableStateOf(false) }
+            val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+            DisposableEffect(lifecycleOwner) {
+                val observer = LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_RESUME) {
+                        isActivityVisible = true
+                    } else if (event == Lifecycle.Event.ON_PAUSE) {
+                        isActivityVisible = false
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                }
+            }
+
             KairosTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -85,6 +107,7 @@ class AlarmActivity : ComponentActivity() {
                         AdBannerView(
                             adId = ADMOB_BANNER_AD_UNIT_ALARM_ACTIVITY,
                             isProUser = isProUser,
+                            loadAd = isActivityVisible,
                         )
                     }
                 }

@@ -10,7 +10,12 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
 @Composable
-fun AdBannerView(modifier: Modifier = Modifier, adId: String, isProUser: Boolean) {
+fun AdBannerView(
+    modifier: Modifier = Modifier,
+    adId: String,
+    isProUser: Boolean,
+    loadAd: Boolean = true,
+) {
     if (isProUser) return
     AndroidView(
         modifier = modifier
@@ -23,7 +28,9 @@ fun AdBannerView(modifier: Modifier = Modifier, adId: String, isProUser: Boolean
             }
         },
         update = { adView ->
-            adView.loadAd(AdRequest.Builder().build())
+            if (loadAd) {
+                adView.loadAd(AdRequest.Builder().build())
+            }
         },
     )
 }
