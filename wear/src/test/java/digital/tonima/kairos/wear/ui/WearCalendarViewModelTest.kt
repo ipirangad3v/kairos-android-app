@@ -30,6 +30,9 @@ class WearCalendarViewModelTest {
         private val vibrateOnly = MutableStateFlow(false)
         private val autoDismiss = MutableStateFlow(false)
         private val vibrateOnlyEventIds = MutableStateFlow<Set<String>>(emptySet())
+        private val installationDate = MutableStateFlow(0L)
+        private val ratingPrompted = MutableStateFlow(false)
+        private val ratingCompleted = MutableStateFlow(false)
         override fun isGlobalAlarmEnabled() = global as Flow<Boolean>
         override suspend fun setGlobalAlarmEnabled(enabled: Boolean) { global.value = enabled }
         override fun getDisabledEventIds() = disabledInstances as Flow<Set<String>>
@@ -42,6 +45,12 @@ class WearCalendarViewModelTest {
         override suspend fun setVibrateOnly(enabled: Boolean) { vibrateOnly.value = enabled }
         override fun getAutostartSuggestionDismissed() = autoDismiss as Flow<Boolean>
         override suspend fun setAutostartSuggestionDismissed(dismissed: Boolean) { autoDismiss.value = dismissed }
+        override fun getInstallationDate() = installationDate as Flow<Long>
+        override suspend fun setInstallationDate(date: Long) { installationDate.value = date }
+        override fun isRatingPrompted() = ratingPrompted as Flow<Boolean>
+        override suspend fun setRatingPrompted(prompted: Boolean) { ratingPrompted.value = prompted }
+        override fun isRatingCompleted() = ratingCompleted as Flow<Boolean>
+        override suspend fun setRatingCompleted(completed: Boolean) { ratingCompleted.value = completed }
     }
 
     @Test

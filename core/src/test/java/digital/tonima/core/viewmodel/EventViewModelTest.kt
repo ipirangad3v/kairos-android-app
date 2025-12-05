@@ -60,6 +60,9 @@ class EventViewModelTest {
     private val disabledSeriesIdsFlow = MutableStateFlow(emptySet<String>())
     private val ringerModeFlow = MutableStateFlow(AudioWarningState.NORMAL)
     private val vibrateOnlyEventIdsFlow = MutableStateFlow(emptySet<String>())
+    private val installationDateFlow = MutableStateFlow(0L)
+    private val ratingPromptedFlow = MutableStateFlow(false)
+    private val ratingCompletedFlow = MutableStateFlow(false)
 
     @Before
     fun setup() {
@@ -70,6 +73,9 @@ class EventViewModelTest {
         every { mockAppPreferencesRepository.getDisabledEventIds() } returns disabledEventIdsFlow
         every { mockAppPreferencesRepository.getDisabledSeriesIds() } returns disabledSeriesIdsFlow
         every { mockAppPreferencesRepository.getVibrateOnlyEventIds() } returns vibrateOnlyEventIdsFlow
+        every { mockAppPreferencesRepository.getInstallationDate() } returns installationDateFlow
+        every { mockAppPreferencesRepository.isRatingPrompted() } returns ratingPromptedFlow
+        every { mockAppPreferencesRepository.isRatingCompleted() } returns ratingCompletedFlow
         every { mockRingerModeRepository.ringerMode } returns ringerModeFlow
         every { mockRingerModeRepository.startObserving() } just Runs
         every { mockRingerModeRepository.stopObserving() } just Runs

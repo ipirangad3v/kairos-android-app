@@ -87,4 +87,35 @@ class AppPreferencesRepositoryImplTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `getInstallationDate defaults to 0 and can be set`() = runTest {
+        repository.getInstallationDate().test {
+            assertEquals(0L, awaitItem())
+            val date = 123456789L
+            repository.setInstallationDate(date)
+            assertEquals(date, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `isRatingPrompted defaults to false and can be set`() = runTest {
+        repository.isRatingPrompted().test {
+            assertEquals(false, awaitItem())
+            repository.setRatingPrompted(true)
+            assertEquals(true, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `isRatingCompleted defaults to false and can be set`() = runTest {
+        repository.isRatingCompleted().test {
+            assertEquals(false, awaitItem())
+            repository.setRatingCompleted(true)
+            assertEquals(true, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }
