@@ -64,4 +64,8 @@
     <string name="allow_exact_alarms">सटीक अलार्म की अनुमति दें</string>
     <string name="allow_fullscreen_intents">अलार्म के लिए फुल‑स्क्रीन की अनुमति दें</string>
     <string name="open_on_phone">फ़ोन पर खोलें</string>
+    <string name="rate_app_title">ऐप को रेट करें</string>
+    <string name="rate_app_message">यदि आपको Kairos पसंद है, तो कृपया हमें Play Store पर रेट करें। आपका फीडबैक हमें बहुत मदद करता है!</string>
+    <string name="rate_now">अभी रेट करें</string>
+    <string name="rate_later">बाद में</string>
 </resources>

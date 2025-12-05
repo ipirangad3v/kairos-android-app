@@ -64,4 +64,8 @@
     <string name="allow_exact_alarms">السماح بالمنبّهات الدقيقة</string>
     <string name="allow_fullscreen_intents">السماح بملء الشاشة للتنبيهات</string>
     <string name="open_on_phone">فتح على الهاتف</string>
+    <string name="rate_app_title">قيم التطبيق</string>
+    <string name="rate_app_message">إذا كنت تستمتع بـ Kairos، يرجى تقييمنا على متجر Play. رأيك يساعدنا كثيرًا!</string>
+    <string name="rate_now">قيم الآن</string>
+    <string name="rate_later">لاحقًا</string>
 </resources>

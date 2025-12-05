@@ -11,9 +11,14 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
+import digital.tonima.core.repository.AppPreferencesRepository
 import digital.tonima.core.service.AlarmSchedulingWorker
 import digital.tonima.kairos.service.CalendarChangeObserver
 import digital.tonima.kairos.service.PhoneEventSyncWorker.Companion.enqueuePeriodic
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import logcat.AndroidLogcatLogger
 import logcat.LogPriority
 import logcat.LogPriority.VERBOSE
@@ -27,6 +32,9 @@ class KairosApplication :
     Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    @Inject
+    lateinit var appPreferencesRepository: AppPreferencesRepository
 
     override val workManagerConfiguration: Configuration
         get() =
@@ -54,6 +62,13 @@ class KairosApplication :
             logcat(
                 LogPriority.ERROR,
             ) { "KairosApplication: failed to init CalendarChangeObserver: ${t.localizedMessage}" }
+        }
+        // Set installation date if not set
+        CoroutineScope(Dispatchers.IO).launch {
+            val installationDate = appPreferencesRepository.getInstallationDate().first()
+            if (installationDate == 0L) {
+                appPreferencesRepository.setInstallationDate(System.currentTimeMillis())
+            }
         }
     }
 

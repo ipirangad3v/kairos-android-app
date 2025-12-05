@@ -3,6 +3,7 @@ package digital.tonima.core.repository
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.paulrybitskyi.hiltbinder.BindType
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,6 +25,9 @@ class AppPreferencesRepositoryImpl @Inject constructor(
         val VIBRATE_ONLY_EVENT_IDS = stringSetPreferencesKey("vibrate_only_event_ids")
         val VIBRATE_ONLY = booleanPreferencesKey("vibrate_only")
         val AUTOSTART_SUGGESTION_DISMISSED = booleanPreferencesKey("autostart_suggestion_dismissed")
+        val INSTALLATION_DATE = longPreferencesKey("installation_date")
+        val RATING_PROMPTED = booleanPreferencesKey("rating_prompted")
+        val RATING_COMPLETED = booleanPreferencesKey("rating_completed")
     }
 
     override fun isGlobalAlarmEnabled(): Flow<Boolean> {
@@ -100,6 +104,45 @@ class AppPreferencesRepositoryImpl @Inject constructor(
     override suspend fun setAutostartSuggestionDismissed(dismissed: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.AUTOSTART_SUGGESTION_DISMISSED] = dismissed
+        }
+    }
+
+    override fun getInstallationDate(): Flow<Long> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[PreferencesKeys.INSTALLATION_DATE] ?: 0L
+            }
+    }
+
+    override suspend fun setInstallationDate(date: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.INSTALLATION_DATE] = date
+        }
+    }
+
+    override fun isRatingPrompted(): Flow<Boolean> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[PreferencesKeys.RATING_PROMPTED] ?: false
+            }
+    }
+
+    override suspend fun setRatingPrompted(prompted: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.RATING_PROMPTED] = prompted
+        }
+    }
+
+    override fun isRatingCompleted(): Flow<Boolean> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[PreferencesKeys.RATING_COMPLETED] ?: false
+            }
+    }
+
+    override suspend fun setRatingCompleted(completed: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.RATING_COMPLETED] = completed
         }
     }
 }

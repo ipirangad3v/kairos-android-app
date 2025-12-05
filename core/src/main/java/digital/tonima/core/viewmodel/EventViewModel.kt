@@ -38,7 +38,8 @@ data class EventScreenUiState(
     val hasExactAlarmPermission: Boolean = false,
     val hasFullScreenIntentPermission: Boolean = false,
     val audioWarning: AudioWarningState = AudioWarningState.NORMAL,
-    val vibrateOnly: Boolean = false
+    val vibrateOnly: Boolean = false,
+    val showRatingDialog: Boolean = false
 )
 
 @HiltViewModel
@@ -86,6 +87,19 @@ constructor(
         ringerModeRepository.ringerMode
             .onEach { warning -> _uiState.update { it.copy(audioWarning = warning) } }
             .launchIn(viewModelScope)
+
+        // Check for rating prompt
+        viewModelScope.launch {
+            val installationDate = appPreferencesRepository.getInstallationDate().firstOrNull() ?: 0L
+            val hasPrompted = appPreferencesRepository.isRatingPrompted().firstOrNull() ?: false
+            val hasCompleted = appPreferencesRepository.isRatingCompleted().firstOrNull() ?: false
+            val currentTime = System.currentTimeMillis()
+            val twoDaysInMillis = TimeUnit.DAYS.toMillis(2)
+            if (installationDate != 0L && currentTime - installationDate >= twoDaysInMillis && !hasPrompted && !hasCompleted) {
+                _uiState.update { it.copy(showRatingDialog = true) }
+                appPreferencesRepository.setRatingPrompted(true)
+            }
+        }
     }
 
     public override fun onCleared() {
@@ -279,5 +293,20 @@ constructor(
 
     fun onPurchaseFlowHandled() {
         _uiState.update { it.copy(showUpgradeConfirmation = false) }
+    }
+
+    fun onRatingDialogDismiss() {
+        _uiState.update { it.copy(showRatingDialog = false) }
+    }
+
+    fun onRateNow() {
+        viewModelScope.launch {
+            appPreferencesRepository.setRatingCompleted(true)
+            _uiState.update { it.copy(showRatingDialog = false) }
+        }
+    }
+
+    fun onRateLater() {
+        _uiState.update { it.copy(showRatingDialog = false) }
     }
 }

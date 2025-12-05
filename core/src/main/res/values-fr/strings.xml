@@ -67,4 +67,8 @@
     <string name="allow_exact_alarms">Autoriser les alarmes exactes</string>
     <string name="allow_fullscreen_intents">Autoriser les alertes en plein écran</string>
     <string name="open_on_phone">Ouvrir sur le téléphone</string>
+    <string name="rate_app_title">Évaluez l\'App</string>
+    <string name="rate_app_message">Si vous aimez Kairos, veuillez nous évaluer sur le Play Store. Votre avis nous aide beaucoup !</string>
+    <string name="rate_now">Évaluer Maintenant</string>
+    <string name="rate_later">Plus Tard</string>
 </resources>

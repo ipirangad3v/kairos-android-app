@@ -26,4 +26,13 @@ interface AppPreferencesRepository {
 
     fun getAutostartSuggestionDismissed(): Flow<Boolean>
     suspend fun setAutostartSuggestionDismissed(dismissed: Boolean)
+
+    fun getInstallationDate(): Flow<Long>
+    suspend fun setInstallationDate(date: Long)
+
+    fun isRatingPrompted(): Flow<Boolean>
+    suspend fun setRatingPrompted(prompted: Boolean)
+
+    fun isRatingCompleted(): Flow<Boolean>
+    suspend fun setRatingCompleted(completed: Boolean)
 }

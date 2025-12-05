@@ -65,4 +65,8 @@
     <string name="allow_exact_alarms">Allow exact alarms</string>
     <string name="allow_fullscreen_intents">Allow full-screen for alarms</string>
     <string name="open_on_phone">Open on phone</string>
+    <string name="rate_app_title">Rate the App</string>
+    <string name="rate_app_message">If you\'re enjoying Kairos, please rate us on the Play Store. Your feedback helps us a lot!</string>
+    <string name="rate_now">Rate Now</string>
+    <string name="rate_later">Later</string>
 </resources>

@@ -65,4 +65,8 @@
     <string name="allow_exact_alarms">Разрешить точные будильники</string>
     <string name="allow_fullscreen_intents">Разрешить полноэкранные уведомления для будильников</string>
     <string name="open_on_phone">Открыть на телефоне</string>
+    <string name="rate_app_title">Оцените приложение</string>
+    <string name="rate_app_message">Если вам нравится Kairos, пожалуйста, оцените нас в Play Store. Ваш отзыв очень помогает нам!</string>
+    <string name="rate_now">Оценить сейчас</string>
+    <string name="rate_later">Позже</string>
 </resources>
